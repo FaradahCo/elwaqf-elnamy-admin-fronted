@@ -1,7 +1,7 @@
 import type { RouteObject } from "react-router";
 import MainLayout from "../../layouts/mainLayout";
 
-export const pagesRoutes: RouteObject[] = [
+export const providerRoutes: RouteObject[] = [
   {
     path: "/",
     element: <MainLayout />,
@@ -9,21 +9,21 @@ export const pagesRoutes: RouteObject[] = [
       {
         index: true,
         lazy: () =>
-          import("./home/home").then((m) => ({
-            Component: m.default,
+          import("./pages/home/home").then((module) => ({
+            Component: module.default,
           })),
       },
       {
         path: "profile",
         lazy: () =>
-          import("./profile/profile").then((m) => ({
-            Component: m.default,
+          import("./pages/profile/profile").then((module) => ({
+            Component: module.default,
           })),
       },
     ],
   },
 ];
 
-export const pagesRoutePath = {
-  PROFILE: "profile",
+export const providerRoutePath = {
+  PROFILE: "/profile",
 };

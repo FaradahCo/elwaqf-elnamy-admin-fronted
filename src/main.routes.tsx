@@ -3,13 +3,13 @@ import NotFound from "./app/components/NotFound";
 import AuthProtectedRoute from "./app/guards/authProtected";
 import ProtectedRoute from "./app/guards/ProtectedRoute";
 import { authenticationRoutes } from "./app/modules/authentication/authentication.routes";
-import { pagesRoutes } from "./app/modules/pages/pages.routes";
+import { providerRoutes } from "./app/modules/provider/provider.routes";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <ProtectedRoute />,
-    children: [...pagesRoutes],
+    children: [...providerRoutes],
   },
   {
     element: <AuthProtectedRoute />,

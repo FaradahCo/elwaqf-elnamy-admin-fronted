@@ -8,7 +8,6 @@ const Login: React.FC = () => {
   const { message } = App.useApp();
 
   const onFinish = (values: { email: string; password: string }) => {
-    console.log("Success:", values);
     message.success("تم تسجيل الدخول بنجاح!");
   };
 
@@ -29,8 +28,14 @@ const Login: React.FC = () => {
           label="البريد الإلكتروني او رقم الجوال"
           name="email"
           rules={[
-            { required: true, message: "يرجى إدخال البريد الإلكتروني او رقم الجوال" },
-            { type: "email", message: "يرجى إدخال بريد إلكتروني او رقم جوال صحيح" },
+            {
+              required: true,
+              message: "يرجى إدخال البريد الإلكتروني او رقم الجوال",
+            },
+            {
+              type: "email",
+              message: "يرجى إدخال بريد إلكتروني او رقم جوال صحيح",
+            },
           ]}
         >
           <Input
@@ -61,21 +66,32 @@ const Login: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-center sm:text-right">
           <p className="mt-2 mb-2">
             ليس لديك حساب؟
-            <Link className="text-primary!" to={authenticationRoutePath.REGISTER}>
+            <Link
+              className="text-primary!"
+              to={authenticationRoutePath.REGISTER}
+            >
               {" "}
               تسجيل حساب جديد
             </Link>
           </p>
 
           <p className="mt-2 mb-2">
-            <Link className="text-primary!" to={authenticationRoutePath.FORGOT_PASSWORD}>
+            <Link
+              className="text-primary!"
+              to={authenticationRoutePath.FORGOT_PASSWORD}
+            >
               نسيت كلمة المرور؟
             </Link>
           </p>
         </div>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" size="large" className="w-full mt-4">
+          <Button
+            type="primary"
+            htmlType="submit"
+            size="large"
+            className="w-full mt-4"
+          >
             دخول
           </Button>
         </Form.Item>

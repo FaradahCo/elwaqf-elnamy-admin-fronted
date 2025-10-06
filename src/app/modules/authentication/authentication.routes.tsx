@@ -16,7 +16,7 @@ export const authenticationRoutes: RouteObject[] = [
       {
         path: "register",
         lazy: () =>
-          import("./signIn/signIn").then((module) => ({
+          import("./register/register").then((module) => ({
             Component: module.default,
           })),
       },
