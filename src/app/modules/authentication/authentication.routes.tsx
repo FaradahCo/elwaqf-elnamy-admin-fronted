@@ -21,6 +21,13 @@ export const authenticationRoutes: RouteObject[] = [
           })),
       },
       {
+        path: "forgot-password",
+        lazy: () =>
+          import("./forgotPassword/forgotPassword").then((module) => ({
+            Component: module.default,
+          })),
+      },
+      {
         path: "verify-otp",
         lazy: () =>
           import("./verifyOTP/verifyOTP").then((module) => ({
@@ -34,5 +41,6 @@ export const authenticationRoutes: RouteObject[] = [
 export const authenticationRoutePath = {
   LOGIN: "/auth",
   REGISTER: "/auth/register",
+  FORGOT_PASSWORD: "/auth/forgot-password",
   VERIFY_OTP: "/auth/verify-otp",
 };
