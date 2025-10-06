@@ -1,18 +1,23 @@
 import { createBrowserRouter } from "react-router";
-import { authenticationRoutes } from "./app/modules/authentication/authentication.routes";
-import { dashboardRoutes } from "./app/modules/dashborad/dashboard.routes";
-import ProtectedRoute from "./app/guards/ProtectedRoute";
+import NotFound from "./app/components/NotFound";
 import AuthProtectedRoute from "./app/guards/authProtected";
+import ProtectedRoute from "./app/guards/ProtectedRoute";
+import { authenticationRoutes } from "./app/modules/authentication/authentication.routes";
+import { pagesRoutes } from "./app/modules/pages/pages.routes";
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <ProtectedRoute />,
+    children: [...pagesRoutes],
+  },
   {
     element: <AuthProtectedRoute />,
     children: [...authenticationRoutes],
   },
-
   {
-    element: <ProtectedRoute />,
-    children: [...dashboardRoutes],
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 

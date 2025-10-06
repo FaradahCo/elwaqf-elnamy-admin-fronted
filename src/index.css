@@ -3,3 +3,21 @@
 @tailwind utilities; */
 @import "./styles/tailwind.config.css";
 @import "tailwindcss";
+
+/* Apply font family with higher specificity */
+* {
+  font-family: "Noto Kufi Arabic", sans-serif;
+  font-optical-sizing: auto;
+  direction: rtl;
+}
+
+/* Ensure Ant Design components also use the font */
+/* .ant-app,
+.ant-typography,
+.ant-btn,
+.ant-input,
+.ant-form,
+.ant-select,
+.ant-menu {
+  font-family: "Noto Kufi Arabic", sans-serif !important;
+} */

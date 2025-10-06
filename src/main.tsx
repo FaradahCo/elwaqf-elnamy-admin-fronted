@@ -6,7 +6,7 @@ import "./index.css";
 
 const theme = {
   token: {
-    colorPrimary: "#AA1826",
+    colorPrimary: "#7ea831",
   },
 };
 
