@@ -1,19 +1,34 @@
 import { App, Button, Form, Input } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import React from "react";
-import type { SignInPayload } from "../authentication.model";
+import React, { use } from "react";
 import { Link } from "react-router";
 import { authenticationRoutePath } from "../authentication.routes";
-const SignIn: React.FC = () => {
+import type {
+  RegisterPayload,
+  RegisterResponse,
+} from "../authentication.model";
+import { useApiMutation } from "../../../shared/services/api";
+import { AuthenticationService } from "../authenticationService";
+const Register: React.FC = () => {
   const { message } = App.useApp();
 
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
-    message.success("تم تسجيل الدخول بنجاح!");
+  const RegisterationMutation = useApiMutation<
+    RegisterPayload,
+    RegisterResponse
+  >(AuthenticationService.register, {
+    onSuccess: (res) => {
+      message.success("تم التسجيل بنجاح!");
+    },
+    onError: () => {
+      message.error("فشل في التسجيل. يرجى المحاولة مرة أخرى.");
+    },
+  });
+
+  const onFinish = (_values: RegisterPayload) => {
+    RegisterationMutation.mutate(_values);
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+  const onFinishFailed = (_errorInfo: any) => {
     message.error("يرجى التحقق من البيانات المدخلة");
   };
 
@@ -25,9 +40,9 @@ const SignIn: React.FC = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item<SignInPayload>
+        <Form.Item<RegisterPayload>
           label="الاسم الثلاثي"
-          name="fullName"
+          name="name"
           rules={[
             {
               required: true,
@@ -46,9 +61,9 @@ const SignIn: React.FC = () => {
           />
         </Form.Item>
 
-        <Form.Item<SignInPayload>
+        <Form.Item<RegisterPayload>
           label="رقم الجوال"
-          name="phoneNumber"
+          name="phone"
           rules={[
             {
               required: true,
@@ -71,7 +86,7 @@ const SignIn: React.FC = () => {
           />
         </Form.Item>
 
-        <Form.Item<SignInPayload>
+        <Form.Item<RegisterPayload>
           label="البريد الإلكتروني"
           name="email"
           rules={[
@@ -92,7 +107,7 @@ const SignIn: React.FC = () => {
           />
         </Form.Item>
 
-        <Form.Item<SignInPayload>
+        <Form.Item<RegisterPayload>
           label="كلمة المرور"
           name="password"
           rules={[
@@ -116,9 +131,9 @@ const SignIn: React.FC = () => {
           />
         </Form.Item>
 
-        <Form.Item<SignInPayload>
+        <Form.Item<RegisterPayload>
           label="تأكيد كلمة المرور"
-          name="confirmPassword"
+          name="password_confirmation"
           dependencies={["password"]}
           rules={[
             {
@@ -176,4 +191,4 @@ const SignIn: React.FC = () => {
   );
 };
 
-export default SignIn;
+export default Register;

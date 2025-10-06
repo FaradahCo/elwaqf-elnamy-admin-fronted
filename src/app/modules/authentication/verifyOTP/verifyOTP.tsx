@@ -1,8 +1,27 @@
-import { Button, Form, Input, message } from "antd";
+import { App, Button, Form, Input } from "antd";
 import React from "react";
+import { useApiMutation } from "../../../shared/services/api";
+import type {
+  VerifyOTPPayload,
+  VerifyOTPResponse,
+} from "../authentication.model";
+import { AuthenticationService } from "../authenticationService";
 
 const VerifyOtp: React.FC = () => {
-  const onFinish = async (values: { otp: string }) => {};
+  const { message } = App.useApp();
+
+  const VerifyOtpMutation = useApiMutation<VerifyOTPPayload, VerifyOTPResponse>(
+    AuthenticationService.verifyOtp,
+    {
+      onSuccess: (_) => {
+        message.success("تم التحقق من الرمز بنجاح!");
+      },
+    }
+  );
+
+  const onFinish = async (_values: VerifyOTPPayload) => {
+    VerifyOtpMutation.mutate(_values);
+  };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);

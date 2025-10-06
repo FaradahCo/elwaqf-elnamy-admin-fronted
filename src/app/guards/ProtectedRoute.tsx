@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate, Outlet } from "react-router";
 
 export const isAuthenticated = () => {
-  return false;
+  return true;
 };
 
 const ProtectedRoute: React.FC = () => {

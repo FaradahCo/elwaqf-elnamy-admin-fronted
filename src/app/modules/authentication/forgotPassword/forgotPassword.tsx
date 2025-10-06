@@ -12,21 +12,32 @@ const ForgotPassword: React.FC = () => {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
     message.error("يرجى التحقق من البيانات المدخلة");
   };
 
   return (
     <>
-      <Form layout="vertical" onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off">
+      <Form
+        layout="vertical"
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+      >
         <Form.Item
           label="البريد الإلكتروني او رقم الجوال"
           name="emailOrPhone"
           rules={[
-            { required: true, message: "يرجى إدخال البريد الإلكتروني او رقم الجوال" },
+            {
+              required: true,
+              message: "يرجى إدخال البريد الإلكتروني او رقم الجوال",
+            },
           ]}
         >
-          <Input placeholder="ادخل بريدك الإلكتروني او رقم الجوال" size="large" className="text-right" />
+          <Input
+            placeholder="ادخل بريدك الإلكتروني او رقم الجوال"
+            size="large"
+            className="text-right"
+          />
         </Form.Item>
 
         <p className="mt-2 mb-4">
@@ -38,7 +49,12 @@ const ForgotPassword: React.FC = () => {
         </p>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" size="large" className="w-full mt-4">
+          <Button
+            type="primary"
+            htmlType="submit"
+            size="large"
+            className="w-full mt-4"
+          >
             إرسال رابط/رمز الاستعادة
           </Button>
         </Form.Item>
@@ -48,5 +64,3 @@ const ForgotPassword: React.FC = () => {
 };
 
 export default ForgotPassword;
-
-

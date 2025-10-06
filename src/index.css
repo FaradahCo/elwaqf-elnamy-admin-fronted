@@ -1,6 +1,3 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
 @import "./styles/tailwind.config.css";
 @import "tailwindcss";
 
@@ -11,13 +8,24 @@
   direction: rtl;
 }
 
-/* Ensure Ant Design components also use the font */
-/* .ant-app,
-.ant-typography,
-.ant-btn,
-.ant-input,
-.ant-form,
-.ant-select,
-.ant-menu {
-  font-family: "Noto Kufi Arabic", sans-serif !important;
-} */
+.profile .ant-collapse-item {
+  margin-bottom: 0.5rem;
+  border: 0;
+  background-color: var(--color-white);
+  border-radius: 10px !important;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.06);
+}
+
+.profile .ant-collapse {
+  border: none;
+}
+
+.profile .ant-collapse-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  padding: 1rem !important;
+}
+
+.profile .ant-collapse-header-text {
+  font-size: 15px;
+}
