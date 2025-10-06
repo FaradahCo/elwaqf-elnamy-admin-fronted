@@ -6,7 +6,6 @@ import type {
 } from "axios";
 import axios from "axios";
 import environment from "./app/enviroments/environemnt.dev";
-import { App, message } from "antd";
 
 // Define response type structure
 export interface ApiResponse<T> {

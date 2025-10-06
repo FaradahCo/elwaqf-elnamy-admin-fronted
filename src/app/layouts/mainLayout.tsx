@@ -1,6 +1,8 @@
-import { Layout, Menu, Button, theme } from "antd";
+import { theme, Layout, Menu, Button } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
+import React, { useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -8,8 +10,6 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import React, { useState } from "react";
-import { useNavigate, useLocation, Outlet } from "react-router";
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
