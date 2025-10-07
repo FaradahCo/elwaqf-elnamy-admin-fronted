@@ -24,3 +24,16 @@ export type VerifyOTPPayload = {
 };
 
 export type VerifyOTPResponse = {};
+
+export type LoginPayload = {
+  identifier: string;
+  password: string;
+};
+
+export type LoginResponse = {};
+
+export type ForgotPasswordPayload = {
+  identifier: string;
+};
+
+export type ForgotPasswordResponse = {};
