@@ -3,6 +3,7 @@ import MainInformation from "./components/mainInformation/mainInformation";
 import PrimaryEntryData from "./components/primaryEntryData/primarEntryData";
 import NationalAddress from "./components/nationalAddress/nationalAddress";
 import BankAccount from "./components/bankAccount/bankAccount";
+import GeneralAttachements from "./components/generalAttachements/generalAttachements";
 
 const Profile = () => {
   const items: CollapseProps["items"] = [
@@ -29,7 +30,7 @@ const Profile = () => {
     {
       key: "5",
       label: "مرفقات هامة",
-      children: <p>test</p>,
+      children: <GeneralAttachements />,
     },
   ];
   return (

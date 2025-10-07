@@ -27,5 +27,7 @@
 }
 
 .profile .ant-collapse-header-text {
-  font-size: 15px;
+  font-size: 16px;
+  clear: var(--color-second-rimary);
+  font-weight: 700;
 }
