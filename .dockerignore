@@ -1,0 +1,11 @@
+node_modules
+dist
+.git
+.github
+.gitignore
+Dockerfile
+*.log
+npm-debug.log*
+pnpm-lock.yaml
+yarn.lock
+gha-creds-*.json

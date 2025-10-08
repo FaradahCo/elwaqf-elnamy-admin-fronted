@@ -1,0 +1,136 @@
+name: Build and Push Image
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  APP:               waqfnami
+  ENV:               dev
+  GCP_PROJECT:       faradah-dev
+  ARTIFACT_LOCATION: us-central1
+  ZONE:              me-central1-a
+  INSTANCE:          faradah-dev-ce-app-001
+  IMAGE:             frontend
+  SERVICE_ACCOUNT:   github-action@faradah-dev.iam.gserviceaccount.com
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      app_tag: ${{ steps.tag.outputs.app_tag }}
+      latest_app: ${{ steps.tag.outputs.latest_app }}
+      short: ${{ steps.tag.outputs.short }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Determine image tags (short SHA)
+        id: tag
+        shell: bash
+        run: |
+          SHORT_SHA=${GITHUB_SHA:0:7}
+
+          APP_TAG="${ARTIFACT_LOCATION}-docker.pkg.dev/${GCP_PROJECT}/${APP}-${ENV}/${IMAGE}:${SHORT_SHA}"
+          LATEST_APP="${ARTIFACT_LOCATION}-docker.pkg.dev/${GCP_PROJECT}/${APP}-${ENV}/${IMAGE}:latest"
+
+          echo "app_tag=${APP_TAG}"       >> $GITHUB_OUTPUT
+          echo "latest_app=${LATEST_APP}" >> $GITHUB_OUTPUT
+          echo "short=${SHORT_SHA}"       >> $GITHUB_OUTPUT
+
+      - name: Set up Docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Authenticate to Artifact Registry
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_DEV_KEY }}
+
+      - name: Configure gcloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ env.GCP_PROJECT }}
+          install_components: 'beta'
+
+      - name: Configure Docker credential helper
+        run: |
+          gcloud auth configure-docker "${{ env.ARTIFACT_LOCATION }}-docker.pkg.dev" --quiet
+
+      - name: Build and push frontend Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            ${{ steps.tag.outputs.app_tag }}
+            ${{ steps.tag.outputs.latest_app }}
+          cache-from: type=registry,ref=${{ steps.tag.outputs.app_tag }}
+          cache-to: type=inline
+
+  deploy:
+    name: Deploy to Dev GCE
+    needs: build-and-push
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_DEV_KEY }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ env.GCP_PROJECT }}
+
+      - name: Debug deploy input
+        run: |
+          echo "App image tag:   ${{ needs.build-and-push.outputs.app_tag }}"
+          echo "Short SHA:       ${{ needs.build-and-push.outputs.short }}"
+
+      - name: Generate Temporary SSH Key
+        run: ssh-keygen -t rsa -b 2048 -f ~/.ssh/temp_rsa -N ""
+
+      - name: Add Temporary SSH Key to OS Login with TTL
+        run: |
+          gcloud compute os-login ssh-keys add \
+            --key-file=/home/runner/.ssh/temp_rsa.pub \
+            --impersonate-service-account=${{env.SERVICE_ACCOUNT}} \
+            --ttl=5m --quiet
+
+      - name: SSH into VM and deploy
+        run: |
+          APP_TAG="${{ needs.build-and-push.outputs.app_tag }}"
+          TAG="${{ needs.build-and-push.outputs.short }}"
+
+          if [[ -z "$APP_TAG" ]]; then
+            echo "❌ Image tag is empty. Failing deployment."
+            exit 1
+          fi
+
+          gcloud compute ssh "${{ env.INSTANCE }}" \
+            --zone="${{ env.ZONE }}" \
+            --tunnel-through-iap \
+            --impersonate-service-account=${{env.SERVICE_ACCOUNT}} \
+            --ssh-key-file=~/.ssh/temp_rsa \
+            --command="sudo su ubuntu -c '\
+              cd /home/ubuntu/${{ env.ENV }}/${{ env.APP }} && \
+              sed -i \"s|^FRONTEND_TAG=.*|FRONTEND_TAG=${TAG}|\" .env && \
+              docker compose up -d --force-recreate ${{ env.IMAGE }}  && \
+              docker image prune -f\
+            '"
+          echo "✅ Deployment completed successfully."
