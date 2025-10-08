@@ -34,6 +34,13 @@ export const authenticationRoutes: RouteObject[] = [
             Component: module.default,
           })),
       },
+      {
+        path: "reset-password",
+        lazy: () =>
+          import("./resetPassword/resetPassword").then((module) => ({
+            Component: module.default,
+          })),
+      },
     ],
   },
 ];
@@ -43,4 +50,5 @@ export const authenticationRoutePath = {
   REGISTER: "/auth/register",
   FORGOT_PASSWORD: "/auth/forgot-password",
   VERIFY_OTP: "/auth/verify-otp",
+  RESET_PASSWORD: "/auth/reset-password",
 };

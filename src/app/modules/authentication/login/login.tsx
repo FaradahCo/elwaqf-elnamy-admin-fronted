@@ -1,14 +1,40 @@
 import React from "react";
 import { App, Button, Form, Input } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { authenticationRoutePath } from "../authentication.routes";
+import { AuthenticationService } from "../authenticationService";
+import { useApiMutation } from "../../../shared/services/api";
+import type { LoginPayload } from "../authentication.model";
 
 const Login: React.FC = () => {
   const { message } = App.useApp();
+  const navigate = useNavigate();
 
-  const onFinish = (values: { email: string; password: string }) => {
-    message.success("تم تسجيل الدخول بنجاح!");
+  const loginMutation = useApiMutation<LoginPayload, any>(
+    AuthenticationService.login,
+    {
+      onSuccess: (response) => {
+        // Store token in localStorage
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        
+        message.success("تم تسجيل الدخول بنجاح!");
+        
+        // Navigate to home page or dashboard
+        navigate("/provider/home");
+      },
+     
+    }
+  );
+
+  const onFinish = (values: { identifier: string; password: string }) => {
+    const loginData: LoginPayload = {
+      identifier: values.identifier,
+      password: values.password,
+    };
+    
+    loginMutation.mutate(loginData);
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -26,15 +52,21 @@ const Login: React.FC = () => {
       >
         <Form.Item
           label="البريد الإلكتروني او رقم الجوال"
-          name="email"
+          name="identifier"
           rules={[
             {
               required: true,
               message: "يرجى إدخال البريد الإلكتروني او رقم الجوال",
             },
             {
-              type: "email",
-              message: "يرجى إدخال بريد إلكتروني او رقم جوال صحيح",
+              validator: (_, value) => {
+                if (!value) return Promise.resolve();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const phoneRegex = /^[0-9+\-()\s]{6,}$/;
+                return emailRegex.test(value) || phoneRegex.test(value)
+                  ? Promise.resolve()
+                  : Promise.reject("يرجى إدخال بريد إلكتروني أو رقم جوال صحيح");
+              },
             },
           ]}
         >
@@ -91,8 +123,10 @@ const Login: React.FC = () => {
             htmlType="submit"
             size="large"
             className="w-full mt-4"
+            loading={loginMutation.isPending}
+            disabled={loginMutation.isPending}
           >
-            دخول
+            {loginMutation.isPending ? "جاري تسجيل الدخول..." : "دخول"}
           </Button>
         </Form.Item>
       </Form>

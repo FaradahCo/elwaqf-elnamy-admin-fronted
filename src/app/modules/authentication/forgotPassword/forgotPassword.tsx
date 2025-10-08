@@ -2,16 +2,32 @@ import React from "react";
 import { App, Button, Form, Input } from "antd";
 import { Link } from "react-router";
 import { authenticationRoutePath } from "../authentication.routes";
+import { AuthenticationService } from "../authenticationService";
+import { useApiMutation } from "../../../shared/services/api";
+import type { ForgotPasswordPayload } from "../authentication.model";
 
 const ForgotPassword: React.FC = () => {
   const { message } = App.useApp();
 
-  const onFinish = (values: { emailOrPhone: string }) => {
-    console.log("Forgot password submit:", values);
-    message.success("تم إرسال تعليمات استعادة كلمة المرور إن وجد حساب مطابق");
+  const forgotPasswordMutation = useApiMutation<ForgotPasswordPayload, any>(
+    AuthenticationService.forgotPassword,
+    {
+      onSuccess: () => {
+        message.success("تم إرسال تعليمات استعادة كلمة المرور إن وجد حساب مطابق");
+      },
+     
+    }
+  );
+
+  const onFinish = (values: { identifier: string }) => {
+    const forgotPasswordData: ForgotPasswordPayload = {
+      identifier: values.identifier,
+    };
+    
+    forgotPasswordMutation.mutate(forgotPasswordData);
   };
 
-  const onFinishFailed = (errorInfo: any) => {
+  const onFinishFailed = () => {
     message.error("يرجى التحقق من البيانات المدخلة");
   };
 
@@ -25,11 +41,21 @@ const ForgotPassword: React.FC = () => {
       >
         <Form.Item
           label="البريد الإلكتروني او رقم الجوال"
-          name="emailOrPhone"
+          name="identifier"
           rules={[
             {
               required: true,
               message: "يرجى إدخال البريد الإلكتروني او رقم الجوال",
+            },
+            {
+              validator: (_, value) => {
+                if (!value) return Promise.resolve();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const phoneRegex = /^[0-9+\-()\s]{6,}$/;
+                return emailRegex.test(value) || phoneRegex.test(value)
+                  ? Promise.resolve()
+                  : Promise.reject("يرجى إدخال بريد إلكتروني أو رقم جوال صحيح");
+              },
             },
           ]}
         >
@@ -54,8 +80,10 @@ const ForgotPassword: React.FC = () => {
             htmlType="submit"
             size="large"
             className="w-full mt-4"
+            loading={forgotPasswordMutation.isPending}
+            disabled={forgotPasswordMutation.isPending}
           >
-            إرسال رابط/رمز الاستعادة
+            {forgotPasswordMutation.isPending ? "جاري الإرسال..." : "إرسال رابط/رمز الاستعادة"}
           </Button>
         </Form.Item>
       </Form>
