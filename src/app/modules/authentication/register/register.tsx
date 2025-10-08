@@ -1,13 +1,13 @@
-import { App, Button, Form, Input } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import React, { use } from "react";
+import { App, Button, Form, Input } from "antd";
+import React from "react";
 import { Link } from "react-router";
-import { authenticationRoutePath } from "../authentication.routes";
+import { useApiMutation } from "../../../shared/services/api";
 import type {
   RegisterPayload,
   RegisterResponse,
 } from "../authentication.model";
-import { useApiMutation } from "../../../shared/services/api";
+import { authenticationRoutePath } from "../authentication.routes";
 import { AuthenticationService } from "../authenticationService";
 const Register: React.FC = () => {
   const { message } = App.useApp();
@@ -16,10 +16,9 @@ const Register: React.FC = () => {
     RegisterPayload,
     RegisterResponse
   >(AuthenticationService.register, {
-    onSuccess: (res) => {
+    onSuccess: (_) => {
       message.success("تم التسجيل بنجاح!");
     },
-   
   });
 
   const onFinish = (_values: RegisterPayload) => {

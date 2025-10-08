@@ -16,7 +16,7 @@ const MainLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { borderRadiusLG },
   } = theme.useToken();
 
   // Menu items with navigation
@@ -25,13 +25,13 @@ const MainLayout: React.FC = () => {
       key: "1",
       icon: <UserOutlined />,
       label: "الرئيسية",
-      path: "/",
+      path: "/provider",
     },
     {
       key: "2",
       icon: <VideoCameraOutlined />,
       label: "البروفايل",
-      path: "/profile",
+      path: "/provider/profile",
     },
     {
       key: "3",

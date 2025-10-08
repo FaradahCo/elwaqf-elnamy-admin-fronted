@@ -1,15 +1,15 @@
 import type { RouteObject } from "react-router";
-import MainLayout from "../../layouts/mainLayout";
+import ClientLayout from "../../layouts/clientLayout";
 
-export const providerRoutes: RouteObject[] = [
+export const clientRoutes: RouteObject[] = [
   {
-    path: "/provider",
-    element: <MainLayout />,
+    path: "/",
+    element: <ClientLayout />,
     children: [
       {
         index: true,
         lazy: () =>
-          import("./pages/home/home").then((module) => ({
+          import("./pages/landingPage/landingPage").then((module) => ({
             Component: module.default,
           })),
       },
@@ -24,6 +24,6 @@ export const providerRoutes: RouteObject[] = [
   },
 ];
 
-export const providerRoutePath = {
-  PROFILE: "/provider/profile",
+export const clientRoutePath = {
+  PROFILE: "/profile",
 };
