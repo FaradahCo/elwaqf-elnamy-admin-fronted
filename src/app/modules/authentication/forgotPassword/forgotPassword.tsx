@@ -15,20 +15,7 @@ const ForgotPassword: React.FC = () => {
       onSuccess: () => {
         message.success("تم إرسال تعليمات استعادة كلمة المرور إن وجد حساب مطابق");
       },
-      onError: (error: any) => {
-        console.error("Forgot password error:", error);
-        
-        // Handle different error scenarios
-        if (error.response?.status === 404) {
-          message.error("لا يوجد حساب مطابق لمدخلاتك");
-        } else if (error.response?.status === 422) {
-          message.error("يرجى التحقق من البيانات المدخلة");
-        } else if (error.response?.data?.message) {
-          message.error(error.response.data.message);
-        } else {
-          message.error("حدث خطأ أثناء إرسال طلب استعادة كلمة المرور. يرجى المحاولة مرة أخرى");
-        }
-      },
+     
     }
   );
 

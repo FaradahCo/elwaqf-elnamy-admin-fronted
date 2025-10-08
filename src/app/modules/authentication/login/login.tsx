@@ -24,20 +24,7 @@ const Login: React.FC = () => {
         // Navigate to home page or dashboard
         navigate("/provider/home");
       },
-      onError: (error: any) => {
-        console.error("Login error:", error);
-        
-        // Handle different error scenarios
-        if (error.response?.status === 401) {
-          message.error("البريد الإلكتروني أو كلمة المرور غير صحيحة");
-        } else if (error.response?.status === 422) {
-          message.error("يرجى التحقق من البيانات المدخلة");
-        } else if (error.response?.data?.message) {
-          message.error(error.response.data.message);
-        } else {
-          message.error("حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى");
-        }
-      },
+     
     }
   );
 

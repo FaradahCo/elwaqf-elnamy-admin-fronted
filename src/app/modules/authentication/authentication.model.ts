@@ -37,3 +37,12 @@ export type ForgotPasswordPayload = {
 };
 
 export type ForgotPasswordResponse = {};
+
+export type ResetPasswordPayload = {
+  token: string;
+  password: string;
+  password_confirmation: string;
+  identifier?: string;
+};
+
+export type ResetPasswordResponse = {};

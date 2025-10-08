@@ -19,9 +19,7 @@ const Register: React.FC = () => {
     onSuccess: (res) => {
       message.success("تم التسجيل بنجاح!");
     },
-    onError: () => {
-      message.error("فشل في التسجيل. يرجى المحاولة مرة أخرى.");
-    },
+   
   });
 
   const onFinish = (_values: RegisterPayload) => {
