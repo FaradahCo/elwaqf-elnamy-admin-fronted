@@ -6,11 +6,11 @@ import ClientFooter from "../modules/client/components/clientFooter/clientFooter
 
 const ClientLayout = () => {
   return (
-    <Layout className="h-screen">
+    <Layout>
       <Header className="p-0! bg-white! py-2!">
         <ClientHeader />
       </Header>
-      <Content>
+      <Content className="min-h-screen!">
         <Outlet />
       </Content>
       <Footer className="p-0!">
