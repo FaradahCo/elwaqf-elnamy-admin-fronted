@@ -4,53 +4,40 @@ import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router";
 import { authenticationRoutePath } from "../authentication.routes";
 import { AuthenticationService } from "../authenticationService";
-import { useApiMutation } from "../../../shared/services/api";
-import type { LoginPayload } from "../authentication.model";
+import { useApiMutation } from "@services/api";
+import type { LoginPayload, LoginResponse } from "../authentication.model";
+import { providerRoutePath } from "../../provider/provider.routes";
+import { clientRoutePath } from "../../client/clientRoutes";
 
 const Login: React.FC = () => {
   const { message } = App.useApp();
   const navigate = useNavigate();
 
-  const loginMutation = useApiMutation<LoginPayload, any>(
+  const loginMutation = useApiMutation<LoginPayload, LoginResponse>(
     AuthenticationService.login,
     {
       onSuccess: (response) => {
-        // Store token in localStorage
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("user", JSON.stringify(response.user));
+
         message.success("تم تسجيل الدخول بنجاح!");
-        
-        // Navigate to home page or dashboard
-        navigate("/provider/home");
+        navigate(
+          response.user.type === "provider"
+            ? providerRoutePath.PROFILE
+            : clientRoutePath.PROFILE
+        );
       },
-     
     }
   );
 
-  const onFinish = (values: { identifier: string; password: string }) => {
-    const loginData: LoginPayload = {
-      identifier: values.identifier,
-      password: values.password,
-    };
-    
-    loginMutation.mutate(loginData);
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
-    message.error("يرجى التحقق من البيانات المدخلة");
+  const onFinish = (values: LoginPayload) => {
+    loginMutation.mutate(values);
   };
 
   return (
     <>
-      <Form
-        layout="vertical"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
-        <Form.Item
+      <Form layout="vertical" onFinish={onFinish} autoComplete="off">
+        <Form.Item<LoginPayload>
           label="البريد الإلكتروني او رقم الجوال"
           name="identifier"
           rules={[
@@ -77,7 +64,7 @@ const Login: React.FC = () => {
           />
         </Form.Item>
 
-        <Form.Item
+        <Form.Item<LoginPayload>
           label="كلمة المرور"
           name="password"
           rules={[

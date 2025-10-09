@@ -1,9 +1,10 @@
-import axios from "axios";
+import { message } from "antd";
 import type {
-  AxiosResponse,
   AxiosError,
+  AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
+import axios from "axios";
 import environment from "./app/enviroments/environemnt.dev";
 
 // Define response type structure
@@ -24,30 +25,47 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem("token");
+    const teamId = localStorage.getItem("teamId");
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    if (teamId) {
+      config.headers["X-Team-Id"] = teamId;
+    }
+
+    // Inject API key
+    config.headers["X-API-Key"] = "Tpvra20!3o#ynyq";
+
     return config;
   },
   (error: AxiosError) => {
-    return Promise.reject(error);
+    return Promise.reject(error.response);
   }
 );
 
 // Response interceptor
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-    return response;
+    return response.data;
   },
-  (error: AxiosError) => {
+  (error) => {
     switch (error.response?.status) {
       case 401:
         localStorage.removeItem("token");
-        window.location.href = "/auth";
+        // window.location.href = "/auth";
         break;
       case 403:
         break;
       case 404:
+        break;
+      case 422:
+        message.error(error.response?.data?.message || error.message);
+        break;
+
+      case 429:
+        message.error(error.response?.data?.message || error.message);
         break;
       case 500:
         break;

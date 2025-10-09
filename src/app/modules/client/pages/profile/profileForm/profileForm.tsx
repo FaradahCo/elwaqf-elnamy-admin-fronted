@@ -1,4 +1,4 @@
-import BreadCrumbComponent from "../../../../../shared/components/breadcrumb/breadcrumb";
+import BreadCrumbComponent from "@components/breadcrumb/breadcrumb";
 import { Button, Form, Input } from "antd";
 import { SaveOutlined, CloseOutlined } from "@ant-design/icons";
 

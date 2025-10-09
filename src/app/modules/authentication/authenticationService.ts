@@ -1,17 +1,23 @@
-import AoiService from "../../shared/services/api";
-import type { RegisterPayload, RegisterResponse, LoginPayload, LoginResponse, ForgotPasswordPayload, ForgotPasswordResponse, ResetPasswordPayload, ResetPasswordResponse } from "./authentication.model";
+import AoiService from "@services/api";
+import type {
+  RegisterPayload,
+  RegisterResponse,
+  LoginPayload,
+  LoginResponse,
+  ForgotPasswordPayload,
+  ForgotPasswordResponse,
+  ResetPasswordPayload,
+  ResetPasswordResponse,
+} from "./authentication.model";
 
 export const AuthenticationService = {
   login: async (data: LoginPayload) => {
-    return AoiService.post<LoginPayload, LoginResponse>(
-      "/auth/login",
-      data
-    );
+    return AoiService.post<LoginPayload, LoginResponse>("/auth/login", data);
   },
 
-  register: async (data: RegisterPayload) => {
+  register: async (data: RegisterPayload, type: string = "provider") => {
     return AoiService.post<RegisterPayload, RegisterResponse>(
-      "/provider/register",
+      type === "provider" ? "/provider/register" : "client/register",
       data
     );
   },

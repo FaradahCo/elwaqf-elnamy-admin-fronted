@@ -1,5 +1,10 @@
 import { Dropdown, Avatar } from "antd";
-import { UserOutlined, DownOutlined, MenuOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  DownOutlined,
+  MenuOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 import { useState } from "react";
 import { Link } from "react-router";
 import MobileMenu from "./mobileMenu";
@@ -28,7 +33,8 @@ const ClientHeader = () => {
     {
       key: "2",
       label: (
-        <Link to="/settings" className="flex items-center gap-2">
+        <Link to="/profile" className="flex items-center gap-2">
+          <SettingOutlined />
           الإعدادات
         </Link>
       ),

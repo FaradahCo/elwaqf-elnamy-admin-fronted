@@ -8,4 +8,12 @@ export default defineConfig({
   css: {
     postcss: "./postcss.config.js",
   },
+  resolve: {
+    alias: {
+      "@shared": "/src/app/shared",
+      "@components": "/src/app/shared/components",
+      "@services": "/src/app/shared/services",
+      "@": "/src",
+    },
+  },
 });

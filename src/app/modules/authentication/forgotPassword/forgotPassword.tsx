@@ -1,30 +1,65 @@
-import React from "react";
+import PhoneNumber from "@shared/components/phone-number/phone-number";
 import { App, Button, Form, Input } from "antd";
-import { Link } from "react-router";
+import React, { useState } from "react";
+import { isValidPhoneNumber } from "react-phone-number-input";
+import { Link, useNavigate } from "react-router";
+import { useApiMutation } from "../../../shared/services/api";
+import type {
+  ForgotPasswordPayload,
+  ForgotPasswordResponse,
+} from "../authentication.model";
 import { authenticationRoutePath } from "../authentication.routes";
 import { AuthenticationService } from "../authenticationService";
-import { useApiMutation } from "../../../shared/services/api";
-import type { ForgotPasswordPayload } from "../authentication.model";
+import VerifyOtp from "../verifyOTP/verifyOTP";
+import { setItem } from "@shared/services/storageService";
 
 const ForgotPassword: React.FC = () => {
+  const [form] = Form.useForm<ForgotPasswordPayload>();
+
+  const initialValues = {
+    identifier: "",
+    region: "sa",
+  };
   const { message } = App.useApp();
+  const navigate = useNavigate();
+  const [showVerifyOTP, setShowVerifyOTP] = React.useState(false);
+  const [verifedtoken, setVerifedToken] = React.useState<string>("");
+  const [verificationChannelType, setVerificationChannelType] =
+    useState<string>("phone");
 
-  const forgotPasswordMutation = useApiMutation<ForgotPasswordPayload, any>(
-    AuthenticationService.forgotPassword,
-    {
-      onSuccess: () => {
-        message.success("تم إرسال تعليمات استعادة كلمة المرور إن وجد حساب مطابق");
-      },
-     
-    }
-  );
+  const forgotPasswordMutation = useApiMutation<
+    ForgotPasswordPayload,
+    ForgotPasswordResponse
+  >(AuthenticationService.forgotPassword, {
+    onSuccess: (res) => {
+      message.success("تم إرسال تعليمات استعادة كلمة المرور إن وجد حساب مطابق");
+      setVerifedToken(res.token);
+      setShowVerifyOTP(true);
+    },
+  });
 
-  const onFinish = (values: { identifier: string }) => {
-    const forgotPasswordData: ForgotPasswordPayload = {
-      identifier: values.identifier,
-    };
-    
-    forgotPasswordMutation.mutate(forgotPasswordData);
+  const handelOnVerifed = () => {
+    setShowVerifyOTP(false);
+    setItem("identifier", form.getFieldValue("identifier"));
+    setItem("region", form.getFieldValue("region"));
+    navigate(authenticationRoutePath.RESET_PASSWORD + `?token=${verifedtoken}`);
+  };
+
+  const handlePhoneNumberChange = (phoneNumber?: string, country?: string) => {
+    form.setFieldsValue({
+      identifier: phoneNumber,
+      region: country,
+    });
+  };
+
+  const handelChangeChannel = (channel: string) => {
+    form.resetFields();
+    setVerificationChannelType(channel);
+    setShowVerifyOTP(false);
+  };
+
+  const onFinish = (values: ForgotPasswordPayload) => {
+    forgotPasswordMutation.mutate(values);
   };
 
   const onFinishFailed = () => {
@@ -33,60 +68,104 @@ const ForgotPassword: React.FC = () => {
 
   return (
     <>
-      <Form
-        layout="vertical"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="البريد الإلكتروني او رقم الجوال"
-          name="identifier"
-          rules={[
-            {
-              required: true,
-              message: "يرجى إدخال البريد الإلكتروني او رقم الجوال",
-            },
-            {
-              validator: (_, value) => {
-                if (!value) return Promise.resolve();
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                const phoneRegex = /^[0-9+\-()\s]{6,}$/;
-                return emailRegex.test(value) || phoneRegex.test(value)
-                  ? Promise.resolve()
-                  : Promise.reject("يرجى إدخال بريد إلكتروني أو رقم جوال صحيح");
-              },
-            },
-          ]}
+      {showVerifyOTP ? (
+        <VerifyOtp
+          openedForm="forgotPassword"
+          functionMutation={handelOnVerifed}
+          changeChannel={(channel: string) => handelChangeChannel(channel)}
+          virfedChannelType={verificationChannelType}
+          data={{
+            email: form.getFieldValue("identifier"),
+            phone: form.getFieldValue("identifier"),
+            region: form.getFieldValue("region"),
+          }}
+        />
+      ) : (
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+          initialValues={initialValues}
         >
-          <Input
-            placeholder="ادخل بريدك الإلكتروني او رقم الجوال"
-            size="large"
-            className="text-right"
-          />
-        </Form.Item>
+          {verificationChannelType === "email" ? (
+            <Form.Item<ForgotPasswordPayload>
+              label="البريد الإلكتروني"
+              name="identifier"
+              rules={[
+                {
+                  required: true,
+                  message: "يرجى إدخال البريد الإلكتروني",
+                },
+                {
+                  type: "email",
+                  message: "يرجى إدخال بريد إلكتروني صحيح",
+                },
+              ]}
+            >
+              <Input
+                placeholder="ادخل بريدك الإلكتروني"
+                size="large"
+                className="text-right"
+              />
+            </Form.Item>
+          ) : (
+            <Form.Item<ForgotPasswordPayload>
+              name="identifier"
+              label="رقم الجوال"
+              rules={[
+                {
+                  required: true,
+                  message: "يرجى إدخال رقم الجوال",
+                },
+                {
+                  validator: (_, value) => {
+                    return new Promise<void>((resolve, reject) => {
+                      if (value && !isValidPhoneNumber(value)) {
+                        reject(new Error("يرجى إدخال رقم جوال صحيح"));
+                      } else {
+                        resolve();
+                      }
+                    });
+                  },
+                },
+              ]}
+            >
+              <PhoneNumber
+                onChange={handlePhoneNumberChange}
+                placeholder="ادخل رقم جوالك"
+              />
+            </Form.Item>
+          )}
 
-        <p className="mt-2 mb-4">
-          تذكرت كلمة المرور؟
-          <Link className="text-primary!" to={authenticationRoutePath.LOGIN}>
-            {" "}
-            العودة لتسجيل الدخول
-          </Link>
-        </p>
+          {/* Hidden field to store region */}
+          <Form.Item<ForgotPasswordPayload> name="region" hidden>
+            <Input />
+          </Form.Item>
 
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            size="large"
-            className="w-full mt-4"
-            loading={forgotPasswordMutation.isPending}
-            disabled={forgotPasswordMutation.isPending}
-          >
-            {forgotPasswordMutation.isPending ? "جاري الإرسال..." : "إرسال رابط/رمز الاستعادة"}
-          </Button>
-        </Form.Item>
-      </Form>
+          <p className="mt-2 mb-4">
+            تذكرت كلمة المرور؟
+            <Link className="text-primary!" to={authenticationRoutePath.LOGIN}>
+              {" "}
+              العودة لتسجيل الدخول
+            </Link>
+          </p>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              size="large"
+              className="w-full mt-4"
+              loading={forgotPasswordMutation.isPending}
+              disabled={forgotPasswordMutation.isPending}
+            >
+              إرسال رابط/رمز الاستعادة
+            </Button>
+          </Form.Item>
+        </Form>
+      )}
     </>
   );
 };

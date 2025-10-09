@@ -3,34 +3,43 @@ import { App, Button, Form, Input } from "antd";
 import { useNavigate, useSearchParams } from "react-router";
 import { useApiMutation } from "../../../shared/services/api";
 import { AuthenticationService } from "../authenticationService";
-import type { ResetPasswordPayload, ResetPasswordResponse } from "../authentication.model";
+import type {
+  ResetPasswordPayload,
+  ResetPasswordResponse,
+} from "../authentication.model";
 import { authenticationRoutePath } from "../authentication.routes";
+import { getItem, removeItem } from "../../../shared/services/storageService";
 
 const ResetPassword: React.FC = () => {
   const { message } = App.useApp();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const queryToken = useMemo(() => searchParams.get("token") ?? "", [searchParams]);
-  const queryIdentifier = useMemo(() => searchParams.get("identifier") ?? "", [searchParams]);
-
-  const resetMutation = useApiMutation<ResetPasswordPayload, ResetPasswordResponse>(
-    AuthenticationService.resetPassword,
-    {
-      onSuccess: () => {
-        message.success("تم تعيين كلمة المرور بنجاح");
-        navigate(authenticationRoutePath.LOGIN);
-      },
-     
-    }
+  const queryToken = useMemo(
+    () => searchParams.get("token") ?? "",
+    [searchParams]
   );
 
-  const onFinish = (values: { password: string; password_confirmation: string }) => {
+  const resetMutation = useApiMutation<
+    ResetPasswordPayload,
+    ResetPasswordResponse
+  >(AuthenticationService.resetPassword, {
+    onSuccess: () => {
+      message.success("تم تعيين كلمة المرور بنجاح");
+      removeItem("identifier");
+      navigate(authenticationRoutePath.LOGIN);
+    },
+  });
+
+  const onFinish = (values: {
+    password: string;
+    password_confirmation: string;
+  }) => {
     const payload: ResetPasswordPayload = {
       token: queryToken,
-      password: values.password,
-      password_confirmation: values.password_confirmation,
-      identifier: queryIdentifier || undefined,
+      identifier: getItem("identifier")!,
+      region: getItem("region") || "sa",
+      ...values,
     };
     resetMutation.mutate(payload);
   };
@@ -47,11 +56,13 @@ const ResetPassword: React.FC = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-
         <Form.Item
           label="كلمة المرور الجديدة"
           name="password"
-          rules={[{ required: true, message: "يرجى إدخال كلمة المرور" }, { min: 8, message: "الحد الأدنى 8 أحرف" }]}
+          rules={[
+            { required: true, message: "يرجى إدخال كلمة المرور" },
+            { min: 8, message: "الحد الأدنى 8 أحرف" },
+          ]}
           hasFeedback
         >
           <Input.Password size="large" className="text-right" />
@@ -86,7 +97,9 @@ const ResetPassword: React.FC = () => {
             loading={resetMutation.isPending}
             disabled={resetMutation.isPending}
           >
-            {resetMutation.isPending ? "جاري الحفظ..." : "إعادة تعيين كلمة المرور"}
+            {resetMutation.isPending
+              ? "جاري الحفظ..."
+              : "إعادة تعيين كلمة المرور"}
           </Button>
         </Form.Item>
       </Form>
@@ -95,5 +108,3 @@ const ResetPassword: React.FC = () => {
 };
 
 export default ResetPassword;
-
-

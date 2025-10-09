@@ -5,7 +5,7 @@ import { Outlet } from "react-router";
 const AuthenticationLayout: React.FC = () => (
   <Row className="h-screen">
     <Col xs={24} md={10} order={1} className="md:order-1">
-      <div className="bg-second-rimary flex flex-col gap-4 justify-center items-center h-48 md:h-screen">
+      <div className="bg-second-primary! flex flex-col gap-4 justify-center items-center md:h-screen">
         <img
           src="/images/logo.svg"
           className="w-32 md:w-80 mb-4 md:mb-10"

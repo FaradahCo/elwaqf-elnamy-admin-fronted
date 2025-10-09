@@ -1,4 +1,4 @@
-import BreadCrumbComponent from "../../../../../shared/components/breadcrumb/breadcrumb";
+import BreadCrumbComponent from "@components/breadcrumb/breadcrumb";
 import { Button } from "antd";
 import { EditOutlined, LockOutlined } from "@ant-design/icons";
 

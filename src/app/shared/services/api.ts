@@ -23,8 +23,9 @@ const AoiService = {
   post: async <TInput, TResponse>(
     url: string,
     data?: TInput
-  ): Promise<ApiResponse<TResponse>> => {
-    const res = await axiosInstance.post<ApiResponse<TResponse>>(url, data);
+  ): Promise<TResponse> => {
+    const res = await axiosInstance.post<TResponse>(url, data);
+    console.log("POST response:", res);
     return res.data;
   },
 

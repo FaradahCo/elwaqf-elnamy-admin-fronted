@@ -9,7 +9,10 @@ export type RegisterPayload = {
   channel?: string;
 };
 
-export type RegisterResponse = {};
+export type RegisterResponse = {
+  token?: string;
+  user?: User;
+};
 
 export type SendOTPPayload = {
   identifier?: string;
@@ -20,7 +23,8 @@ export type SendOTPPayload = {
 export type VerifyOTPPayload = {
   identifier?: string;
   channel?: string;
-  otp?: number;
+  otp?: string | number;
+  region?: string;
 };
 
 export type VerifyOTPResponse = {};
@@ -30,19 +34,54 @@ export type LoginPayload = {
   password: string;
 };
 
-export type LoginResponse = {};
+export type LoginResponse = {
+  token: string;
+  user: User;
+};
 
 export type ForgotPasswordPayload = {
   identifier: string;
+  region?: string;
+  channel?: string;
 };
 
-export type ForgotPasswordResponse = {};
+export type ForgotPasswordResponse = {
+  token: string;
+};
 
 export type ResetPasswordPayload = {
   token: string;
   password: string;
   password_confirmation: string;
   identifier?: string;
+  region?: string;
 };
 
 export type ResetPasswordResponse = {};
+
+export type User = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  region: string;
+  type: string;
+  status: string;
+  image: string;
+  last_login_at: string;
+  teams: TemplateStringsArray;
+};
+
+export type Team = {
+  id: number;
+  name: string;
+  type: string;
+  created_at: string;
+};
+
+// API error response types
+export type ApiErrorResponse = {
+  message?: string;
+  errors?: Record<string, string | string[]>;
+  status?: number;
+};

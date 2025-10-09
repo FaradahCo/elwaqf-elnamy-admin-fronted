@@ -22,7 +22,15 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Path mapping for absolute imports */
+    "paths": {
+      "@shared/*": ["./src/app/shared/*"],
+      "@components/*": ["./src/app/shared/components/*"],
+      "@services/*": ["./src/app/shared/services/*"],
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"]
 }

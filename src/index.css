@@ -31,3 +31,11 @@
   clear: var(--color-second-rimary);
   font-weight: 700;
 }
+.PhoneInput {
+  direction: ltr;
+}
+
+.PhoneInputInput {
+  direction: inherit;
+  text-align: right;
+}
