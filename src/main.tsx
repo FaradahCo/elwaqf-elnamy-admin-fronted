@@ -1,5 +1,6 @@
 import "@ant-design/v5-patch-for-react-19";
 import { ConfigProvider, App as AntApp } from "antd";
+import arEG from "antd/locale/ar_EG";
 import { createRoot } from "react-dom/client";
 import App from "./app/App";
 import "./index.css";
@@ -21,12 +22,15 @@ const theme = {
     Collapse: {
       borderRadiusLG: 0,
     },
+    Steps: {
+      colorPrimary: "#150941",
+    },
   },
 };
 
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
-    <ConfigProvider theme={theme}>
+    <ConfigProvider theme={theme} locale={arEG} direction="rtl">
       <AntApp>
         <App />
       </AntApp>

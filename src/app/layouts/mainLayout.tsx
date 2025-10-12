@@ -37,7 +37,7 @@ const MainLayout: React.FC = () => {
       key: "3",
       icon: <UploadOutlined />,
       label: "إدارة الخدمات",
-      path: "/",
+      path: "/provider/services-management",
     },
     {
       key: "4",

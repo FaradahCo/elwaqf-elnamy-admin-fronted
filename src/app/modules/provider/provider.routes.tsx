@@ -1,5 +1,6 @@
 import type { RouteObject } from "react-router";
 import MainLayout from "../../layouts/mainLayout";
+import { ServicesManagementRoutes } from "./pages/services-management/servisesManagements.routes";
 
 export const providerRoutes: RouteObject[] = [
   {
@@ -20,10 +21,16 @@ export const providerRoutes: RouteObject[] = [
             Component: module.default,
           })),
       },
+      {
+        path: "services-management",
+        children: ServicesManagementRoutes,
+      },
     ],
   },
 ];
 
 export const providerRoutePath = {
   PROFILE: "/provider/profile",
+  SERVICES_MANAGEMENT: "/provider/services-management",
+  ADD_SERVICE: "/provider/services-management/add-service",
 };
