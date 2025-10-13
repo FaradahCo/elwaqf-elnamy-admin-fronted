@@ -14,10 +14,10 @@ const ClientHeader = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navigationItems = [
-    "عن الوقف النامي",
-    "الإستشارة",
-    "الخدمات",
-    "الباقات",
+    { label: "عن الوقف النامي", path: "#" },
+    { label: "الإستشارة", path: "#" },
+    { label: "الخدمات", path: clientRoutePath.SERVICES },
+    { label: "الباقات", path: clientRoutePath.PACKAGES },
   ];
 
   const profileMenuItems = [
@@ -68,7 +68,7 @@ const ClientHeader = () => {
           {navigationItems.map((item, index) => (
             <Link
               key={index}
-              to="#"
+              to={item.path}
               className="font-medium transition-colors cursor-pointer text-sm xl:text-base"
               style={{
                 color: "var(--color-second-primary)",
@@ -80,7 +80,7 @@ const ClientHeader = () => {
                 e.currentTarget.style.color = "var(--color-second-primary)";
               }}
             >
-              {item}
+              {item.label}
             </Link>
           ))}
         </nav>

@@ -1,10 +1,15 @@
 import { Drawer } from "antd";
 import { Link } from "react-router";
 
+interface NavigationItem {
+  label: string;
+  path: string;
+}
+
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  navigationItems: string[];
+  navigationItems: NavigationItem[];
 }
 
 const MobileMenu = ({ isOpen, onClose, navigationItems }: MobileMenuProps) => {
@@ -23,7 +28,7 @@ const MobileMenu = ({ isOpen, onClose, navigationItems }: MobileMenuProps) => {
           {navigationItems.map((item, index) => (
             <Link
               key={index}
-              to="#"
+              to={item.path}
               className="font-medium transition-colors cursor-pointer text-lg py-2 border-b border-gray-100"
               style={{
                 color: "var(--color-second-primary)",
@@ -36,7 +41,7 @@ const MobileMenu = ({ isOpen, onClose, navigationItems }: MobileMenuProps) => {
               }}
               onClick={onClose}
             >
-              {item}
+              {item.label}
             </Link>
           ))}
         </nav>
