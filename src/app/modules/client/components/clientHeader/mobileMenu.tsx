@@ -13,7 +13,6 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = ({ isOpen, onClose, navigationItems }: MobileMenuProps) => {
-  console.log("RENDERING MOBILE MENU"!!);
   return (
     <Drawer
       title="القائمة"

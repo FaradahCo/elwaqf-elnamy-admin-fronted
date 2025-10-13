@@ -19,4 +19,20 @@ export const ServicesManagementRoutes: RouteObject[] = [
         })
       ),
   },
+  {
+    path: "edit-service/:serviceId",
+    lazy: () =>
+      import("./pages/servicesManagementForm/servicesManagementForm").then(
+        (module) => ({
+          Component: module.default,
+        })
+      ),
+  },
 ];
+
+export const servicesManagementsPaths = {
+  BASE: "/provider/services-management",
+  ADD_SERVICE: "/provider/services-management/add-service",
+  EDIT_SERVICE: (serviceId: number) =>
+    `/provider/services-management/edit-service/${serviceId}`,
+};

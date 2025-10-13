@@ -1,6 +1,7 @@
 import { providerRoutePath } from "@/app/modules/provider/provider.routes";
 import { Button } from "antd";
 import { useNavigate } from "react-router";
+import { servicesManagementsPaths } from "../../servisesManagements.routes";
 
 const ServcieManagementList = () => {
   const navigation = useNavigate();
@@ -12,7 +13,11 @@ const ServcieManagementList = () => {
       >
         إضافة حدمة
       </Button>
-      <Button>إضافه باقة</Button>
+      <Button
+        onClick={() => navigation(servicesManagementsPaths.EDIT_SERVICE(1))}
+      >
+        إضافه باقة
+      </Button>
     </div>
   );
 };

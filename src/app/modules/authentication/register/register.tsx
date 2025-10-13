@@ -82,10 +82,6 @@ const Register: React.FC = () => {
                 required: true,
                 message: "يرجى إدخال الاسم الثلاثي",
               },
-              {
-                min: 3,
-                message: "الاسم يجب أن يكون 3 أحرف على الأقل",
-              },
             ]}
           >
             <Input

@@ -17,7 +17,7 @@ const AoiService = {
         indexes: null,
       },
     });
-    return res as TResponse;
+    return res.data as TResponse;
   },
 
   post: async <TInput, TResponse>(
@@ -25,7 +25,6 @@ const AoiService = {
     data?: TInput
   ): Promise<TResponse> => {
     const res = await axiosInstance.post<TResponse>(url, data);
-    console.log("POST response:", res);
     return res.data;
   },
 

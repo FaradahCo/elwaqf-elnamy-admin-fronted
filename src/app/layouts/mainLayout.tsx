@@ -1,15 +1,14 @@
-import { theme, Layout, Menu, Button } from "antd";
+import { theme, Layout, Menu } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import React, { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
+import ProviderHeader from "../modules/provider/components/providerHeader/providerHeader";
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -104,16 +103,10 @@ const MainLayout: React.FC = () => {
         />
       </Sider>
       <Layout>
-        <Header className="bg-white! p-0!">
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
-            }}
+        <Header className="bg-white! p-0! px-4">
+          <ProviderHeader
+            collapsed={collapsed}
+            onToggleCollapse={() => setCollapsed(!collapsed)}
           />
         </Header>
         <Content

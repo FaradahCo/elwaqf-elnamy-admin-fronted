@@ -134,7 +134,7 @@ const ForgotPassword: React.FC = () => {
             >
               <PhoneNumber
                 onChange={handlePhoneNumberChange}
-                placeholder="ادخل رقم جوالك"
+                placeholder=" ادخل رقم جوالك"
               />
             </Form.Item>
           )}

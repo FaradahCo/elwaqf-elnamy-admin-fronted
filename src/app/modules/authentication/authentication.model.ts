@@ -69,7 +69,7 @@ export type User = {
   status: string;
   image: string;
   last_login_at: string;
-  teams: TemplateStringsArray;
+  teams: Team[];
 };
 
 export type Team = {
