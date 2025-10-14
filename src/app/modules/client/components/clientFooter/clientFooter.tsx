@@ -1,6 +1,6 @@
 const ClientFooter = () => {
   return (
-    <div className="bg-gray-800 text-white p-8">
+    <div className="bg-second-primary text-white p-8">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-7xl mx-auto">
         {/* First Column - Logo and Social Media */}
         <div className="flex flex-col items-center md:items-start">
