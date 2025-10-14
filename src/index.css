@@ -56,8 +56,31 @@
     background-color: var(--color-primary) !important;
     color: white !important;
   }
+}
 
-  .ant-menu-item-selected:hover .anticon {
-    color: white !important;
-  }
+.services-steps .ant-steps-item::after {
+  top: calc(50% - 13px) !important;
+}
+
+.services-steps .ant-steps.ant-steps-navigation {
+  background-color: #fff !important;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.06);
+}
+
+.services-steps
+  :where(.css-dev-only-do-not-override-1by1pcp).ant-steps.ant-steps-navigation
+  .ant-steps-item::before {
+  display: none;
+}
+
+.services-steps .ant-steps-item-container {
+  padding-bottom: 0 !important;
+}
+
+.main-radio .ant-radio-button-wrapper-checked {
+  background-color: var(--color-second-primary);
+  border-color: var(--color-second-primary);
+  color: white;
 }

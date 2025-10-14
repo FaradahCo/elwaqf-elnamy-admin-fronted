@@ -43,6 +43,7 @@ const PhoneNumber: React.FC<PhoneNumberProps> = ({
         value={value as any}
         onChange={handleChange}
         placeholder={placeholder}
+        countries={["SA"]}
         defaultCountry={defaultCountry as any}
         disabled={disabled}
         style={{

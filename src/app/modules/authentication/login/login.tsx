@@ -8,19 +8,25 @@ import { useApiMutation } from "@services/api";
 import type { LoginPayload, LoginResponse } from "../authentication.model";
 import { providerRoutePath } from "../../provider/provider.routes";
 import { clientRoutePath } from "../../client/clientRoutes";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/app/store/slices/userSlice";
+import { setItem } from "@shared/services/storageService";
 
 const Login: React.FC = () => {
   const { message } = App.useApp();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const loginMutation = useApiMutation<LoginPayload, LoginResponse>(
     AuthenticationService.login,
     {
       onSuccess: (response) => {
-        localStorage.setItem("token", response.token);
-        localStorage.setItem("user", JSON.stringify(response.user));
-
         message.success("تم تسجيل الدخول بنجاح!");
+
+        setItem("token", response.token);
+        setItem("teamId", String(response.user.teams[0]?.id));
+        dispatch(setUser(response.user));
+
         navigate(
           response.user.type === "provider"
             ? providerRoutePath.PROFILE
@@ -38,12 +44,12 @@ const Login: React.FC = () => {
     <>
       <Form layout="vertical" onFinish={onFinish} autoComplete="off">
         <Form.Item<LoginPayload>
-          label="البريد الإلكتروني او رقم الجوال"
+          label="البريد الإلكتروني او رقم الجوال "
           name="identifier"
           rules={[
             {
               required: true,
-              message: "يرجى إدخال البريد الإلكتروني او رقم الجوال",
+              message: "يرجى إدخال البريد الإلكتروني او رقم الجوال ",
             },
             {
               validator: (_, value) => {

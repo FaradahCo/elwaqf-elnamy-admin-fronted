@@ -27,7 +27,6 @@ export const setFormFieldErrors = <T = any>(
   errorResponse: any
 ): void => {
   const fieldErrors = handleFormErrors<T>(errorResponse);
-  console.log("Setting form field errors:", fieldErrors);
 
   if (fieldErrors.length > 0) {
     form.setFields(fieldErrors);

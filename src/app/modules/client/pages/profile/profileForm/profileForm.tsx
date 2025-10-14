@@ -11,9 +11,7 @@ const ProfileForm = ({ onCancel }: ProfileFormProps) => {
 
   const handleSave = async () => {
     try {
-      const values = await form.validateFields();
-      console.log("Form values:", values);
-      // Here you would typically save the data to your API
+      // const values = await form.validateFields();
       onCancel(); // Close the form after saving
     } catch (error) {
       console.log("Validation failed:", error);
