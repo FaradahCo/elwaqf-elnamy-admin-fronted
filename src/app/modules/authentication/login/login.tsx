@@ -13,7 +13,6 @@ import { setUser } from "@/app/store/slices/userSlice";
 import { setItem } from "@shared/services/storageService";
 
 const Login: React.FC = () => {
-  const { message } = App.useApp();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -21,8 +20,6 @@ const Login: React.FC = () => {
     AuthenticationService.login,
     {
       onSuccess: (response) => {
-        message.success("تم تسجيل الدخول بنجاح!");
-
         setItem("token", response.token);
         setItem("teamId", String(response.user.teams[0]?.id));
         dispatch(setUser(response.user));

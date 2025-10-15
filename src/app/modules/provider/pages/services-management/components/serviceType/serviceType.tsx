@@ -1,8 +1,11 @@
 import { Form, Radio } from "antd";
 import type { CheckboxGroupProps } from "antd/es/checkbox";
-import type { ServiceFormData } from "../../servicesManagement.model";
+import type {
+  ServiceFormData,
+  FormnProps,
+} from "../../servicesManagement.model";
 
-const ServiceType = () => {
+const ServiceType = ({ form }: FormnProps) => {
   const options: CheckboxGroupProps<string>["options"] = [
     { label: "إضافة خدمة", value: "service" },
     { label: "إضافة باقة", value: "package" },

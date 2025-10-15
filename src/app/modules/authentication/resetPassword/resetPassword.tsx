@@ -11,7 +11,6 @@ import { authenticationRoutePath } from "../authentication.routes";
 import { getItem, removeItem } from "../../../shared/services/storageService";
 
 const ResetPassword: React.FC = () => {
-  const { message } = App.useApp();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -25,7 +24,6 @@ const ResetPassword: React.FC = () => {
     ResetPasswordResponse
   >(AuthenticationService.resetPassword, {
     onSuccess: () => {
-      message.success("تم تعيين كلمة المرور بنجاح");
       removeItem("identifier");
       navigate(authenticationRoutePath.LOGIN);
     },
@@ -44,18 +42,9 @@ const ResetPassword: React.FC = () => {
     resetMutation.mutate(payload);
   };
 
-  const onFinishFailed = () => {
-    message.error("يرجى التحقق من البيانات المدخلة");
-  };
-
   return (
     <>
-      <Form
-        layout="vertical"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
+      <Form layout="vertical" onFinish={onFinish} autoComplete="off">
         <Form.Item
           label="كلمة المرور الجديدة"
           name="password"

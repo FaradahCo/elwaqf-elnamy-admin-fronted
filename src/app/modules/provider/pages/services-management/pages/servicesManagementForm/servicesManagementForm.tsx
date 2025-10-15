@@ -21,6 +21,40 @@ const ServicesManagementForm = () => {
   const navigate = useNavigate();
   const { serviceId } = useParams();
 
+  // Watch for form type changes
+  const formType = Form.useWatch("type", form);
+
+  // Get appropriate labels based on form type
+  const getLabels = (type: string) => {
+    return type === "package"
+      ? {
+          entity: "الباقة",
+          entityPlural: "الباقات",
+          entityGenitive: "الباقة",
+          entityAccusative: "باقة",
+        }
+      : {
+          entity: "الخدمة",
+          entityPlural: "الخدمات",
+          entityGenitive: "الخدمة",
+          entityAccusative: "خدمة",
+        };
+  };
+
+  const labels = getLabels(formType || formData.type || "service");
+
+  // Get dynamic step titles based on current type
+  const getStepTitles = () => {
+    const entity = labels.entityGenitive;
+    return [
+      { title: "اختيار نوع الإضافة" },
+      { title: "المعلومات الأساسية" },
+      { title: `مدة ${entity} والمبلغ` },
+      { title: "متطلبات الاستفادة" },
+      { title: "المراجعة والإرسال" },
+    ];
+  };
+
   const handleStepData = (stepData: Partial<ServiceFormData>) => {
     setFormData((prev) => ({ ...prev, ...stepData }));
   };
@@ -53,9 +87,6 @@ const ServicesManagementForm = () => {
     },
     {
       onSuccess: () => {
-        message.success(
-          serviceId ? "تم تحديث الخدمة بنجاح" : "تم إنشاء الخدمة بنجاح"
-        );
         form.resetFields();
         navigate(providerRoutePath.SERVICES_MANAGEMENT);
       },
@@ -77,15 +108,23 @@ const ServicesManagementForm = () => {
 
   useLayoutEffect(() => {
     if (serviceData) {
-      console.log("serviceData", serviceData);
+      // Ensure order property exists for existing items, add it if missing
+      const ensureOrder = (items: any[] | undefined) => {
+        if (!items) return [];
+        return items.map((item, index) => ({
+          ...item,
+          order: item.order || index + 1,
+        }));
+      };
+
       const serviceDataUpdate: ServiceFormData = {
         type: serviceData.type,
         title: serviceData.title,
         field_id: serviceData.field?.id!,
         description: serviceData.description,
-        outputs: serviceData?.outputs || [],
-        requirements: serviceData?.requirements || [],
-        scopes: serviceData?.scopes || [],
+        outputs: ensureOrder(serviceData?.outputs),
+        requirements: ensureOrder(serviceData?.requirements),
+        scopes: ensureOrder(serviceData?.scopes),
         duration_type: serviceData?.duration?.type,
         duration_time: Number(serviceData?.duration?.time),
         min_price: Number(serviceData.min_price),
@@ -123,17 +162,22 @@ const ServicesManagementForm = () => {
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
-        return <ServiceType />;
+        return <ServiceType form={form} />;
       case 1:
-        return <MainInformation form={form} />;
+        return <MainInformation form={form} labels={labels} />;
       case 2:
-        return <ServiceTime />;
+        return <ServiceTime form={form} labels={labels} />;
       case 3:
-        return <UserRequiremnts form={form} />;
+        return <UserRequiremnts form={form} labels={labels} />;
       case 4:
-        return <Reviews />;
+        return (
+          <Reviews
+            formData={{ ...formData, ...form.getFieldsValue() }}
+            labels={labels}
+          />
+        );
       default:
-        return <ServiceType />;
+        return <ServiceType form={form} />;
     }
   };
 
@@ -144,23 +188,7 @@ const ServicesManagementForm = () => {
         type="navigation"
         current={currentStep}
         onChange={setCurrentStep}
-        items={[
-          {
-            title: "اختيار نوع الإضافة",
-          },
-          {
-            title: "المعلومات الأساسية",
-          },
-          {
-            title: "مدة الخدمة والمبلغ",
-          },
-          {
-            title: "متطلبات الاستفادة",
-          },
-          {
-            title: "المراجعة والإرسال",
-          },
-        ]}
+        items={getStepTitles()}
       />
 
       <div className="mt-2 bg-white p-4 shadow-md rounded-2xl">

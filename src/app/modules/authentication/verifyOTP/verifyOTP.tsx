@@ -34,7 +34,6 @@ const VerifyOtp: React.FC<VerifyOtpProps> = ({
     AuthenticationService.verifyOtp,
     {
       onSuccess: (_) => {
-        message.success("تم التحقق من الرمز بنجاح!");
         if (openedForm === "forgotPassword") {
           functionMutation();
         } else {
@@ -52,7 +51,6 @@ const VerifyOtp: React.FC<VerifyOtpProps> = ({
     AuthenticationService.sendOtp,
     {
       onSuccess: (_) => {
-        message.success("تم إرسال الرمز بنجاح!");
         setVerifyedByEmail(true);
       },
     }

@@ -5,7 +5,6 @@ import type { ServiceCardProps } from "./serviceCard.model";
 
 const ServiceCard = ({
   id,
-  image,
   providerName,
   title,
   rating,

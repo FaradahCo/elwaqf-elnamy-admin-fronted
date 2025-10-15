@@ -17,7 +17,6 @@ import { authenticationRoutePath } from "../authentication.routes";
 import { AuthenticationService } from "../authenticationService";
 import VerifyOtp from "../verifyOTP/verifyOTP";
 const Register: React.FC = () => {
-  const { message } = App.useApp();
   const [form] = Form.useForm<RegisterPayload>();
   const [searchParams] = useSearchParams();
   const [showVerifyOTP, setShowVerifyOTP] = React.useState(false);
@@ -31,7 +30,6 @@ const Register: React.FC = () => {
       AuthenticationService.register(payload, searchParams.get("type")!),
     {
       onSuccess: (res) => {
-        message.success("تم التسجيل بنجاح!");
         if (res.token) {
           res?.user?.type === "provider"
             ? navigate(providerRoutePath.PROFILE)

@@ -7,7 +7,7 @@ import type {
   ServiceFormData,
 } from "../../servicesManagement.model";
 
-const UserRequiremnts = ({ form }: FormnProps) => {
+const UserRequiremnts = ({ form, labels }: FormnProps) => {
   const [currentRequirement, setCurrentRequirement] = useState("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
@@ -15,7 +15,11 @@ const UserRequiremnts = ({ form }: FormnProps) => {
 
   const handleAdd = () => {
     if (currentRequirement.trim()) {
-      const newItem = { title: currentRequirement.trim() };
+      // Create new item with order based on current array length
+      const newItem = {
+        title: currentRequirement.trim(),
+        order: currentRequirements.length + 1,
+      };
       const newRequirements = [...currentRequirements, newItem];
       form.setFieldsValue({ requirements: newRequirements });
       setCurrentRequirement("");
@@ -34,30 +38,46 @@ const UserRequiremnts = ({ form }: FormnProps) => {
       const newRequirements = [...currentRequirements];
       const existingItem = currentRequirements[editingIndex];
 
-      // Preserve id if it exists, otherwise create object without id
-      const updatedItem = existingItem?.id
-        ? { title: currentRequirement.trim(), id: existingItem.id }
-        : { title: currentRequirement.trim() };
+      // Preserve id and order if they exist, otherwise create object with current order
+      const updatedItem = {
+        title: currentRequirement.trim(),
+        ...(existingItem?.id && { id: existingItem.id }),
+        order: existingItem?.order || editingIndex + 1,
+      };
 
       newRequirements[editingIndex] = updatedItem;
       form.setFieldsValue({ requirements: newRequirements });
       setCurrentRequirement("");
       setEditingIndex(null);
-      message.success("تم تحديث المتطلب بنجاح");
     }
   };
-
   const handleDelete = (index: number) => {
-    const newRequirements = currentRequirements.filter(
-      (_: { title: string }, i: number) => i !== index
+    const filteredRequirements = currentRequirements.filter(
+      (_: { title: string; id?: number; order?: number }, i: number) =>
+        i !== index
     );
+
+    // Reassign order values after deletion
+    const newRequirements = filteredRequirements.map(
+      (item: { title: string; id?: number; order?: number }, i: number) => ({
+        ...item,
+        order: i + 1,
+      })
+    );
+
     form.setFieldsValue({ requirements: newRequirements });
-    message.success("تم حذف المتطلب بنجاح");
   };
 
   const handleCancel = () => {
     setCurrentRequirement("");
     setEditingIndex(null);
+  };
+
+  // Handle reordering requirements
+  const handleReorder = (
+    newOrder: { title: string; id?: number; order: number }[]
+  ) => {
+    form.setFieldsValue({ requirements: newOrder });
   };
 
   return (
@@ -73,8 +93,8 @@ const UserRequiremnts = ({ form }: FormnProps) => {
           متطلبات الاستفادة
         </h1>
         <p className="text-gray-400 mb-3">
-          الشروط أو الضوابط التي يجب أن تتوفر لدى العميل حتى يتمكّن من طلب
-          الخدمة
+          الشروط أو الضوابط التي يجب أن تتوفر لدى العميل حتى يتمكّن من طلب{" "}
+          {labels?.entityAccusative}
         </p>
 
         {/* Hidden form field for requirement array */}
@@ -99,8 +119,10 @@ const UserRequiremnts = ({ form }: FormnProps) => {
             dataSource={currentRequirements}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            onReorder={handleReorder}
             editingIndex={editingIndex}
             title="المتطلبات المضافة:"
+            enableDragDrop={true}
           />
         </div>
       </div>

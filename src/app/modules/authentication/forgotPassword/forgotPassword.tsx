@@ -1,5 +1,6 @@
 import PhoneNumber from "@shared/components/phone-number/phone-number";
-import { App, Button, Form, Input } from "antd";
+import { setItem } from "@shared/services/storageService";
+import { Button, Form, Input } from "antd";
 import React, { useState } from "react";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { Link, useNavigate } from "react-router";
@@ -11,7 +12,6 @@ import type {
 import { authenticationRoutePath } from "../authentication.routes";
 import { AuthenticationService } from "../authenticationService";
 import VerifyOtp from "../verifyOTP/verifyOTP";
-import { setItem } from "@shared/services/storageService";
 
 const ForgotPassword: React.FC = () => {
   const [form] = Form.useForm<ForgotPasswordPayload>();
@@ -20,7 +20,6 @@ const ForgotPassword: React.FC = () => {
     identifier: "",
     region: "sa",
   };
-  const { message } = App.useApp();
   const navigate = useNavigate();
   const [showVerifyOTP, setShowVerifyOTP] = React.useState(false);
   const [verifedtoken, setVerifedToken] = React.useState<string>("");
@@ -32,7 +31,6 @@ const ForgotPassword: React.FC = () => {
     ForgotPasswordResponse
   >(AuthenticationService.forgotPassword, {
     onSuccess: (res) => {
-      message.success("تم إرسال تعليمات استعادة كلمة المرور إن وجد حساب مطابق");
       setVerifedToken(res.token);
       setShowVerifyOTP(true);
     },
@@ -62,10 +60,6 @@ const ForgotPassword: React.FC = () => {
     forgotPasswordMutation.mutate(values);
   };
 
-  const onFinishFailed = () => {
-    message.error("يرجى التحقق من البيانات المدخلة");
-  };
-
   return (
     <>
       {showVerifyOTP ? (
@@ -85,7 +79,6 @@ const ForgotPassword: React.FC = () => {
           form={form}
           layout="vertical"
           onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
           autoComplete="off"
           initialValues={initialValues}
         >

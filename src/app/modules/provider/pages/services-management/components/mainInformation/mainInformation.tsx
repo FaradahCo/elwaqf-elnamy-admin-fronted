@@ -11,7 +11,7 @@ import type {
 } from "../../servicesManagement.model";
 import { ServiceManagenetsService } from "../../servicesManagemts.service";
 
-const MainInformation = ({ form }: FormnProps) => {
+const MainInformation = ({ form, labels }: FormnProps) => {
   const [currentOutput, setCurrentOutput] = useState("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [currentScope, setCurrentScope] = useState("");
@@ -42,8 +42,10 @@ const MainInformation = ({ form }: FormnProps) => {
         : "يرجى إدخال وصف النطاق";
 
     if (currentValue.trim()) {
-      // Create new item without id for new items
-      const newItem = { title: currentValue.trim() };
+      const newItem = {
+        title: currentValue.trim(),
+        order: currentArray.length + 1,
+      };
       const newArray = [...currentArray, newItem];
       form.setFieldsValue({ [fieldName]: newArray });
       setValue("");
@@ -74,39 +76,42 @@ const MainInformation = ({ form }: FormnProps) => {
       fieldName === "outputs" ? setCurrentOutput : setCurrentScope;
     const setEditingIndexFn =
       fieldName === "outputs" ? setEditingIndex : setEditingScopeIndex;
-    const successMessage =
-      fieldName === "outputs"
-        ? "تم تحديث المخرج بنجاح"
-        : "تم تحديث النطاق بنجاح";
 
     if (currentValue.trim() && editingIndexValue !== null) {
       const newArray = [...currentArray];
       const existingItem = currentArray[editingIndexValue];
 
-      // Preserve id if it exists, otherwise create object without id
-      const updatedItem = existingItem?.id
-        ? { title: currentValue.trim(), id: existingItem.id }
-        : { title: currentValue.trim() };
+      const updatedItem = {
+        title: currentValue.trim(),
+        ...(existingItem?.id && { id: existingItem.id }),
+        order: existingItem?.order || editingIndexValue + 1,
+      };
 
       newArray[editingIndexValue] = updatedItem;
       form.setFieldsValue({ [fieldName]: newArray });
       setValue("");
       setEditingIndexFn(null);
-      message.success(successMessage);
     }
   };
 
   const handleDelete = (index: number, fieldName: "outputs" | "scopes") => {
     const currentArray =
       fieldName === "outputs" ? currentOutputs : currentScopes;
-    const successMessage =
-      fieldName === "outputs" ? "تم حذف المخرج بنجاح" : "تم حذف النطاق بنجاح";
 
-    const newArray = currentArray.filter(
-      (_: { title: string }, i: number) => i !== index
+    const filteredArray = currentArray.filter(
+      (_: { title: string; id?: number; order?: number }, i: number) =>
+        i !== index
     );
+
+    // Reassign order values after deletion
+    const newArray = filteredArray.map(
+      (item: { title: string; id?: number; order?: number }, i: number) => ({
+        ...item,
+        order: i + 1,
+      })
+    );
+
     form.setFieldsValue({ [fieldName]: newArray });
-    message.success(successMessage);
   };
 
   const handleCancel = (fieldName: "outputs" | "scopes") => {
@@ -119,6 +124,14 @@ const MainInformation = ({ form }: FormnProps) => {
     setEditingIndexFn(null);
   };
 
+  // Handle reordering for outputs and scopes
+  const handleReorder = (
+    fieldName: "outputs" | "scopes",
+    newOrder: { title: string; id?: number; order: number }[]
+  ) => {
+    form.setFieldsValue({ [fieldName]: newOrder });
+  };
+
   return (
     <div>
       <main>
@@ -126,21 +139,27 @@ const MainInformation = ({ form }: FormnProps) => {
           المعلومات الأساسية
         </h1>
         <p className="text-gray-400">
-          أدخِل المعلومات الأساسية الخاصة بخدمتك، بما في ذلك الاسم والوصف
-          والتصنيف. تأكد من أن البيانات دقيقة وواضحة لتسهيل مراجعتها واعتمادها.
+          أدخِل المعلومات الأساسية الخاصة ب{labels?.entityGenitive || "خدمتك"}،
+          بما في ذلك الاسم والوصف والتصنيف. تأكد من أن البيانات دقيقة وواضحة
+          لتسهيل مراجعتها واعتمادها.
         </p>
       </main>
 
       <div className="mt-10">
         <h1 className="text-second-primary text-md font-semibold mb-2">
-          اسم الخدمة
+          اسم {labels?.entity}
         </h1>
-        <p className="text-gray-400 mb-3">اكتب اسمًا يصف الخدمة بوضوح </p>
+        <p className="text-gray-400 mb-3">
+          اكتب اسمًا يصف {labels?.entityAccusative} بوضوح{" "}
+        </p>
 
         <Form.Item<ServiceFormData>
           name="title"
           rules={[
-            { required: true, message: "يرجى إدخال اسم الخدمة" },
+            {
+              required: true,
+              message: `يرجى إدخال اسم ${labels?.entityGenitive}`,
+            },
             { min: 3, message: "يجب أن يكون الاسم 3 أحرف على الأقل" },
           ]}
         >
@@ -154,17 +173,25 @@ const MainInformation = ({ form }: FormnProps) => {
 
       <div className="mt-10">
         <h1 className="text-second-primary text-md font-semibold mb-2">
-          تصنيف الخدمة
+          تصنيف {labels?.entityGenitive}
         </h1>
         <p className="text-gray-400 mb-3">
-          اختر التصنيف الذي يعبّر عن نوع الخدمة
+          اختر التصنيف الذي يعبّر عن نوع {labels?.entityGenitive}
         </p>
 
         <Form.Item<ServiceFormData>
           name="field_id"
-          rules={[{ required: true, message: "يرجى اختيار تصنيف الخدمة" }]}
+          rules={[
+            {
+              required: true,
+              message: `يرجى اختيار تصنيف ${labels?.entityGenitive}`,
+            },
+          ]}
         >
-          <Select size="large" placeholder="اختر تصنيف الخدمة">
+          <Select
+            size="large"
+            placeholder={`اختر تصنيف ${labels?.entityGenitive}`}
+          >
             {serviseCalssificationQuery.data
               ?.filter((item) => item.selected)
               ?.map((classification) => (
@@ -181,16 +208,19 @@ const MainInformation = ({ form }: FormnProps) => {
 
       <div className="mt-10">
         <h1 className="text-second-primary text-md font-semibold mb-2">
-          وصف الخدمة
+          وصف {labels?.entityGenitive}
         </h1>
         <p className="text-gray-400 mb-3">
-          صف الخدمة وآلية تنفيذها والفائدة المتوقعة
+          صف {labels?.entityAccusative} وآلية تنفيذها والفائدة المتوقعة
         </p>
 
         <Form.Item<ServiceFormData>
           name="description"
           rules={[
-            { required: true, message: "يرجى إدخال وصف الخدمة" },
+            {
+              required: true,
+              message: `يرجى إدخال وصف ${labels?.entityGenitive}`,
+            },
             { min: 20, message: "يجب أن يكون الوصف 20 حرف على الأقل" },
           ]}
         >
@@ -200,10 +230,10 @@ const MainInformation = ({ form }: FormnProps) => {
 
       <div className="mt-10">
         <h1 className="text-second-primary text-md font-semibold mb-2">
-          مخرجات الخدمة
+          مخرجات {labels?.entityGenitive}
         </h1>
         <p className="text-gray-400 mb-3">
-          اذكر ما سيستلمه العميل بعد تنفيذ الخدمة
+          اذكر ما سيستلمه العميل بعد تنفيذ {labels?.entityGenitive}
         </p>
 
         {/* Hidden form field for output array */}
@@ -215,8 +245,8 @@ const MainInformation = ({ form }: FormnProps) => {
           <AddItem
             currentValue={currentOutput}
             onValueChange={setCurrentOutput}
-            placeholder="مخرجات الخدمة"
-            editPlaceholder="تعديل مخرج الخدمة..."
+            placeholder={`مخرجات ${labels?.entityGenitive}`}
+            editPlaceholder={`تعديل مخرج ${labels?.entityGenitive}...`}
             isEditing={editingIndex !== null}
             onAdd={() => handleAdd("outputs")}
             onUpdate={() => handleUpdate("outputs")}
@@ -226,19 +256,25 @@ const MainInformation = ({ form }: FormnProps) => {
           {/* Display current outputs */}
           <CustomList
             dataSource={currentOutputs}
-            onEdit={(index) => handleEdit(index, "outputs")}
-            onDelete={(index) => handleDelete(index, "outputs")}
+            onEdit={(index: number) => handleEdit(index, "outputs")}
+            onDelete={(index: number) => handleDelete(index, "outputs")}
+            onReorder={(
+              newOrder: { title: string; id?: number; order: number }[]
+            ) => handleReorder("outputs", newOrder)}
             editingIndex={editingIndex}
             title="المخرجات المضافة:"
+            enableDragDrop={true}
           />
         </div>
       </div>
 
       <div className="mt-10">
         <h1 className="text-second-primary text-md font-semibold mb-2">
-          نطاق الخدمة
+          نطاق {labels?.entityGenitive}
         </h1>
-        <p className="text-gray-400 mb-3">وضّح حدود الخدمة وما يشمله التنفيذ</p>
+        <p className="text-gray-400 mb-3">
+          وضّح حدود {labels?.entityGenitive} وما يشمله التنفيذ
+        </p>
 
         {/* Hidden form field for scope array */}
         <Form.Item<ServiceFormData> name="scopes" hidden>
@@ -249,8 +285,8 @@ const MainInformation = ({ form }: FormnProps) => {
           <AddItem
             currentValue={currentScope}
             onValueChange={setCurrentScope}
-            placeholder="نطاق الخدمة"
-            editPlaceholder="تعديل نطاق الخدمة..."
+            placeholder={`نطاق ${labels?.entityGenitive}`}
+            editPlaceholder={`تعديل نطاق ${labels?.entityGenitive}...`}
             isEditing={editingScopeIndex !== null}
             onAdd={() => handleAdd("scopes")}
             onUpdate={() => handleUpdate("scopes")}
@@ -260,10 +296,14 @@ const MainInformation = ({ form }: FormnProps) => {
           {/* Display current scopes */}
           <CustomList
             dataSource={currentScopes}
-            onEdit={(index) => handleEdit(index, "scopes")}
-            onDelete={(index) => handleDelete(index, "scopes")}
+            onEdit={(index: number) => handleEdit(index, "scopes")}
+            onDelete={(index: number) => handleDelete(index, "scopes")}
+            onReorder={(
+              newOrder: { title: string; id?: number; order: number }[]
+            ) => handleReorder("scopes", newOrder)}
             editingIndex={editingScopeIndex}
-            title="نطاقات الخدمة المضافة:"
+            title={`نطاقات ${labels?.entityGenitive} المضافة:`}
+            enableDragDrop={true}
           />
         </div>
       </div>

@@ -1,7 +1,11 @@
 import { Form, Radio } from "antd";
 import { Input } from "antd";
-import type { ServiceFormData } from "../../servicesManagement.model";
-const ServiceTime = () => {
+import type {
+  ServiceFormData,
+  FormnProps,
+} from "../../servicesManagement.model";
+
+const ServiceTime = ({ labels }: FormnProps) => {
   return (
     <>
       <div>
@@ -10,16 +14,17 @@ const ServiceTime = () => {
             المبلغ
           </h1>
           <p className="text-gray-400">
-            اختر طريقة التسعير المناسبة لهذه الخدمة.
+            اختر طريقة التسعير المناسبة لهذه {labels?.entityGenitive}.
           </p>
         </main>
 
         <div className="mt-10">
           <h1 className="text-second-primary text-md font-semibold mb-2">
-            مدة تنفيذ الخدمة
+            مدة تنفيذ {labels?.entityGenitive}
           </h1>
           <p className="text-gray-400 mb-3">
-            المدّة التي تلتزم فيها بالتسليم النهائي للخدمة (ضمن ساعات العمل)
+            المدّة التي تلتزم فيها بالتسليم النهائي {labels?.entityGenitive}{" "}
+            (ضمن ساعات العمل)
           </p>
           <Form.Item<ServiceFormData>
             name="duration_type"
@@ -39,10 +44,11 @@ const ServiceTime = () => {
 
         <div className="mt-10">
           <h1 className="text-second-primary text-md font-semibold mb-2">
-            مبلغ الخدمة يبدأ من
+            مبلغ {labels?.entityGenitive} يبدأ من
           </h1>
           <p className="text-gray-400 mb-3">
-            ضع الحدّ الأدنى لمبلغ الخدمة، يظهر للعميل كـ “يبدأ من”.
+            ضع الحدّ الأدنى لمبلغ {labels?.entityGenitive}، يظهر للعميل كـ "يبدأ
+            من".
           </p>
 
           <Form.Item<ServiceFormData> name="min_price">

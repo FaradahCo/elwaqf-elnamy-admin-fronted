@@ -13,9 +13,9 @@ export interface ServiceFormData {
   duration_time?: number;
   min_price?: number;
   response_time?: number;
-  requirements?: { title: string; id: number }[];
-  outputs?: { title: string; id: number }[];
-  scopes?: { title: string; id: number }[];
+  requirements?: { title: string; id?: number; order: number }[];
+  outputs?: { title: string; id?: number; order: number }[];
+  scopes?: { title: string; id?: number; order: number }[];
   field?: Field;
 }
 
@@ -26,6 +26,14 @@ export type Field = {
   selected: boolean;
 };
 
+export interface Labels {
+  entity: string;
+  entityPlural: string;
+  entityGenitive: string;
+  entityAccusative: string;
+}
+
 export interface FormnProps {
   form: FormInstance;
+  labels?: Labels;
 }
