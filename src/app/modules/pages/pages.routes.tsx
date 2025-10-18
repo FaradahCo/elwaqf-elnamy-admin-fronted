@@ -1,9 +1,11 @@
 import type { RouteObject } from "react-router";
 import MainLayout from "../../layouts/mainLayout";
+import { ServiceProviderRoutes } from "./serviceProvider/serviceProviderRoutes";
+import { serviceManagementRoutes } from "./serviceManagement/serviceManagementRoutes";
 
 export const pagesRoutes: RouteObject[] = [
   {
-    path: "/",
+    path: "/admin",
     element: <MainLayout />,
     children: [
       {
@@ -14,16 +16,17 @@ export const pagesRoutes: RouteObject[] = [
           })),
       },
       {
-        path: "profile",
-        lazy: () =>
-          import("./profile/profile").then((m) => ({
-            Component: m.default,
-          })),
+        path: "service-management",
+        children: [...serviceManagementRoutes],
+      },
+      {
+        path: "service-providers",
+        children: [...ServiceProviderRoutes],
       },
     ],
   },
 ];
 
 export const pagesRoutePath = {
-  PROFILE: "profile",
+  HOME: "/admin",
 };

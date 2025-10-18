@@ -8,7 +8,9 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import ProviderHeader from "../modules/provider/components/providerHeader/providerHeader";
+import MainHeader from "@shared/components/mainHeader/mainHeader";
+import { serviceProviderRoutePath } from "../modules/pages/serviceProvider/serviceProviderRoutes";
+import { serviceManagementRoutePath } from "../modules/pages/serviceManagement/serviceManagementRoutes";
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -24,43 +26,75 @@ const MainLayout: React.FC = () => {
       key: "1",
       icon: <UserOutlined />,
       label: "الرئيسية",
-      path: "/provider",
+      path: "/amin/home",
     },
     {
       key: "2",
       icon: <VideoCameraOutlined />,
-      label: "البروفايل",
-      path: "/provider/profile",
+      label: "إدارج الخدمات",
+      path: serviceManagementRoutePath.SERVICE_MANAGEMENT_LIST,
     },
     {
       key: "3",
       icon: <UploadOutlined />,
-      label: "إدارة الخدمات",
+      label: "متابعه الطلبات",
       path: "/provider/services-management",
     },
     {
       key: "4",
       icon: <UploadOutlined />,
-      label: "متابعة الطلبات",
+      label: "الإوقاف",
       path: "/",
     },
     {
       key: "5",
       icon: <UploadOutlined />,
-      label: "المحفظة",
-      path: "/",
+      label: "مزودي الخدمات",
+      path: serviceProviderRoutePath.SERVICE_PROVIDERS,
     },
     {
       key: "6",
       icon: <UploadOutlined />,
-      label: "الفاتورة",
+      label: "أكواد الخصم",
       path: "/",
     },
     {
       key: "7",
       icon: <UploadOutlined />,
-      label: "مكتبة الوقف",
+      label: "جدول العمليات",
       path: "/",
+    },
+    {
+      key: "8",
+      path: "/",
+      icon: <UploadOutlined />,
+      label: "إدارة المستخدمين",
+    },
+    {
+      key: "9",
+      path: "",
+      icon: <UploadOutlined />,
+      label: "مكتبة الوقف",
+    },
+
+    {
+      key: "10",
+      path: "/",
+      icon: <UploadOutlined />,
+      label: "الشكاوى والاقتراحات",
+    },
+
+    {
+      key: "11",
+      path: "/",
+      icon: <UploadOutlined />,
+      label: "سياسة الخصوصية",
+    },
+    {
+      key: "12",
+      path: "/",
+      icon: <UploadOutlined />,
+      label: "الاعدادات",
     },
   ];
 
@@ -104,7 +138,7 @@ const MainLayout: React.FC = () => {
       </Sider>
       <Layout>
         <Header className="bg-white! p-0! px-4">
-          <ProviderHeader
+          <MainHeader
             collapsed={collapsed}
             onToggleCollapse={() => setCollapsed(!collapsed)}
           />

@@ -6,11 +6,10 @@ import { authenticationRoutePath } from "../authentication.routes";
 import { AuthenticationService } from "../authenticationService";
 import { useApiMutation } from "@services/api";
 import type { LoginPayload, LoginResponse } from "../authentication.model";
-import { providerRoutePath } from "../../provider/provider.routes";
-import { clientRoutePath } from "../../client/clientRoutes";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/app/store/slices/userSlice";
 import { setItem } from "@shared/services/storageService";
+import { pagesRoutePath } from "../../pages/pages.routes";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -21,14 +20,8 @@ const Login: React.FC = () => {
     {
       onSuccess: (response) => {
         setItem("token", response.token);
-        setItem("teamId", String(response.user.teams[0]?.id));
         dispatch(setUser(response.user));
-
-        navigate(
-          response.user.type === "provider"
-            ? providerRoutePath.PROFILE
-            : clientRoutePath.PROFILE
-        );
+        navigate(pagesRoutePath.HOME);
       },
     }
   );
@@ -116,7 +109,7 @@ const Login: React.FC = () => {
             loading={loginMutation.isPending}
             disabled={loginMutation.isPending}
           >
-            {loginMutation.isPending ? "جاري تسجيل الدخول..." : "دخول"}
+            تسجيل الدخول
           </Button>
         </Form.Item>
       </Form>

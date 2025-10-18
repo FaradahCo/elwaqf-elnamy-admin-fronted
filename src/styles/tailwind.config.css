@@ -6,17 +6,24 @@
   --color-primary-light: #4bc2e8;
   --color-gray-text: #717171;
   --color-primary-lighter: #dff7ff;
+  --color-green-light: #e6f6ed;
+  --color-green-dark: #31ce77;
   --color-primary-dark: #0a7fb0;
   --color-secondary: #6b7280;
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
   --color-info: #898484;
+  --color-info-light: #e1f2fa;
+  --color-info-dark: #00a8ff;
   --color-light-gray: #f6f9fa;
   --color-secondary-yellow: #fdd400;
   --color-rating: #dadada;
   --color-rating-filled: #eeb656;
   --color-field: #1509410d;
-
+  --color-gray-dark: #8c8c8c;
+  --color-gray-light: #efefef;
+  --color-orange-light: #fefbf7;
+  --color-orange-dark: #eeb656;
   --font-family-sans: "Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif;
 }

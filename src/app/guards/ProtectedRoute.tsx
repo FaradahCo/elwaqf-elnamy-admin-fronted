@@ -2,11 +2,11 @@ import React from "react";
 import { Navigate, Outlet } from "react-router";
 
 export const isAuthenticated = () => {
-  return true;
+  return !!localStorage.getItem("token");
 };
 
 const ProtectedRoute: React.FC = () => {
-  return isAuthenticated() ? <Outlet /> : <Navigate to="/auth" replace />;
+  return isAuthenticated() ? <Outlet /> : <Navigate to="/" replace />;
 };
 
 export default ProtectedRoute;

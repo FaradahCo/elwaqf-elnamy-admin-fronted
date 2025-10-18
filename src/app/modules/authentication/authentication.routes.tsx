@@ -3,7 +3,7 @@ import AuthenticationLayout from "../../layouts/authenticationLayout";
 
 export const authenticationRoutes: RouteObject[] = [
   {
-    path: "/auth",
+    path: "/",
     element: <AuthenticationLayout />,
     children: [
       {
