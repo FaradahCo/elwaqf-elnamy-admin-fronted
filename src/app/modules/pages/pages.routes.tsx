@@ -23,6 +23,13 @@ export const pagesRoutes: RouteObject[] = [
         path: "service-providers",
         children: [...ServiceProviderRoutes],
       },
+      {
+        path: "*",
+        lazy: () =>
+          import("@shared/components/underCreation").then((m) => ({
+            Component: m.UnderCreation,
+          })),
+      },
     ],
   },
 ];

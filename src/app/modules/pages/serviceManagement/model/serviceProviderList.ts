@@ -8,16 +8,24 @@ export enum ServiceStatus {
   rejected = "rejected",
   revision_pending = "revision_pending",
   inactive = "inactive",
+  disabled = "disabled",
+  hidden = "hidden",
 }
 
+export type ServiceStatusLabel = {
+  count: number;
+  label: string;
+  status: string;
+};
+
 export interface ServiceData {
-  id: string;
-  title: string;
-  provider_id: ProviderId;
-  status: ServiceStatus;
-  field: Field;
-  min_price: number;
-  duration: Duration;
+  id?: string;
+  title?: string;
+  provider_id?: ProviderId;
+  status?: string;
+  field?: Field;
+  min_price?: number;
+  duration?: Duration;
   type?: string;
   field_id?: number;
   description?: string;

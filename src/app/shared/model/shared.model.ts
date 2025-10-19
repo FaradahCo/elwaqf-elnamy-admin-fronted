@@ -11,6 +11,7 @@ export type PaginatedResponse<T> = {
     from: number;
     last_page: number;
     total: number;
+    per_page: number;
   };
 };
 

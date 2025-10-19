@@ -16,7 +16,6 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    // Set user data
     setUser: (state, action: PayloadAction<User>) => {
       return {
         ...state,
@@ -24,7 +23,6 @@ const userSlice = createSlice({
       };
     },
 
-    // Clear user data
     clearUser: (state) => {
       state.user = null;
     },

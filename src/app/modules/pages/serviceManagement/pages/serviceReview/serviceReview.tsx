@@ -1,24 +1,35 @@
+import { CustomTable } from "@shared/components/customTable/customtable";
 import { useApiMutation, useApiQuery } from "@shared/services/api";
 import {
-  getStatusTag,
-  transformFilterParams,
-} from "@shared/services/sharedService";
-import { Button, Form, Input, Modal, Radio, Spin, Tag } from "antd";
-import { useRef, useState } from "react";
+  Button,
+  Collapse,
+  Form,
+  Input,
+  message,
+  Modal,
+  Radio,
+  Select,
+  Spin,
+} from "antd";
+import { useRef, useState, useEffect } from "react";
 import { useParams } from "react-router";
 import RejectService, {
   type RejectServiceRef,
 } from "../../components/rejectService/rejectService";
 import {
-  ServiceStatus,
   type ServiceData,
+  type ServiceRevision,
 } from "../../model/serviceProviderList";
 import {
   approveServiceRevision,
   getRevision,
   getRevisionsByServiceId,
+  GetServiceStatus,
   rejectServiceRevision,
+  updateService,
 } from "../../serviceManagementService";
+import { serviceLogColumns } from "./serviceReviewConfig";
+import { getStatusTag } from "@shared/services/sharedService";
 
 const { TextArea } = Input;
 
@@ -26,6 +37,7 @@ const ServiceReview = () => {
   const { id } = useParams<{ id: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const rejectServiceRef = useRef<RejectServiceRef>(null);
+  const [serviceRevision, setServiceRevision] = useState<ServiceRevision>();
 
   const handleOk = async () => {
     const formData = await rejectServiceRef.current?.validateForm();
@@ -37,7 +49,7 @@ const ServiceReview = () => {
     rejectServiceRef.current?.resetForm();
   };
 
-  const { data: serviceRevision, isLoading } = useApiQuery(
+  const { data: serviceRevisionData, isLoading } = useApiQuery(
     ["serviceRevision", id],
     () => getRevision(id!),
     {
@@ -45,15 +57,24 @@ const ServiceReview = () => {
     }
   );
 
-  const { data: serviceRevisionsByServiceId } = useApiQuery(
-    ["serviceRevisionsByServiceId", id],
-    () => getRevisionsByServiceId(transformFilterParams({ service_id: +id! })),
+  // Get available service status options from API
+  const { data: serviceStatusOptions } = useApiQuery(
+    ["service-status-options"],
+    () => GetServiceStatus({ type: serviceRevision?.service?.type }),
     {
-      enabled: !!id,
+      retry: false,
+      enabled: !!serviceRevision?.service,
     }
   );
 
-  console.log("Service Revisions by Service ID:", serviceRevisionsByServiceId);
+  const { data: revisionsByServiceData } = useApiQuery(
+    ["revisions-services-id", id],
+    () => getRevisionsByServiceId({ service_id: id }),
+    {
+      enabled: !!serviceRevision?.service?.id,
+      retry: false,
+    }
+  );
 
   const approveServiceRevisionMutation = useApiMutation(
     () => approveServiceRevision(id!),
@@ -79,6 +100,43 @@ const ServiceReview = () => {
     }
   );
 
+  const updateStatusMutation = useApiMutation(
+    (status: string) => {
+      return updateService(id!, { status: status });
+    },
+    {
+      onSuccess: () => {
+        // setServiceRevision(res.data);
+      },
+    }
+  );
+
+  const handleStatusChange = (newStatus: string) => {
+    updateStatusMutation.mutate(newStatus);
+  };
+
+  const serviceLogCollapseItems = [
+    {
+      key: "service-log",
+      label: "سجل الخدمة",
+      children: (
+        <CustomTable
+          columns={serviceLogColumns}
+          dataSource={revisionsByServiceData?.data!}
+          showPagination={false}
+          showSelection={false}
+          className={[]}
+        />
+      ),
+    },
+  ];
+
+  useEffect(() => {
+    if (serviceRevisionData) {
+      setServiceRevision(serviceRevisionData);
+    }
+  }, [serviceRevisionData]);
+
   return (
     <>
       {isLoading ? (
@@ -97,12 +155,31 @@ const ServiceReview = () => {
             </main>
             <div className="flex justify-between items-center">
               <p>تم تفعيل الحساب بناء على موافقة الإدارة</p>
-              <Tag
-                color={getStatusTag("approved").color}
-                className="mt-2 p-1! px-4!"
-              >
-                {getStatusTag("approved").text}
-              </Tag>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">حالة الخدمة:</span>
+                <Select
+                  value={serviceRevision?.status || ""}
+                  onChange={handleStatusChange}
+                  loading={updateStatusMutation.isPending}
+                  disabled={updateStatusMutation.isPending}
+                  popupRender={(menu) => menu}
+                  className="min-w-40"
+                >
+                  {serviceStatusOptions?.data?.map((option) => (
+                    <Select.Option key={option.status} value={option.status}>
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-3 h-3 rounded-full"
+                          style={{
+                            backgroundColor: getStatusTag(option.status).color,
+                          }}
+                        />
+                        <span>{option.label}</span>
+                      </div>
+                    </Select.Option>
+                  ))}
+                </Select>
+              </div>
             </div>
           </div>
           <div className="main-information bg-white shadow rounded-lg p-6 mt-4">
@@ -236,31 +313,36 @@ const ServiceReview = () => {
             </Form>
           </div>
 
-          {serviceRevision?.status === ServiceStatus.revision_pending ||
-            (serviceRevision?.status === ServiceStatus.pending && (
-              <div className="actions bg-white shadow rounded-lg p-6 mt-4 flex justify-end gap-5">
-                <Button
-                  type="primary"
-                  className="bg-transparent! text-primary! shadow-none! border-primary!"
-                  size="large"
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  إرجاع للمزوّد مع ملاحظات
-                </Button>
-                <Button
-                  type="primary"
-                  className="shadow-none!"
-                  size="large"
-                  onClick={() =>
-                    approveServiceRevisionMutation.mutate(undefined)
-                  }
-                  loading={approveServiceRevisionMutation.isPending}
-                  disabled={approveServiceRevisionMutation.isPending}
-                >
-                  اعتماد الخدمة
-                </Button>
-              </div>
-            ))}
+          {(serviceRevision?.status === "revision_pending" ||
+            serviceRevision?.status === "pending") && (
+            <div className="actions bg-white shadow rounded-lg p-6 mt-4 flex justify-end gap-5">
+              <Button
+                type="primary"
+                className="bg-transparent! text-primary! shadow-none! border-primary!"
+                size="large"
+                onClick={() => setIsModalOpen(true)}
+              >
+                إرجاع للمزوّد مع ملاحظات
+              </Button>
+              <Button
+                type="primary"
+                className="shadow-none!"
+                size="large"
+                onClick={() => approveServiceRevisionMutation.mutate(undefined)}
+                loading={approveServiceRevisionMutation.isPending}
+                disabled={approveServiceRevisionMutation.isPending}
+              >
+                اعتماد الخدمة
+              </Button>
+            </div>
+          )}
+
+          <div className="service-log bg-white shadow rounded-lg p-6 mt-4">
+            <Collapse
+              items={serviceLogCollapseItems}
+              className="service-log-collapse"
+            />
+          </div>
         </>
       )}
       <Modal

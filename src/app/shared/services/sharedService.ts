@@ -59,6 +59,8 @@ export const getStatusTag = (status: ServiceStatus | string) => {
     [ServiceStatus.draft]: { color: "blue", text: "مسودة" },
     [ServiceStatus.rejected]: { color: "red", text: "مرفوض" },
     [ServiceStatus.inactive]: { color: "gray", text: "غير نشط" },
+    [ServiceStatus.disabled]: { color: "gray", text: "معطل" },
+    [ServiceStatus.hidden]: { color: "gray", text: "مخفي" },
     [ServiceStatus.revision_pending]: {
       color: "purple",
       text: "بانتظار المراجعة",
@@ -66,7 +68,7 @@ export const getStatusTag = (status: ServiceStatus | string) => {
   };
 
   const config = statusConfig[status as ServiceStatus] || {
-    color: "default",
+    color: "gray",
     text: "غير محدد",
   };
 
@@ -80,7 +82,12 @@ export const transformFilterParams = <T>(filter: T): Record<string, any> => {
 
   Object.entries(filter).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
-      transformedParams[`filter[${key}]`] = value;
+      // Send page and per_page directly without filter[] wrapper
+      if (key === "page" || key === "per_page") {
+        transformedParams[key] = value;
+      } else {
+        transformedParams[`filter[${key}]`] = value;
+      }
     }
   });
 

@@ -26,7 +26,7 @@ const MainLayout: React.FC = () => {
       key: "1",
       icon: <UserOutlined />,
       label: "الرئيسية",
-      path: "/amin/home",
+      path: "/admin",
     },
     {
       key: "2",
@@ -44,7 +44,7 @@ const MainLayout: React.FC = () => {
       key: "4",
       icon: <UploadOutlined />,
       label: "الإوقاف",
-      path: "/",
+      path: "/waqf/list",
     },
     {
       key: "5",
@@ -56,43 +56,43 @@ const MainLayout: React.FC = () => {
       key: "6",
       icon: <UploadOutlined />,
       label: "أكواد الخصم",
-      path: "/",
+      path: "/cobon/list",
     },
     {
       key: "7",
       icon: <UploadOutlined />,
       label: "جدول العمليات",
-      path: "/",
+      path: "/manage/transactions",
     },
     {
       key: "8",
-      path: "/",
+      path: "/user",
       icon: <UploadOutlined />,
       label: "إدارة المستخدمين",
     },
     {
       key: "9",
-      path: "",
+      path: "library/waqf",
       icon: <UploadOutlined />,
       label: "مكتبة الوقف",
     },
 
     {
       key: "10",
-      path: "/",
+      path: "complaints-suggestions",
       icon: <UploadOutlined />,
       label: "الشكاوى والاقتراحات",
     },
 
     {
       key: "11",
-      path: "/",
+      path: "privacy-policy",
       icon: <UploadOutlined />,
       label: "سياسة الخصوصية",
     },
     {
       key: "12",
-      path: "/",
+      path: "settings",
       icon: <UploadOutlined />,
       label: "الاعدادات",
     },

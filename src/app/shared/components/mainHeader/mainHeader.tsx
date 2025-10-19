@@ -5,11 +5,13 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
   SettingOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { pagesRoutePath } from "@/app/modules/pages/pages.routes";
 import type { RootState } from "@/app/store";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { clearUser } from "@/app/store/slices/userSlice";
 
 interface HeaderProps {
   collapsed?: boolean;
@@ -18,6 +20,15 @@ interface HeaderProps {
 
 const MainHeader = ({ collapsed, onToggleCollapse }: HeaderProps) => {
   const user = useSelector((state: RootState) => state.user.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(clearUser());
+    localStorage.removeItem("token");
+    localStorage.removeItem("teamId");
+    navigate("/");
+  };
 
   const profileMenuItems = [
     {
@@ -44,9 +55,13 @@ const MainHeader = ({ collapsed, onToggleCollapse }: HeaderProps) => {
     {
       key: "3",
       label: (
-        <Link to="/logout" className="flex items-center gap-2 text-red-600">
+        <div
+          onClick={handleLogout}
+          className="flex items-center gap-2 text-red-600 cursor-pointer"
+        >
+          <LogoutOutlined />
           تسجيل الخروج
-        </Link>
+        </div>
       ),
     },
   ];
