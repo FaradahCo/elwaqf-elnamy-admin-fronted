@@ -22,7 +22,7 @@ env:
   ARTIFACT_LOCATION: us-central1
   ZONE:              me-central1-a
   INSTANCE:          faradah-dev-ce-app-001
-  IMAGE:             frontend
+  IMAGE:             adminfe2
   SERVICE_ACCOUNT:   github-action@faradah-dev.iam.gserviceaccount.com
 
 jobs:
@@ -129,7 +129,7 @@ jobs:
             --ssh-key-file=~/.ssh/temp_rsa \
             --command="sudo su ubuntu -c '\
               cd /home/ubuntu/${{ env.ENV }}/${{ env.APP }} && \
-              sed -i \"s|^FRONTEND_TAG=.*|FRONTEND_TAG=${TAG}|\" .env && \
+              sed -i \"s|^ADMINFE2_TAG=.*|ADMINFE2_TAG=${TAG}|\" .env && \
               docker compose up -d --force-recreate ${{ env.IMAGE }}  && \
               docker image prune -f\
             '"
