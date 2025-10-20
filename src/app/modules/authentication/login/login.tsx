@@ -1,5 +1,5 @@
 import React from "react";
-import { App, Button, Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router";
 import { authenticationRoutePath } from "../authentication.routes";
