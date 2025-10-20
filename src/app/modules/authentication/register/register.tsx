@@ -2,12 +2,10 @@ import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import PhoneNumber from "@components/phone-number/phone-number";
 import { useApiMutation } from "@services/api";
 import { setFormFieldErrors } from "@services/sharedService";
-import { App, Button, Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import React from "react";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { Link, useNavigate, useSearchParams } from "react-router";
-import { clientRoutePath } from "../../client/clientRoutes";
-import { providerRoutePath } from "../../provider/provider.routes";
 import type {
   ApiErrorResponse,
   RegisterPayload,
@@ -16,6 +14,7 @@ import type {
 import { authenticationRoutePath } from "../authentication.routes";
 import { AuthenticationService } from "../authenticationService";
 import VerifyOtp from "../verifyOTP/verifyOTP";
+import { pagesRoutePath } from "../../pages/pages.routes";
 const Register: React.FC = () => {
   const [form] = Form.useForm<RegisterPayload>();
   const [searchParams] = useSearchParams();
@@ -31,9 +30,7 @@ const Register: React.FC = () => {
     {
       onSuccess: (res) => {
         if (res.token) {
-          res?.user?.type === "provider"
-            ? navigate(providerRoutePath.PROFILE)
-            : navigate(clientRoutePath.PROFILE);
+          navigate(pagesRoutePath.HOME);
         } else {
           setShowVerifyOTP(true);
         }
