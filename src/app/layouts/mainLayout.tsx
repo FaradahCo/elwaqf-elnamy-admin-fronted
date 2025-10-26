@@ -10,7 +10,8 @@ import {
 } from "@ant-design/icons";
 import MainHeader from "@shared/components/mainHeader/mainHeader";
 import { serviceProviderRoutePath } from "../modules/pages/serviceProvider/serviceProviderRoutes";
-import { serviceManagementRoutePath } from "../modules/pages/serviceManagement/serviceManagementRoutes";
+import { pagesRoutePath } from "../modules/pages/pages.routes";
+import { useLogOut } from "../hooks/useLogOut";
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -20,19 +21,21 @@ const MainLayout: React.FC = () => {
     token: { borderRadiusLG },
   } = theme.useToken();
 
+  useLogOut();
+
   // Menu items with navigation
   const menuItems = [
     {
       key: "1",
       icon: <UserOutlined />,
       label: "الرئيسية",
-      path: "/admin",
+      path: pagesRoutePath.HOME,
     },
     {
       key: "2",
       icon: <VideoCameraOutlined />,
       label: "إدارج الخدمات",
-      path: serviceManagementRoutePath.SERVICE_MANAGEMENT_LIST,
+      path: pagesRoutePath.SERVICE_MANAGEMENT_LIST,
     },
     {
       key: "3",
@@ -56,7 +59,7 @@ const MainLayout: React.FC = () => {
       key: "6",
       icon: <UploadOutlined />,
       label: "أكواد الخصم",
-      path: "/cobon/list",
+      path: pagesRoutePath.DISCOUNT_CODES_LIST,
     },
     {
       key: "7",

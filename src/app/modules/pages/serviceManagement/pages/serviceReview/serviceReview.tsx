@@ -1,17 +1,20 @@
 import { CustomTable } from "@shared/components/customTable/customtable";
 import { useApiMutation, useApiQuery } from "@shared/services/api";
 import {
+  getSeriviceStatus,
+  getStatusTag,
+} from "@shared/services/sharedService";
+import {
   Button,
   Collapse,
   Form,
   Input,
-  message,
   Modal,
   Radio,
   Select,
   Spin,
 } from "antd";
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import RejectService, {
   type RejectServiceRef,
@@ -24,12 +27,10 @@ import {
   approveServiceRevision,
   getRevision,
   getRevisionsByServiceId,
-  GetServiceStatus,
   rejectServiceRevision,
   updateService,
 } from "../../serviceManagementService";
 import { serviceLogColumns } from "./serviceReviewConfig";
-import { getStatusTag } from "@shared/services/sharedService";
 
 const { TextArea } = Input;
 
@@ -60,7 +61,7 @@ const ServiceReview = () => {
   // Get available service status options from API
   const { data: serviceStatusOptions } = useApiQuery(
     ["service-status-options"],
-    () => GetServiceStatus({ type: serviceRevision?.service?.type }),
+    () => getSeriviceStatus({ type: serviceRevision?.service?.type! }),
     {
       retry: false,
       enabled: !!serviceRevision?.service,

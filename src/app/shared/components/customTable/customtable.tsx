@@ -101,6 +101,7 @@ export const CustomTable = <T extends Record<string, any>>({
           rowKey={(record) => record.id}
           pagination={showPagination ? paginationConfig : false}
           loading={loading}
+          scroll={{ x: "max-content" }}
         />
       </Flex>
     </div>

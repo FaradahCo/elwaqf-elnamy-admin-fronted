@@ -2,6 +2,7 @@ import type { RouteObject } from "react-router";
 import MainLayout from "../../layouts/mainLayout";
 import { ServiceProviderRoutes } from "./serviceProvider/serviceProviderRoutes";
 import { serviceManagementRoutes } from "./serviceManagement/serviceManagementRoutes";
+import DiscoundCodesRoutes from "./discoundCodes/discoundCodesRoutes";
 
 export const pagesRoutes: RouteObject[] = [
   {
@@ -24,6 +25,10 @@ export const pagesRoutes: RouteObject[] = [
         children: [...ServiceProviderRoutes],
       },
       {
+        path: "discound-codes",
+        children: [...DiscoundCodesRoutes],
+      },
+      {
         path: "*",
         lazy: () =>
           import("@shared/components/underCreation").then((m) => ({
@@ -36,4 +41,7 @@ export const pagesRoutes: RouteObject[] = [
 
 export const pagesRoutePath = {
   HOME: "/admin",
+  SERVICE_PROVIDERS: "/admin/service-providers",
+  SERVICE_MANAGEMENT_LIST: "/admin/service-management",
+  DISCOUNT_CODES_LIST: "/admin/discound-codes",
 };

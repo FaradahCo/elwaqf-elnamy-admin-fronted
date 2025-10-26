@@ -4,18 +4,15 @@ import type {
   ServiceData,
   ServiceManagementQuery,
   ServiceRevision,
-  ServiceStatusLabel,
 } from "./model/serviceProviderList";
 import type { PaginatedResponse } from "@shared/model/shared.model";
 import { transformFilterParams } from "@shared/services/sharedService";
 
-export const ServiceManagementService = {
-  getServices: async (params?: ServiceManagementQuery) => {
-    return AoiService.get<PaginatedResponse<ServiceData>>(
-      "admin/services",
-      transformFilterParams(params)
-    );
-  },
+export const getServices = async (params?: ServiceManagementQuery) => {
+  return AoiService.get<PaginatedResponse<ServiceData>>(
+    "admin/services",
+    transformFilterParams(params)
+  );
 };
 
 export const getRevision = async (serviceId: string) => {
@@ -56,12 +53,5 @@ export const updateService = async (
   return AoiService.put<Partial<ServiceData>, ServiceRevision>(
     `admin/services/${serviceId}`,
     data
-  );
-};
-
-export const GetServiceStatus = async (params: any) => {
-  return AoiService.get<PaginatedResponse<ServiceStatusLabel>>(
-    `admin/services-status`,
-    transformFilterParams(params)
   );
 };

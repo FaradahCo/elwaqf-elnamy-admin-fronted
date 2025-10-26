@@ -1,17 +1,17 @@
-import { Avatar, Button, Dropdown } from "antd";
-import {
-  DownOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UserOutlined,
-  SettingOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
-import { Link, useNavigate } from "react-router";
 import { pagesRoutePath } from "@/app/modules/pages/pages.routes";
 import type { RootState } from "@/app/store";
-import { useSelector, useDispatch } from "react-redux";
-import { clearUser } from "@/app/store/slices/userSlice";
+import {
+  DownOutlined,
+  LogoutOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { triggerForceLogoutForInterceptor } from "@shared/services/sharedService";
+import { Avatar, Button, Dropdown } from "antd";
+import { useSelector } from "react-redux";
+import { Link } from "react-router";
 
 interface HeaderProps {
   collapsed?: boolean;
@@ -19,15 +19,10 @@ interface HeaderProps {
 }
 
 const MainHeader = ({ collapsed, onToggleCollapse }: HeaderProps) => {
-  const user = useSelector((state: RootState) => state.user.user);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.user?.user);
 
   const handleLogout = () => {
-    dispatch(clearUser());
-    localStorage.removeItem("token");
-    localStorage.removeItem("teamId");
-    navigate("/");
+    triggerForceLogoutForInterceptor();
   };
 
   const profileMenuItems = [

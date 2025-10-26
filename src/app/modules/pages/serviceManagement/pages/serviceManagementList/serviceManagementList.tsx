@@ -2,18 +2,18 @@ import CardStatistic from "@shared/components/cardStatistic/cardStatistic";
 import CustomTable from "@shared/components/customTable/customtable";
 import type { PaginatedResponse } from "@shared/model/shared.model";
 import { useApiQuery } from "@shared/services/api";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useSearchParams } from "react-router";
 import ServiceManagementFilter from "../../components/serviceManagementFilter/serviceManagementFilter";
 import {
   type ServiceData,
   type ServiceManagementQuery,
 } from "../../model/serviceProviderList";
-import { ServiceManagementService } from "../../serviceManagementService";
 import { getColumnsList } from "./serviceManagementListConfig";
+import { getServices } from "../../serviceManagementService";
 
 export const ServiceManagementList = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [serviceType, setServiceType] = useState<string>("service");
 
   // Initialize filter from URL params
@@ -25,67 +25,39 @@ export const ServiceManagementList = () => {
     };
   });
 
-  const handleServiceTypeChange = (type: string) => {
+  const handleServiceTypeChange = useCallback((type: string) => {
     setServiceType(type);
-  };
+  }, []);
 
-  const handleSelectionChange = (
-    _selectedRowKeys: React.Key[],
-    selectedRows: ServiceData[]
-  ) => {
-    console.log("Selected services:", selectedRows);
-  };
+  const handleSelectionChange = useCallback(
+    (_selectedRowKeys: React.Key[], selectedRows: ServiceData[]) => {
+      console.log("Selected services:", selectedRows);
+    },
+    []
+  );
 
-  const handlePaginationChange = (page: number, pageSize: number) => {
-    console.log("Page:", page, "Page Size:", pageSize);
-
-    const newFilter = {
-      ...filter,
+  const handlePaginationChange = useCallback((page: number) => {
+    setFilter((prevFilter) => ({
+      ...prevFilter,
       page,
-    };
+    }));
+  }, []);
 
-    setFilter(newFilter);
-
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("page", page.toString());
-    setSearchParams(newSearchParams);
-  };
-
-  const handleFilterChange = (newFilter: ServiceManagementQuery) => {
-    const filterWithPagination = {
-      ...newFilter,
-      page: 1,
-    };
-
-    setFilter(filterWithPagination);
-
-    // Update URL query parameters
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("page", "1");
-
-    // Add other filter parameters to URL if they exist
-    if (newFilter.type) {
-      newSearchParams.set("type", newFilter.type);
-    }
-    if (newFilter.status) {
-      newSearchParams.set("status", newFilter.status);
-    }
-    if (newFilter.provider_id) {
-      newSearchParams.set("provider_id", newFilter.provider_id.toString());
-    }
-
-    setSearchParams(newSearchParams);
-  };
+  const handleFilterChange = useCallback(
+    (newFilter: ServiceManagementQuery) => {
+      setFilter(() => ({
+        ...newFilter,
+        page: 1,
+      }));
+    },
+    []
+  );
 
   const { data: serviceData, isLoading } = useApiQuery<
     PaginatedResponse<ServiceData>
-  >(
-    ["admin/services", filter],
-    () => ServiceManagementService.getServices(filter),
-    {
-      retry: false,
-    }
-  );
+  >(["admin/services", filter], () => getServices(filter), {
+    retry: false,
+  });
 
   return (
     <div className="py-10">

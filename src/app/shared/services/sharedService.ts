@@ -1,4 +1,20 @@
-import { ServiceStatus } from "@/app/modules/pages/serviceManagement/model/serviceProviderList";
+import { triggerForceLogout } from "@/app/store/slices/authSlice";
+import { store } from "@/app/store";
+import AoiService from "./api";
+import {
+  type PaginatedResponse,
+  type ServiceStatus,
+} from "@shared/model/shared.model";
+
+export const ServiceClassificationConfig: Record<string, { label: string }> = {
+  service: { label: "خدمة" },
+  package: { label: "باقة" },
+};
+
+export const typeOptions = [
+  { value: "service", label: "خدمة" },
+  { value: "package", label: "باقة" },
+];
 
 export const durationNameConfig = {
   day: "يوم",
@@ -52,23 +68,39 @@ export const convertEnumToArrayList = (
   }));
 };
 
-export const getStatusTag = (status: ServiceStatus | string) => {
-  const statusConfig: Record<ServiceStatus, { color: string; text: string }> = {
-    [ServiceStatus.approved]: { color: "green", text: "معتمد" },
-    [ServiceStatus.pending]: { color: "orange", text: "بانتظار الاعتماد" },
-    [ServiceStatus.draft]: { color: "blue", text: "مسودة" },
-    [ServiceStatus.rejected]: { color: "red", text: "مرفوض" },
-    [ServiceStatus.inactive]: { color: "gray", text: "غير نشط" },
-    [ServiceStatus.disabled]: { color: "gray", text: "معطل" },
-    [ServiceStatus.hidden]: { color: "gray", text: "مخفي" },
-    [ServiceStatus.revision_pending]: {
-      color: "purple",
+export enum ServiceStatusEnum {
+  draft = "draft",
+  pending = "pending",
+  approved = "approved",
+  rejected = "rejected",
+  revision_pending = "revision_pending",
+  inactive = "inactive",
+  disabled = "disabled",
+  hidden = "hidden",
+  active = "active",
+}
+
+export const getStatusTag = (status: ServiceStatusEnum | string) => {
+  const statusConfig: Record<
+    ServiceStatusEnum,
+    { color: string; text: string }
+  > = {
+    [ServiceStatusEnum.approved]: { color: "#52c41a", text: "معتمد" },
+    [ServiceStatusEnum.pending]: { color: "#fa8c16", text: "بانتظار الاعتماد" },
+    [ServiceStatusEnum.draft]: { color: "#1890ff", text: "مسودة" },
+    [ServiceStatusEnum.rejected]: { color: "#ff4d4f", text: "مرفوض" },
+    [ServiceStatusEnum.inactive]: { color: "#ff4d4f", text: "غير نشط" },
+    [ServiceStatusEnum.disabled]: { color: "#8c8c8c", text: "معطل" },
+    [ServiceStatusEnum.hidden]: { color: "#8c8c8c", text: "مخفي" },
+    [ServiceStatusEnum.active]: { color: "#52c41a", text: "مفعل" },
+    [ServiceStatusEnum.revision_pending]: {
+      color: "#722ed1",
       text: "بانتظار المراجعة",
     },
   };
 
-  const config = statusConfig[status as ServiceStatus] || {
-    color: "gray",
+  const config = statusConfig[status as ServiceStatusEnum] || {
+    color: "#8c8c8c",
     text: "غير محدد",
   };
 
@@ -102,4 +134,15 @@ export const transformFilterParams = <T>(filter: T): Record<string, any> => {
 
 export const transformDurationName = (durationName: DurationName) => {
   return durationNameConfig[durationName];
+};
+
+export const triggerForceLogoutForInterceptor = () => {
+  store.dispatch(triggerForceLogout());
+};
+
+export const getSeriviceStatus = async (params?: { type: string }) => {
+  return await AoiService.get<PaginatedResponse<ServiceStatus>>(
+    `/admin/services-status`,
+    transformFilterParams(params)
+  );
 };

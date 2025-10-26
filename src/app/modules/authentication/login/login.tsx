@@ -1,15 +1,16 @@
-import React from "react";
-import { App, Button, Form, Input } from "antd";
+import { setUser } from "@/app/store/slices/userSlice";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { useApiMutation } from "@services/api";
+import { setItem } from "@shared/services/storageService";
+import { Button, Form, Input } from "antd";
+import React from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router";
+import { pagesRoutePath } from "../../pages/pages.routes";
+import type { LoginPayload, LoginResponse } from "../authentication.model";
 import { authenticationRoutePath } from "../authentication.routes";
 import { AuthenticationService } from "../authenticationService";
-import { useApiMutation } from "@services/api";
-import type { LoginPayload, LoginResponse } from "../authentication.model";
-import { useDispatch } from "react-redux";
-import { setUser } from "@/app/store/slices/userSlice";
-import { setItem } from "@shared/services/storageService";
-import { pagesRoutePath } from "../../pages/pages.routes";
+import { resetForceLogout } from "@/app/store/slices/authSlice";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const Login: React.FC = () => {
       onSuccess: (response) => {
         setItem("token", response.token);
         dispatch(setUser(response.user));
+        dispatch(resetForceLogout());
         navigate(pagesRoutePath.HOME);
       },
     }

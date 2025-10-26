@@ -1,22 +1,8 @@
-import type { PaginatedParams } from "@shared/model/shared.model";
+import type {
+  PaginatedParams,
+  ServiceStatus,
+} from "@shared/model/shared.model";
 import type { DurationName } from "@shared/services/sharedService";
-
-export enum ServiceStatus {
-  draft = "draft",
-  pending = "pending",
-  approved = "approved",
-  rejected = "rejected",
-  revision_pending = "revision_pending",
-  inactive = "inactive",
-  disabled = "disabled",
-  hidden = "hidden",
-}
-
-export type ServiceStatusLabel = {
-  count: number;
-  label: string;
-  status: string;
-};
 
 export interface ServiceData {
   id?: string;

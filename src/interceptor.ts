@@ -6,6 +6,7 @@ import type {
 } from "axios";
 import axios from "axios";
 import environment from "./app/enviroments/environemnt.dev";
+import { triggerForceLogoutForInterceptor } from "@shared/services/sharedService";
 
 // Define response type structure
 export interface ApiResponse<T> {
@@ -57,8 +58,7 @@ axiosInstance.interceptors.response.use(
   (error) => {
     switch (error.response?.status) {
       case 401:
-        localStorage.removeItem("token");
-        // window.location.href = "/auth";
+        triggerForceLogoutForInterceptor();
         break;
       case 403:
         break;

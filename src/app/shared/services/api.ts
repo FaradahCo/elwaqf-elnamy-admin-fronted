@@ -46,7 +46,7 @@ const AoiService = {
 
   delete: async (url: string) => {
     const res = await axiosInstance.delete(url);
-    return res;
+    return res.data;
   },
 };
 

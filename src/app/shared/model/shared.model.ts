@@ -19,3 +19,14 @@ export type PaginatedParams = {
   page?: number;
   per_page?: number;
 };
+
+export enum ServiceClassification {
+  service = "service",
+  package = "package",
+}
+
+export type ServiceStatus = {
+  label: string;
+  status: string;
+  count: number;
+};
