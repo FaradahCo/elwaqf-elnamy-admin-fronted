@@ -1,6 +1,9 @@
 import CardStatistic from "@shared/components/cardStatistic/cardStatistic";
 import CustomTable from "@shared/components/customTable/customtable";
-import type { PaginatedResponse } from "@shared/model/shared.model";
+import type {
+  PaginatedResponse,
+  ServiceStatus,
+} from "@shared/model/shared.model";
 import { useApiQuery } from "@shared/services/api";
 import { useState, useCallback } from "react";
 import { useSearchParams } from "react-router";
@@ -11,6 +14,7 @@ import {
 } from "../../model/serviceProviderList";
 import { getColumnsList } from "./serviceManagementListConfig";
 import { getServices } from "../../serviceManagementService";
+import { getSeriviceStatus } from "@shared/services/sharedService";
 
 export const ServiceManagementList = () => {
   const [searchParams] = useSearchParams();
@@ -53,6 +57,14 @@ export const ServiceManagementList = () => {
     []
   );
 
+  const { data: serviceStatus } = useApiQuery<PaginatedResponse<ServiceStatus>>(
+    ["serviceStatus", serviceType],
+    () => getSeriviceStatus({ type: serviceType }),
+    {
+      enabled: !!serviceType,
+    }
+  );
+
   const { data: serviceData, isLoading } = useApiQuery<
     PaginatedResponse<ServiceData>
   >(["admin/services", filter], () => getServices(filter), {
@@ -65,7 +77,7 @@ export const ServiceManagementList = () => {
         <CardStatistic
           title="خدمة"
           icon="/images/elements.svg"
-          value={35}
+          value={serviceData?.meta?.total ?? 0}
           classesName={[
             "border border-second-primary p-4 rounded-xl w-64 min-w-64",
           ]}
@@ -73,7 +85,10 @@ export const ServiceManagementList = () => {
         <CardStatistic
           title="نشطة"
           icon="/images/elements.svg"
-          value={28}
+          value={
+            serviceStatus?.data?.find((status) => status.status === "approved")
+              ?.count ?? 0
+          }
           classesName={[
             "border border-green-dark text-green-dark rounded-lg p-4 rounded-xl bg-green-light w-64 min-w-64",
           ]}
@@ -82,7 +97,11 @@ export const ServiceManagementList = () => {
         <CardStatistic
           title="بانتظار الاعتماد"
           icon="/images/elements.svg"
-          value={28}
+          value={
+            serviceStatus?.data?.find(
+              (status) => status.status === "revision_pending"
+            )?.count ?? 0
+          }
           classesName={[
             "border border-orange-dark bg-orange-light text-orange-dark rounded-lg p-4 rounded-xl w-64 min-w-64",
           ]}
@@ -91,7 +110,10 @@ export const ServiceManagementList = () => {
         <CardStatistic
           title="معلّقة"
           icon="/images/elements.svg"
-          value={20}
+          value={
+            serviceStatus?.data?.find((status) => status.status === "inactive")
+              ?.count ?? 0
+          }
           classesName={[
             "border border-gray-dark bg-gray-light text-gray-dark rounded-lg p-4 rounded-xl w-64 min-w-64",
           ]}
@@ -101,6 +123,7 @@ export const ServiceManagementList = () => {
         <h1 className="text-lg font-semibold">إدارة الخدمات</h1>
         <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
         <ServiceManagementFilter
+          serviceStatus={serviceStatus?.data ?? []}
           onFilterChange={handleFilterChange}
           onServiceTypeChange={handleServiceTypeChange}
         />

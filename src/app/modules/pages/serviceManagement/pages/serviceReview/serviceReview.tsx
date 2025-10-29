@@ -15,7 +15,7 @@ import {
   Spin,
 } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import RejectService, {
   type RejectServiceRef,
 } from "../../components/rejectService/rejectService";
@@ -50,13 +50,13 @@ const ServiceReview = () => {
     rejectServiceRef.current?.resetForm();
   };
 
-  const { data: serviceRevisionData, isLoading } = useApiQuery(
-    ["serviceRevision", id],
-    () => getRevision(id!),
-    {
-      enabled: !!id,
-    }
-  );
+  const {
+    data: serviceRevisionData,
+    isLoading,
+    refetch,
+  } = useApiQuery(["serviceRevision", id], () => getRevision(id!), {
+    enabled: !!id,
+  });
 
   // Get available service status options from API
   const { data: serviceStatusOptions } = useApiQuery(
@@ -80,8 +80,8 @@ const ServiceReview = () => {
   const approveServiceRevisionMutation = useApiMutation(
     () => approveServiceRevision(id!),
     {
-      onSuccess: (res) => {
-        console.log(res);
+      onSuccess: () => {
+        refetch();
       },
     }
   );
@@ -93,10 +93,10 @@ const ServiceReview = () => {
       });
     },
     {
-      onSuccess: (res) => {
-        console.log(res);
+      onSuccess: () => {
         setIsModalOpen(false);
         rejectServiceRef.current?.resetForm();
+        refetch();
       },
     }
   );

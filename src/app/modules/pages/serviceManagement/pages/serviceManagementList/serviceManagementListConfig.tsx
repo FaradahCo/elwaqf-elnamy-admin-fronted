@@ -26,15 +26,18 @@ export const servicesColumnsList: ColumnsType<ServiceData> = [
     key: "title",
     width: 200,
     ellipsis: true,
-    render: (title: string, record: ServiceData) => (
-      <Link
-        to={`reviews/${record.id}`}
-        className="text-primary! underline! cursor-pointer"
-        title={title}
-      >
-        {title}
-      </Link>
-    ),
+    render: (title: string, record: ServiceData) =>
+      record?.pending_revision?.id ? (
+        <Link
+          to={`reviews/${record?.pending_revision?.id}`}
+          className="text-primary! underline! cursor-pointer"
+          title={title}
+        >
+          {title}
+        </Link>
+      ) : (
+        <span title={title}>{title}</span>
+      ),
   },
   {
     title: "مزود الخدمة",

@@ -14,6 +14,7 @@ export interface ServiceData {
   duration?: Duration;
   type?: string;
   field_id?: number;
+  pending_revision: ServiceRevision;
   description?: string;
   duration_type?: string;
   duration_time?: number;

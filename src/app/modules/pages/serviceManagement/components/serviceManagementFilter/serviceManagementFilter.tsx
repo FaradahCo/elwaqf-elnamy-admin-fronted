@@ -1,7 +1,5 @@
-import {
-  getSeriviceStatus,
-  getStatusTag,
-} from "@shared/services/sharedService";
+import type { ServiceStatus } from "@shared/model/shared.model";
+import { getStatusTag } from "@shared/services/sharedService";
 import { Button, Card, Col, Form, Input, Row, Select } from "antd";
 import React, {
   useCallback,
@@ -11,20 +9,17 @@ import React, {
   useState,
 } from "react";
 import { type ServiceManagementQuery } from "../../model/serviceProviderList";
-import { useApiQuery } from "@shared/services/api";
-import type {
-  ServiceStatus,
-  PaginatedResponse,
-} from "@shared/model/shared.model";
 
 const { Option } = Select;
 
 interface ServiceManagementFilterProps {
+  serviceStatus: ServiceStatus[];
   onFilterChange?: (filter: ServiceManagementQuery) => void;
   onServiceTypeChange?: (type: string) => void;
 }
 
 const ServiceManagementFilter = ({
+  serviceStatus,
   onFilterChange,
   onServiceTypeChange,
 }: ServiceManagementFilterProps) => {
@@ -82,14 +77,6 @@ const ServiceManagementFilter = ({
       }
     },
     [onServiceTypeChange, onFilterChange, form]
-  );
-
-  const { data: serviceStatus } = useApiQuery<PaginatedResponse<ServiceStatus>>(
-    ["serviceStatus", serviceType],
-    () => getSeriviceStatus({ type: serviceType }),
-    {
-      enabled: !!serviceType,
-    }
   );
 
   // Cleanup timer on unmount
@@ -152,7 +139,7 @@ const ServiceManagementFilter = ({
           <Col xs={24} md={6}>
             <Form.Item name="status" label="الحالة">
               <Select placeholder="اختر الحالة" className="w-full" allowClear>
-                {serviceStatus?.data?.map((option) => (
+                {serviceStatus?.map((option) => (
                   <Option key={option.status} value={option.status}>
                     <div className="flex items-center gap-2">
                       <div
