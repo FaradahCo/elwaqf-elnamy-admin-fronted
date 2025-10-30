@@ -39,8 +39,8 @@ const AoiService = {
   put: async <TInput, TResponse>(
     url: string,
     data?: TInput
-  ): Promise<ApiResponse<TResponse>> => {
-    const res = await axiosInstance.put<ApiResponse<TResponse>>(url, data);
+  ): Promise<TResponse> => {
+    const res = await axiosInstance.put<TResponse>(url, data);
     return res.data;
   },
 

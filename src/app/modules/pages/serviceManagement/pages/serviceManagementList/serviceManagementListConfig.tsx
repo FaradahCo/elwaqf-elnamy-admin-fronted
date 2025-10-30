@@ -14,7 +14,7 @@ import {
 // Columns for Services (خدمات)
 export const servicesColumnsList: ColumnsType<ServiceData> = [
   {
-    title: "معرف الخدمة",
+    title: "ID",
     dataIndex: "id",
     key: "id",
     width: 100,
@@ -26,18 +26,15 @@ export const servicesColumnsList: ColumnsType<ServiceData> = [
     key: "title",
     width: 200,
     ellipsis: true,
-    render: (title: string, record: ServiceData) =>
-      record?.pending_revision?.id ? (
-        <Link
-          to={`reviews/${record?.pending_revision?.id}`}
-          className="text-primary! underline! cursor-pointer"
-          title={title}
-        >
-          {title}
-        </Link>
-      ) : (
-        <span title={title}>{title}</span>
-      ),
+    render: (title: string, record: ServiceData) => (
+      <Link
+        to={`reviews/${record?.id}`}
+        className="text-primary! underline! cursor-pointer"
+        title={title}
+      >
+        {record?.title}
+      </Link>
+    ),
   },
   {
     title: "مزود الخدمة",

@@ -3,31 +3,15 @@ import { useApiMutation, useApiQuery } from "@shared/services/api";
 import {
   getSeriviceStatus,
   getStatusTag,
+  ServiceStatusEnum,
 } from "@shared/services/sharedService";
+import { useQueryClient } from "@tanstack/react-query";
+import { Collapse, Form, Input, Radio, Select, Spin } from "antd";
+import { useParams } from "react-router";
+import { type ServiceData } from "../../model/serviceProviderList";
 import {
-  Button,
-  Collapse,
-  Form,
-  Input,
-  Modal,
-  Radio,
-  Select,
-  Spin,
-} from "antd";
-import { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-import RejectService, {
-  type RejectServiceRef,
-} from "../../components/rejectService/rejectService";
-import {
-  type ServiceData,
-  type ServiceRevision,
-} from "../../model/serviceProviderList";
-import {
-  approveServiceRevision,
-  getRevision,
+  getService,
   getRevisionsByServiceId,
-  rejectServiceRevision,
   updateService,
 } from "../../serviceManagementService";
 import { serviceLogColumns } from "./serviceReviewConfig";
@@ -36,35 +20,34 @@ const { TextArea } = Input;
 
 const ServiceReview = () => {
   const { id } = useParams<{ id: string }>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const rejectServiceRef = useRef<RejectServiceRef>(null);
-  const [serviceRevision, setServiceRevision] = useState<ServiceRevision>();
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const rejectServiceRef = useRef<RejectServiceRef>(null);
+  const queryClient = useQueryClient();
 
-  const handleOk = async () => {
-    const formData = await rejectServiceRef.current?.validateForm();
-    rejectServiceRevisionMutation.mutate(formData);
-  };
+  // const handleOk = async () => {
+  //   const formData = await rejectServiceRef.current?.validateForm();
+  //   rejectServiceRevisionMutation.mutate(formData);
+  // };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    rejectServiceRef.current?.resetForm();
-  };
+  // const handleCancel = () => {
+  //   setIsModalOpen(false);
+  //   rejectServiceRef.current?.resetForm();
+  // };
 
-  const {
-    data: serviceRevisionData,
-    isLoading,
-    refetch,
-  } = useApiQuery(["serviceRevision", id], () => getRevision(id!), {
-    enabled: !!id,
-  });
+  const { data: serviceData, isLoading } = useApiQuery(
+    ["serviceRevisionData", id],
+    () => getService(id!),
+    {
+      enabled: !!id,
+    }
+  );
 
-  // Get available service status options from API
   const { data: serviceStatusOptions } = useApiQuery(
     ["service-status-options"],
-    () => getSeriviceStatus({ type: serviceRevision?.service?.type! }),
+    () => getSeriviceStatus({ type: serviceData?.type! }),
     {
       retry: false,
-      enabled: !!serviceRevision?.service,
+      enabled: !!serviceData,
     }
   );
 
@@ -72,47 +55,53 @@ const ServiceReview = () => {
     ["revisions-services-id", id],
     () => getRevisionsByServiceId({ service_id: id }),
     {
-      enabled: !!serviceRevision?.service?.id,
+      enabled: !!serviceData?.id,
       retry: false,
     }
   );
 
-  const approveServiceRevisionMutation = useApiMutation(
-    () => approveServiceRevision(id!),
-    {
-      onSuccess: () => {
-        refetch();
-      },
-    }
-  );
+  // const approveServiceRevisionMutation = useApiMutation(
+  //   () => approveServiceRevision(id!),
+  //   {
+  //     onSuccess: () => {
+  //       // refetch();
+  //     },
+  //   }
+  // );
 
-  const rejectServiceRevisionMutation = useApiMutation(
-    (formData: any) => {
-      return rejectServiceRevision(id!, {
-        reason: formData?.reason,
+  // const rejectServiceRevisionMutation = useApiMutation(
+  //   (formData: any) => {
+  //     return rejectServiceRevision(id!, {
+  //       reason: formData?.reason,
+  //     });
+  //   },
+  //   {
+  //     onSuccess: () => {
+  //       setIsModalOpen(false);
+  //       rejectServiceRef.current?.resetForm();
+  //       // refetch();
+  //     },
+  //   }
+  // );
+
+  const updateStatusMutation = useApiMutation(
+    (status) => {
+      return updateService(serviceData?.id!, {
+        status: status as ServiceStatusEnum,
       });
     },
     {
-      onSuccess: () => {
-        setIsModalOpen(false);
-        rejectServiceRef.current?.resetForm();
-        refetch();
+      onSuccess: (res) => {
+        console.log("Update status response:", res);
+        queryClient.setQueryData(["serviceRevisionData", id], {
+          ...serviceData,
+          status: res.status,
+        });
       },
     }
   );
 
-  const updateStatusMutation = useApiMutation(
-    (status: string) => {
-      return updateService(id!, { status: status });
-    },
-    {
-      onSuccess: () => {
-        // setServiceRevision(res.data);
-      },
-    }
-  );
-
-  const handleStatusChange = (newStatus: string) => {
+  const handleStatusChange = (newStatus: ServiceStatusEnum) => {
     updateStatusMutation.mutate(newStatus);
   };
 
@@ -131,12 +120,6 @@ const ServiceReview = () => {
       ),
     },
   ];
-
-  useEffect(() => {
-    if (serviceRevisionData) {
-      setServiceRevision(serviceRevisionData);
-    }
-  }, [serviceRevisionData]);
 
   return (
     <>
@@ -159,26 +142,34 @@ const ServiceReview = () => {
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">حالة الخدمة:</span>
                 <Select
-                  value={serviceRevision?.status || ""}
+                  value={serviceData?.status}
                   onChange={handleStatusChange}
                   loading={updateStatusMutation.isPending}
                   disabled={updateStatusMutation.isPending}
-                  popupRender={(menu) => menu}
                   className="min-w-40"
                 >
-                  {serviceStatusOptions?.data?.map((option) => (
-                    <Select.Option key={option.status} value={option.status}>
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-3 h-3 rounded-full"
-                          style={{
-                            backgroundColor: getStatusTag(option.status).color,
-                          }}
-                        />
-                        <span>{option.label}</span>
-                      </div>
-                    </Select.Option>
-                  ))}
+                  {serviceStatusOptions?.data
+                    ?.filter(
+                      (item) =>
+                        item.status === ServiceStatusEnum.hold ||
+                        item.status === ServiceStatusEnum.approved ||
+                        item.status === ServiceStatusEnum.inactive ||
+                        item.status === ServiceStatusEnum.removed
+                    )
+                    ?.map((option) => (
+                      <Select.Option key={option.status} value={option.status}>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-3 h-3 rounded-full"
+                            style={{
+                              backgroundColor: getStatusTag(option.status)
+                                .color,
+                            }}
+                          />
+                          <span>{option.label}</span>
+                        </div>
+                      </Select.Option>
+                    ))}
                 </Select>
               </div>
             </div>
@@ -189,7 +180,7 @@ const ServiceReview = () => {
             <Form layout="vertical" className="space-y-4">
               <Form.Item<ServiceData> label="اسم الخدمة">
                 <Input
-                  value={serviceRevision?.service?.title || "-"}
+                  value={serviceData?.title || "-"}
                   readOnly
                   className="bg-gray-50"
                   size="large"
@@ -198,7 +189,7 @@ const ServiceReview = () => {
 
               <Form.Item<ServiceData> label="تصنيف الخدمة">
                 <Input
-                  value={serviceRevision?.service?.field?.name || "-"}
+                  value={serviceData?.field?.name || "-"}
                   readOnly
                   className="bg-gray-50"
                   size="large"
@@ -207,7 +198,7 @@ const ServiceReview = () => {
 
               <Form.Item<ServiceData> label="وصف الخدمة">
                 <TextArea
-                  value={serviceRevision?.service?.description || "-"}
+                  value={serviceData?.description || "-"}
                   rows={4}
                   readOnly
                   className="bg-gray-50"
@@ -217,29 +208,37 @@ const ServiceReview = () => {
 
               <Form.Item<ServiceData> label="مخرجات الخدمة">
                 <div className="space-y-2">
-                  {serviceRevision?.service?.outputs?.map((output, index) => (
-                    <Input
-                      key={index}
-                      value={output.title || "-"}
-                      readOnly
-                      className="bg-gray-50 mt-4!"
-                      size="large"
-                    />
-                  ))}
+                  {serviceData?.outputs?.length ? (
+                    serviceData?.outputs?.map((output, index) => (
+                      <Input
+                        key={index}
+                        value={output.title || "-"}
+                        readOnly
+                        className="bg-gray-50 mt-4!"
+                        size="large"
+                      />
+                    ))
+                  ) : (
+                    <span className="text-[12px]"> لا توجد مخرجات</span>
+                  )}
                 </div>
               </Form.Item>
 
               <Form.Item<ServiceData> label="نطاق الخدمة">
                 <div className="space-y-2">
-                  {serviceRevision?.service?.scopes?.map((scope, index) => (
-                    <Input
-                      key={index}
-                      value={scope.title || "-"}
-                      readOnly
-                      className="bg-gray-50 mt-4!"
-                      size="large"
-                    />
-                  ))}
+                  {serviceData?.scopes?.length ? (
+                    serviceData?.scopes?.map((scope, index) => (
+                      <Input
+                        key={index}
+                        value={scope.title || "-"}
+                        readOnly
+                        className="bg-gray-50 mt-4!"
+                        size="large"
+                      />
+                    ))
+                  ) : (
+                    <span className="text-[12px]">لا يوجد نطاق</span>
+                  )}
                 </div>
               </Form.Item>
             </Form>
@@ -250,7 +249,7 @@ const ServiceReview = () => {
             <Form layout="vertical" className="space-y-4">
               <Form.Item<ServiceData> label="نوع المدة" className="main-radio">
                 <Radio.Group
-                  value={serviceRevision?.service?.duration?.type || "day"}
+                  value={serviceData?.duration?.type || "day"}
                   size="large"
                   disabled
                 >
@@ -262,7 +261,7 @@ const ServiceReview = () => {
 
               <Form.Item label="مدة التنفيذ">
                 <Input
-                  value={serviceRevision?.service?.duration?.time || "-"}
+                  value={serviceData?.duration?.time || "-"}
                   type="number"
                   size="large"
                   readOnly
@@ -272,7 +271,7 @@ const ServiceReview = () => {
 
               <Form.Item<ServiceData> label="مبلغ الخدمة يبدأ من">
                 <Input
-                  value={serviceRevision?.service?.min_price || "-"}
+                  value={serviceData?.min_price || "-"}
                   type="number"
                   readOnly
                   className="bg-gray-50"
@@ -282,7 +281,7 @@ const ServiceReview = () => {
 
               <Form.Item<ServiceData> label="زمن الاستجابة">
                 <Input
-                  value={serviceRevision?.service?.response_time || "-"}
+                  value={serviceData?.response_time || "-"}
                   type="number"
                   readOnly
                   className="bg-gray-50"
@@ -298,8 +297,8 @@ const ServiceReview = () => {
             <Form layout="vertical" className="space-y-4">
               <Form.Item<ServiceData> label="متطلبات الاستفادة">
                 <div className="space-y-2">
-                  {serviceRevision?.service?.requirements?.map(
-                    (requirement, index) => (
+                  {serviceData?.requirements?.length ? (
+                    serviceData?.requirements?.map((requirement, index) => (
                       <Input
                         key={index}
                         value={requirement.title || "-"}
@@ -307,15 +306,18 @@ const ServiceReview = () => {
                         className="bg-gray-50 mt-4!"
                         size="large"
                       />
-                    )
+                    ))
+                  ) : (
+                    <span className="text-[12px]">لا يوجد متطلبات</span>
                   )}
                 </div>
               </Form.Item>
             </Form>
           </div>
 
-          {(serviceRevision?.status === "revision_pending" ||
-            serviceRevision?.status === "pending") && (
+          {/* {(serviceRevisionData?.service?.status ===
+            ServiceStatusEnum.revision_pending ||
+            serviceRevisionData?.status === ServiceStatusEnum.pending) && (
             <div className="actions bg-white shadow rounded-lg p-6 mt-4 flex justify-end gap-5">
               <Button
                 type="primary"
@@ -336,7 +338,7 @@ const ServiceReview = () => {
                 اعتماد الخدمة
               </Button>
             </div>
-          )}
+          )} */}
 
           <div className="service-log bg-white shadow rounded-lg p-6 mt-4">
             <Collapse
@@ -346,7 +348,7 @@ const ServiceReview = () => {
           </div>
         </>
       )}
-      <Modal
+      {/* <Modal
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -355,7 +357,7 @@ const ServiceReview = () => {
         cancelText="إلغاء"
       >
         <RejectService ref={rejectServiceRef} />
-      </Modal>
+      </Modal> */}
     </>
   );
 };

@@ -34,7 +34,7 @@ const MainLayout: React.FC = () => {
     {
       key: "2",
       icon: <VideoCameraOutlined />,
-      label: "إدارج الخدمات",
+      label: "إدارة الخدمات",
       path: pagesRoutePath.SERVICE_MANAGEMENT_LIST,
     },
     {
@@ -113,7 +113,7 @@ const MainLayout: React.FC = () => {
   const getSelectedKey = () => {
     const currentPath = location.pathname;
     const selectedItem = menuItems.find((item) => item.path === currentPath);
-    return selectedItem ? [selectedItem.key] : ["1"];
+    return selectedItem ? [selectedItem.key] : ["0"];
   };
 
   return (

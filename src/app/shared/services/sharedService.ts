@@ -78,6 +78,8 @@ export enum ServiceStatusEnum {
   disabled = "disabled",
   hidden = "hidden",
   active = "active",
+  hold = "hold",
+  removed = "removed",
 }
 
 export const getStatusTag = (status: ServiceStatusEnum | string) => {
@@ -93,6 +95,8 @@ export const getStatusTag = (status: ServiceStatusEnum | string) => {
     [ServiceStatusEnum.disabled]: { color: "#8c8c8c", text: "معطل" },
     [ServiceStatusEnum.hidden]: { color: "#8c8c8c", text: "مخفي" },
     [ServiceStatusEnum.active]: { color: "#52c41a", text: "مفعل" },
+    [ServiceStatusEnum.hold]: { color: "#fa8c16", text: "معلق" },
+    [ServiceStatusEnum.removed]: { color: "#8c8c8c", text: "محذوف" },
     [ServiceStatusEnum.revision_pending]: {
       color: "#722ed1",
       text: "بانتظار المراجعة",

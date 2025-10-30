@@ -15,8 +15,8 @@ export const getServices = async (params?: ServiceManagementQuery) => {
   );
 };
 
-export const getRevision = async (serviceId: string) => {
-  return AoiService.get<ServiceRevision>(`/admin/revisions/${serviceId}`);
+export const getService = async (serviceId: string) => {
+  return AoiService.get<ServiceData>(`/admin/services/${serviceId}`);
 };
 
 export const getFields = async () => {
@@ -50,7 +50,7 @@ export const updateService = async (
   serviceId: string,
   data: Partial<ServiceData>
 ) => {
-  return AoiService.put<Partial<ServiceData>, ServiceRevision>(
+  return AoiService.put<Partial<ServiceData>, ServiceData>(
     `admin/services/${serviceId}`,
     data
   );

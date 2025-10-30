@@ -2,13 +2,16 @@ import type {
   PaginatedParams,
   ServiceStatus,
 } from "@shared/model/shared.model";
-import type { DurationName } from "@shared/services/sharedService";
+import type {
+  DurationName,
+  ServiceStatusEnum,
+} from "@shared/services/sharedService";
 
 export interface ServiceData {
   id?: string;
   title?: string;
   provider_id?: ProviderId;
-  status?: string;
+  status?: ServiceStatusEnum;
   field?: Field;
   min_price?: number;
   duration?: Duration;
