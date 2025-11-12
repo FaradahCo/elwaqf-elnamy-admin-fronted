@@ -1,7 +1,7 @@
 type CardStatisticProps = {
   title: string;
   icon: string;
-  value: number;
+  value: string | number;
   classesName: string[];
 };
 export const CardStatistic = ({

@@ -84,3 +84,7 @@
   border-color: var(--color-second-primary);
   color: white;
 }
+
+.walet-card .ant-tabs-nav::before {
+  display: none;
+}

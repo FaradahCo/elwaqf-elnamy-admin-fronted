@@ -1,3 +1,4 @@
+import type { RootState } from "@/app/store";
 import {
   ServiceClassification,
   type PaginatedResponse,
@@ -10,15 +11,14 @@ import {
 import { Button, DatePicker, Form, Input, InputNumber, Select } from "antd";
 import enUS from "antd/es/date-picker/locale/en_US";
 import dayjs from "dayjs";
-import { useCallback, useState, memo, useEffect } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import type {
   ServiceData,
   ServiceManagementQuery,
 } from "../../../serviceManagement/model/serviceProviderList";
 import { getServices } from "../../../serviceManagement/serviceManagementService";
 import type { DiscoundCodeItem } from "../../model/discoundCodesModel";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/app/store";
 
 interface DiscoundCodesFormProps {
   onSubmit: (values: DiscoundCodeItem) => void;
@@ -45,9 +45,20 @@ const DiscoundCodesForm = ({
 
   const handleSubmit = useCallback(
     (values: DiscoundCodeItem) => {
+      // Filter out "select-all" and "clear-all" from service_ids if present
+      const filteredServiceIds = Array.isArray(values.service_ids)
+        ? values.service_ids.filter((id) => {
+            if (typeof id === "string") {
+              return id !== "select-all" && id !== "clear-all";
+            }
+            return true;
+          })
+        : values.service_ids;
+
       // Format dates to YYYY-MM-DD for backend
       const formattedValues = {
         ...values,
+        service_ids: filteredServiceIds,
         expires_at: values.expires_at
           ? dayjs(values.expires_at).format("YYYY-MM-DD")
           : undefined,
@@ -81,6 +92,21 @@ const DiscoundCodesForm = ({
     };
   };
 
+  const handleServiceIdsChange = useCallback(
+    (selectedValues: (string | number)[]) => {
+      const values = selectedValues as (string | number)[];
+      if (values.includes("select-all")) {
+        const allServiceIds =
+          serviceData?.data
+            .map((service) => service.id)
+            .filter((id): id is string => !!id) || [];
+        form.setFieldValue("service_ids", allServiceIds);
+      } else if (values.includes("clear-all")) {
+        form.setFieldValue("service_ids", []);
+      }
+    },
+    [form, serviceData]
+  );
   // Update form values when editingItem changes
   useEffect(() => {
     if (editingItem) {
@@ -188,7 +214,19 @@ const DiscoundCodesForm = ({
               }
               size="large"
               mode="multiple"
+              onChange={handleServiceIdsChange}
+              maxTagCount={3}
+              maxTagPlaceholder={(omittedValues) =>
+                `+ ${omittedValues.length} أخرى`
+              }
             >
+              <Select.Option key="select-all" value="select-all">
+                🔘 جميع الخدمات
+              </Select.Option>
+
+              <Select.Option key="clear-all" value="clear-all">
+                ✗ إلغاء الكل
+              </Select.Option>
               {serviceData?.data.map((service) => (
                 <Option key={service.id} value={service.id}>
                   {service.title}

@@ -20,7 +20,7 @@ const Login: React.FC = () => {
     AuthenticationService.login,
     {
       onSuccess: (response) => {
-        setItem("token", response.token);
+        setItem("ADMIN_token", response.token);
         dispatch(setUser(response.user));
         dispatch(resetForceLogout());
         navigate(pagesRoutePath.HOME);

@@ -28,6 +28,18 @@ const AoiService = {
     return res.data;
   },
 
+  postMultipart: async <TResponse>(
+    url: string,
+    data: FormData
+  ): Promise<TResponse> => {
+    const res = await axiosInstance.post<TResponse>(url, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data as TResponse;
+  },
+
   patch: async <TInput, TResponse>(
     url: string,
     data?: TInput

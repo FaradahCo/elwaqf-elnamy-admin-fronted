@@ -11,6 +11,11 @@ export const ServiceClassificationConfig: Record<string, { label: string }> = {
   package: { label: "باقة" },
 };
 
+export const ownerTypeConfig: Record<string, { label: string }> = {
+  Client: { label: "عميل" },
+  Provider: { label: "مقدم الخدمة" },
+};
+
 export const typeOptions = [
   { value: "service", label: "خدمة" },
   { value: "package", label: "باقة" },

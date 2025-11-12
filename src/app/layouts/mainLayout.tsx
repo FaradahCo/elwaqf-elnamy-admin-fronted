@@ -1,20 +1,21 @@
-import { theme, Layout, Menu } from "antd";
-import { Content, Header } from "antd/es/layout/layout";
-import Sider from "antd/es/layout/Sider";
-import React, { useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router";
 import {
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
 import MainHeader from "@shared/components/mainHeader/mainHeader";
-import { serviceProviderRoutePath } from "../modules/pages/serviceProvider/serviceProviderRoutes";
-import { pagesRoutePath } from "../modules/pages/pages.routes";
+import { Layout, Menu, theme } from "antd";
+import Sider from "antd/es/layout/Sider";
+import { Content, Header } from "antd/es/layout/layout";
+import React, { useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router";
 import { useLogOut } from "../hooks/useLogOut";
+import { pagesRoutePath } from "../modules/pages/pages.routes";
+import { walletRoutePath } from "../modules/pages/wallet/walletRoutes";
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [openKeys, setOpenKeys] = useState<string[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
   const {
@@ -49,11 +50,33 @@ const MainLayout: React.FC = () => {
       label: "الإوقاف",
       path: "/waqf/list",
     },
+    // {
+    //   key: "5",
+    //   icon: <UploadOutlined />,
+    //   label: "مزودي الخدمات",
+    //   path: serviceProviderRoutePath.SERVICE_PROVIDERS,
+    // },
     {
       key: "5",
       icon: <UploadOutlined />,
-      label: "مزودي الخدمات",
-      path: serviceProviderRoutePath.SERVICE_PROVIDERS,
+      label: "إدارة المحفظة",
+      children: [
+        {
+          key: "5-1",
+          label: "المحفظة",
+          path: "/admin/wallet",
+        },
+        {
+          key: "5-2",
+          label: "المعاملات المالية",
+          path: walletRoutePath.PAYMENTS,
+        },
+        {
+          key: "5-3",
+          label: "الأرصدة",
+          path: walletRoutePath.BALANCES,
+        },
+      ],
     },
     {
       key: "6",
@@ -101,10 +124,38 @@ const MainLayout: React.FC = () => {
     },
   ];
 
+  // Helper function to find menu item by key (including nested children)
+  const findMenuItemByKey = (items: any[], key: string): any => {
+    for (const item of items) {
+      if (item.key === key) {
+        return item;
+      }
+      if (item.children) {
+        const found = findMenuItemByKey(item.children, key);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
+  // Helper function to find menu item by path (including nested children)
+  const findMenuItemByPath = (items: any[], path: string): any => {
+    for (const item of items) {
+      if (item.path === path) {
+        return item;
+      }
+      if (item.children) {
+        const found = findMenuItemByPath(item.children, path);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
   // Handle menu item click
   const handleMenuClick = ({ key }: { key: string }) => {
-    const selectedItem = menuItems.find((item) => item.key === key);
-    if (selectedItem) {
+    const selectedItem = findMenuItemByKey(menuItems, key);
+    if (selectedItem && selectedItem.path) {
       navigate(selectedItem.path);
     }
   };
@@ -112,9 +163,14 @@ const MainLayout: React.FC = () => {
   // Get current selected key based on location
   const getSelectedKey = () => {
     const currentPath = location.pathname;
-    const selectedItem = menuItems.find((item) => item.path === currentPath);
-    return selectedItem ? [selectedItem.key] : ["0"];
+    const selectedItem = findMenuItemByPath(menuItems, currentPath);
+    if (selectedItem) {
+      return [selectedItem.key];
+    }
+    return ["0"];
   };
+
+  const selectedKeys = getSelectedKey();
 
   return (
     <Layout className="h-screen main-layout">
@@ -134,7 +190,9 @@ const MainLayout: React.FC = () => {
           className="py-5!"
           theme="dark"
           mode="inline"
-          selectedKeys={getSelectedKey()}
+          selectedKeys={selectedKeys}
+          openKeys={openKeys}
+          onOpenChange={setOpenKeys}
           onClick={handleMenuClick}
           items={menuItems}
         />

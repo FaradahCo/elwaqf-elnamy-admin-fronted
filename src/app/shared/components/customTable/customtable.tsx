@@ -63,7 +63,7 @@ export const CustomTable = <T extends Record<string, any>>({
     current: paginationMeta?.current_page || 1,
     pageSize: paginationMeta?.per_page,
     total: paginationMeta?.total || 0,
-    showSizeChanger: false,
+    showSizeChanger: true,
     showQuickJumper: false,
     showTotal: (total, range) =>
       `${range?.[0] || 0}-${range?.[1] || 0} من ${total} عنصر`,

@@ -3,6 +3,7 @@ import MainLayout from "../../layouts/mainLayout";
 import { ServiceProviderRoutes } from "./serviceProvider/serviceProviderRoutes";
 import { serviceManagementRoutes } from "./serviceManagement/serviceManagementRoutes";
 import DiscoundCodesRoutes from "./discoundCodes/discoundCodesRoutes";
+import walletRoutes from "./wallet/walletRoutes";
 
 export const pagesRoutes: RouteObject[] = [
   {
@@ -29,6 +30,10 @@ export const pagesRoutes: RouteObject[] = [
         children: [...DiscoundCodesRoutes],
       },
       {
+        path: "wallet",
+        children: [...walletRoutes],
+      },
+      {
         path: "*",
         lazy: () =>
           import("@shared/components/underCreation").then((m) => ({
@@ -44,4 +49,7 @@ export const pagesRoutePath = {
   SERVICE_PROVIDERS: "/admin/service-providers",
   SERVICE_MANAGEMENT_LIST: "/admin/service-management",
   DISCOUNT_CODES_LIST: "/admin/discound-codes",
+  WALLET: "/admin/wallet",
+  WALLET_TRANSACTIONS: "/admin/wallet/transactions",
+  WALLET_BALANCES: "/admin/wallet/balances",
 };

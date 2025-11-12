@@ -11,16 +11,6 @@ export const serviceLogColumns = [
     title: "التاريخ",
     dataIndex: "created_at",
     key: "created_at",
-    render: (created_at: string) => {
-      const formattedDate = new Date(created_at).toLocaleDateString("ar-SA", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      return formattedDate;
-    },
   },
   {
     title: "التفاصيل",

@@ -6,33 +6,47 @@ import {
   ServiceStatusEnum,
 } from "@shared/services/sharedService";
 import { useQueryClient } from "@tanstack/react-query";
-import { Collapse, Form, Input, Radio, Select, Spin } from "antd";
+import {
+  Button,
+  Collapse,
+  Form,
+  Input,
+  Modal,
+  Radio,
+  Select,
+  Spin,
+} from "antd";
 import { useParams } from "react-router";
 import { type ServiceData } from "../../model/serviceProviderList";
 import {
   getService,
   getRevisionsByServiceId,
   updateService,
+  approveServiceRevision,
+  rejectServiceRevision,
 } from "../../serviceManagementService";
 import { serviceLogColumns } from "./serviceReviewConfig";
+import { useRef, useState } from "react";
+import type { RejectServiceRef } from "../../components/rejectService/rejectService";
+import RejectService from "../../components/rejectService/rejectService";
 
 const { TextArea } = Input;
 
 const ServiceReview = () => {
   const { id } = useParams<{ id: string }>();
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  // const rejectServiceRef = useRef<RejectServiceRef>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const rejectServiceRef = useRef<RejectServiceRef>(null);
   const queryClient = useQueryClient();
 
-  // const handleOk = async () => {
-  //   const formData = await rejectServiceRef.current?.validateForm();
-  //   rejectServiceRevisionMutation.mutate(formData);
-  // };
+  const handleOk = async () => {
+    const formData = await rejectServiceRef.current?.validateForm();
+    rejectServiceRevisionMutation.mutate(formData);
+  };
 
-  // const handleCancel = () => {
-  //   setIsModalOpen(false);
-  //   rejectServiceRef.current?.resetForm();
-  // };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    rejectServiceRef.current?.resetForm();
+  };
 
   const { data: serviceData, isLoading } = useApiQuery(
     ["serviceRevisionData", id],
@@ -60,29 +74,29 @@ const ServiceReview = () => {
     }
   );
 
-  // const approveServiceRevisionMutation = useApiMutation(
-  //   () => approveServiceRevision(id!),
-  //   {
-  //     onSuccess: () => {
-  //       // refetch();
-  //     },
-  //   }
-  // );
+  const approveServiceRevisionMutation = useApiMutation(
+    () => approveServiceRevision(id!),
+    {
+      onSuccess: () => {
+        // refetch();
+      },
+    }
+  );
 
-  // const rejectServiceRevisionMutation = useApiMutation(
-  //   (formData: any) => {
-  //     return rejectServiceRevision(id!, {
-  //       reason: formData?.reason,
-  //     });
-  //   },
-  //   {
-  //     onSuccess: () => {
-  //       setIsModalOpen(false);
-  //       rejectServiceRef.current?.resetForm();
-  //       // refetch();
-  //     },
-  //   }
-  // );
+  const rejectServiceRevisionMutation = useApiMutation(
+    (formData: any) => {
+      return rejectServiceRevision(id!, {
+        reason: formData?.reason,
+      });
+    },
+    {
+      onSuccess: () => {
+        setIsModalOpen(false);
+        rejectServiceRef.current?.resetForm();
+        // refetch();
+      },
+    }
+  );
 
   const updateStatusMutation = useApiMutation(
     (status) => {
@@ -92,7 +106,6 @@ const ServiceReview = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("Update status response:", res);
         queryClient.setQueryData(["serviceRevisionData", id], {
           ...serviceData,
           status: res.status,
@@ -315,9 +328,7 @@ const ServiceReview = () => {
             </Form>
           </div>
 
-          {/* {(serviceRevisionData?.service?.status ===
-            ServiceStatusEnum.revision_pending ||
-            serviceRevisionData?.status === ServiceStatusEnum.pending) && (
+          {serviceData?.pending_revision && (
             <div className="actions bg-white shadow rounded-lg p-6 mt-4 flex justify-end gap-5">
               <Button
                 type="primary"
@@ -338,7 +349,7 @@ const ServiceReview = () => {
                 اعتماد الخدمة
               </Button>
             </div>
-          )} */}
+          )}
 
           <div className="service-log bg-white shadow rounded-lg p-6 mt-4">
             <Collapse
@@ -348,7 +359,7 @@ const ServiceReview = () => {
           </div>
         </>
       )}
-      {/* <Modal
+      <Modal
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -357,7 +368,7 @@ const ServiceReview = () => {
         cancelText="إلغاء"
       >
         <RejectService ref={rejectServiceRef} />
-      </Modal> */}
+      </Modal>
     </>
   );
 };

@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate, Outlet } from "react-router";
 
 export const isAuthenticated = () => {
-  return !!localStorage.getItem("token");
+  return !!localStorage.getItem("ADMIN_token");
 };
 
 const ProtectedRoute: React.FC = () => {

@@ -25,7 +25,7 @@ const axiosInstance = axios.create({
 // Request interceptor
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("ADMIN_token");
     const teamId = localStorage.getItem("teamId");
 
     if (token) {
