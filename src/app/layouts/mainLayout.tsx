@@ -12,6 +12,7 @@ import { Outlet, useLocation, useNavigate } from "react-router";
 import { useLogOut } from "../hooks/useLogOut";
 import { pagesRoutePath } from "../modules/pages/pages.routes";
 import { walletRoutePath } from "../modules/pages/wallet/walletRoutes";
+import { serviceProviderRoutePath } from "../modules/pages/serviceProvider/serviceProviderRoutes";
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -28,28 +29,50 @@ const MainLayout: React.FC = () => {
   const menuItems = [
     {
       key: "1",
+      label: "لوحة التحكم والتحليل",
+      type:"group",
+      children:[
+        {
+          key: "1-1",
       icon: <UserOutlined />,
       label: "الرئيسية",
       path: pagesRoutePath.HOME,
     },
+      ]
+    },
+
     {
       key: "2",
+      label: "إدارة الخدمات والأوقاف",
+      type:"group",
+      children:[
+    {
+      key: "2-1",
       icon: <VideoCameraOutlined />,
       label: "إدارة الخدمات",
       path: pagesRoutePath.SERVICE_MANAGEMENT_LIST,
     },
     {
-      key: "3",
+      key: "2-2",
       icon: <UploadOutlined />,
       label: "متابعه الطلبات",
       path: "/provider/services-management",
     },
     {
-      key: "4",
+      key: "2-3",
+      icon: <UploadOutlined />,
+      label: "مزودي الخدمات",
+      path: serviceProviderRoutePath.SERVICE_PROVIDERS,
+    },
+    {
+      key: "2-4",
       icon: <UploadOutlined />,
       label: "الإوقاف",
       path: "/waqf/list",
     },
+      ]
+    },
+    
     // {
     //   key: "5",
     //   icon: <UploadOutlined />,
@@ -57,71 +80,92 @@ const MainLayout: React.FC = () => {
     //   path: serviceProviderRoutePath.SERVICE_PROVIDERS,
     // },
     {
-      key: "5",
+      key: "3",
       icon: <UploadOutlined />,
-      label: "إدارة المحفظة",
+      label: "الإدارة المالية",
+      type:"group",
       children: [
         {
-          key: "5-1",
-          label: "المحفظة",
-          path: "/admin/wallet",
+          key: "3-1",
+          label: "إدارة المحفظة",
+          path: walletRoutePath.WALLET,
         },
         {
-          key: "5-2",
+          key: "3-2",
           label: "المعاملات المالية",
           path: walletRoutePath.PAYMENTS,
         },
         {
-          key: "5-3",
+          key: "3-3",
           label: "الأرصدة",
           path: walletRoutePath.BALANCES,
         },
-      ],
-    },
-    {
-      key: "6",
-      icon: <UploadOutlined />,
-      label: "أكواد الخصم",
-      path: pagesRoutePath.DISCOUNT_CODES_LIST,
-    },
-    {
-      key: "7",
+        {
+        key: "3-4",
+        icon: <UploadOutlined />,
+        label: "أكواد الخصم",
+        path: pagesRoutePath.DISCOUNT_CODES_LIST,
+      },
+      {
+      key: "3-5",
       icon: <UploadOutlined />,
       label: "جدول العمليات",
       path: "/manage/transactions",
     },
-    {
-      key: "8",
-      path: "/user",
-      icon: <UploadOutlined />,
-      label: "إدارة المستخدمين",
+      ],
     },
     {
-      key: "9",
+      key: "4",
+      label: "المحتوى والخدمات المساندة",
+      type:"group",
+      children:[
+  {
+        key: "4-1",
+        path: "/user",
+        icon: <UploadOutlined />,
+        label: "الاستشارة",
+      },
+  {
+        key: "4-2",
+        path: "/user",
+        icon: <UploadOutlined />,
+        label: "إدارة المستشارين",
+      },
+      {
+      key: "4-3",
       path: "library/waqf",
       icon: <UploadOutlined />,
       label: "مكتبة الوقف",
     },
-
-    {
-      key: "10",
-      path: "complaints-suggestions",
-      icon: <UploadOutlined />,
-      label: "الشكاوى والاقتراحات",
+      ]
     },
-
     {
-      key: "11",
+      key: "5",
+      label: "النظام والسياسات",
+      type:"group",
+      children:[
+        {
+          key: "5-1",
+          path: "complaints-suggestions",
+          icon: <UploadOutlined />,
+          label: "الشكاوى والاقتراحات",
+        },
+        {
+      key: "5-2",
       path: "privacy-policy",
       icon: <UploadOutlined />,
       label: "سياسة الخصوصية",
     },
     {
-      key: "12",
+      key: "5-3",
       path: "settings",
       icon: <UploadOutlined />,
       label: "الاعدادات",
     },
+      ]
+
+    },
+
   ];
 
   // Helper function to find menu item by key (including nested children)
