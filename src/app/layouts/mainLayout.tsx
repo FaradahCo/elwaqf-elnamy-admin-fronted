@@ -12,6 +12,7 @@ import { Outlet, useLocation, useNavigate } from "react-router";
 import { useLogOut } from "../hooks/useLogOut";
 import { pagesRoutePath } from "../modules/pages/pages.routes";
 import { walletRoutePath } from "../modules/pages/wallet/walletRoutes";
+import { serviceProviderRoutePath } from "../modules/pages/serviceProvider/serviceProviderRoutes";
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -28,28 +29,50 @@ const MainLayout: React.FC = () => {
   const menuItems = [
     {
       key: "1",
-      icon: <UserOutlined />,
+      label: "لوحة التحكم والتحليل",
+      type:"group",
+      children:[
+        {
+          key: "1-1",
+      icon: <img src="/images/home-icon.svg"  alt="home icon"/>,
       label: "الرئيسية",
       path: pagesRoutePath.HOME,
     },
+      ]
+    },
+
     {
       key: "2",
-      icon: <VideoCameraOutlined />,
+      label: "إدارة الخدمات والأوقاف",
+      type:"group",
+      children:[
+    {
+      key: "2-1",
+      icon: <img src="/images/services-managemnet-icon.svg" alt="services-managemnet" />,
       label: "إدارة الخدمات",
       path: pagesRoutePath.SERVICE_MANAGEMENT_LIST,
     },
     {
-      key: "3",
-      icon: <UploadOutlined />,
+      key: "2-2",
+      icon: <img src="/images/services.svg" alt="services" />,
       label: "متابعه الطلبات",
       path: "/provider/services-management",
     },
     {
-      key: "4",
-      icon: <UploadOutlined />,
+      key: "2-3",
+      icon:<img src="/images/service-providers-icon.svg" alt="service providers icon" />,
+      label: "مزودي الخدمات",
+      path: serviceProviderRoutePath.SERVICE_PROVIDERS,
+    },
+    {
+      key: "2-4",
+      icon:<img src="/images/awqaf.svg" alt="awqaf icon" />,
       label: "الإوقاف",
       path: "/waqf/list",
     },
+      ]
+    },
+    
     // {
     //   key: "5",
     //   icon: <UploadOutlined />,
@@ -57,71 +80,95 @@ const MainLayout: React.FC = () => {
     //   path: serviceProviderRoutePath.SERVICE_PROVIDERS,
     // },
     {
-      key: "5",
+      key: "3",
       icon: <UploadOutlined />,
-      label: "إدارة المحفظة",
+      label: "الإدارة المالية",
+      type:"group",
       children: [
         {
-          key: "5-1",
-          label: "المحفظة",
-          path: "/admin/wallet",
+          key: "3-1",
+          icon:<img src="/images/walet-management.svg" alt="walet-management icon" />,
+          label: "إدارة المحفظة",
+          path: walletRoutePath.WALLET,
         },
         {
-          key: "5-2",
+          key: "3-2",
+          icon:<img src="/images/transactions.svg" alt="transactions icon" />,
           label: "المعاملات المالية",
           path: walletRoutePath.PAYMENTS,
         },
         {
-          key: "5-3",
+          key: "3-3",
+          icon:<img src="/images/balances.svg" alt="balances icon" />,
           label: "الأرصدة",
           path: walletRoutePath.BALANCES,
         },
-      ],
-    },
-    {
-      key: "6",
-      icon: <UploadOutlined />,
-      label: "أكواد الخصم",
-      path: pagesRoutePath.DISCOUNT_CODES_LIST,
-    },
-    {
-      key: "7",
-      icon: <UploadOutlined />,
+        {
+        key: "3-4",
+        icon:<img src="/images/discount.svg" alt="discount icon" />,
+        label: "أكواد الخصم",
+        path: pagesRoutePath.DISCOUNT_CODES_LIST,
+      },
+      {
+      key: "3-5",
+      icon:<img src="/images/operations-table.svg" alt="operations-table icon" />,
       label: "جدول العمليات",
       path: "/manage/transactions",
     },
+  ],
+},
+{
+  key: "4",
+  label: "المحتوى والخدمات المساندة",
+  type:"group",
+  children:[
     {
-      key: "8",
+      key: "4-1",
       path: "/user",
-      icon: <UploadOutlined />,
-      label: "إدارة المستخدمين",
-    },
-    {
-      key: "9",
+      icon:<img src="/images/consultations.svg" alt="consultations icon" />,
+        label: "الاستشارة",
+      },
+  {
+        key: "4-2",
+        path: "/user",
+        icon:<img src="/images/consultations.svg" alt="consultations management icon" />,
+        label: "إدارة المستشارين",
+      },
+      {
+      key: "4-3",
       path: "library/waqf",
-      icon: <UploadOutlined />,
+      icon:<img src="/images/ic-library.svg" alt="library icon" />,
       label: "مكتبة الوقف",
     },
-
+  ]
+},
+{
+  key: "5",
+  label: "النظام والسياسات",
+  type:"group",
+  children:[
     {
-      key: "10",
+      key: "5-1",
       path: "complaints-suggestions",
-      icon: <UploadOutlined />,
+      icon:<img src="/images/complents.svg" alt="complaints icon" />,
       label: "الشكاوى والاقتراحات",
     },
-
     {
-      key: "11",
+      key: "5-2",
       path: "privacy-policy",
-      icon: <UploadOutlined />,
+      icon:<img src="/images/privacy.svg" alt="privacy icon" />,
       label: "سياسة الخصوصية",
     },
     {
-      key: "12",
+      key: "5-3",
       path: "settings",
-      icon: <UploadOutlined />,
+      icon:<img src="/images/settings.svg" alt="settings icon" />,
       label: "الاعدادات",
     },
+      ]
+
+    },
+
   ];
 
   // Helper function to find menu item by key (including nested children)
