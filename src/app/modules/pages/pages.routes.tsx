@@ -4,6 +4,7 @@ import { ServiceProviderRoutes } from "./serviceProvider/serviceProviderRoutes";
 import { serviceManagementRoutes } from "./serviceManagement/serviceManagementRoutes";
 import DiscoundCodesRoutes from "./discoundCodes/discoundCodesRoutes";
 import walletRoutes from "./wallet/walletRoutes";
+import consultationRoutes from "./consultation/consultationRoutes";
 
 export const pagesRoutes: RouteObject[] = [
   {
@@ -32,6 +33,10 @@ export const pagesRoutes: RouteObject[] = [
       {
         path: "wallet",
         children: [...walletRoutes],
+      },
+      {
+        path: "consultation",
+        children:[...consultationRoutes],
       },
       {
         path: "*",
