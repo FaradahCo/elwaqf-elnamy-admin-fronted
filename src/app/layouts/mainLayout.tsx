@@ -13,6 +13,7 @@ import { useLogOut } from "../hooks/useLogOut";
 import { pagesRoutePath } from "../modules/pages/pages.routes";
 import { walletRoutePath } from "../modules/pages/wallet/walletRoutes";
 import { serviceProviderRoutePath } from "../modules/pages/serviceProvider/serviceProviderRoutes";
+import { consultationRoutePath } from "../modules/pages/consultation/consultationRoutes";
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -124,7 +125,7 @@ const MainLayout: React.FC = () => {
   children:[
     {
       key: "4-1",
-      path: "/user",
+      path: consultationRoutePath.CONSULTATION,
       icon:<img src="/images/consultations.svg" alt="consultations icon" />,
         label: "الاستشارة",
       },

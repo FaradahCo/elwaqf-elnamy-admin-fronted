@@ -4,14 +4,14 @@ const consultationRoutes: RouteObject[] = [
   {
     path:"",
     lazy: () =>
-      import("./consultation").then((m) => ({
+      import("./Consultation").then((m) => ({
         Component: m.default,
       })),
     children:[
         {
         index:true,
         lazy: () =>
-        import("./pages/consultationForm").then((m) => ({
+        import("./pages/ConsultationForm").then((m) => ({
             Component: m.default,
         })),
   },
