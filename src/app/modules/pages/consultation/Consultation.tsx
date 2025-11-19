@@ -2,7 +2,7 @@ import { Outlet } from "react-router";
 
 const Consultation = () => {
   return (
-    <>
+    <div className="bg-white p-4">
       <main className="flex justify-between items-start">
         <div>
           <h1 className="text-xl font-bold text-second-primary">الاستشارة</h1>
@@ -10,7 +10,7 @@ const Consultation = () => {
         </div>
       </main>
       <Outlet />
-    </>
+    </div>
   );
 };
 export default Consultation;
