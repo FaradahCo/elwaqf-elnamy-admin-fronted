@@ -29,6 +29,7 @@ import { serviceLogColumns } from "./serviceReviewConfig";
 import { useRef, useState } from "react";
 import type { RejectServiceRef } from "../../components/rejectService/rejectService";
 import RejectService from "../../components/rejectService/rejectService";
+import { ConvertToNumber } from "@/app/utilites/transformData";
 
 const { TextArea } = Input;
 
@@ -75,17 +76,19 @@ const ServiceReview = () => {
   );
 
   const approveServiceRevisionMutation = useApiMutation(
-    () => approveServiceRevision(id!),
+    () => approveServiceRevision(serviceData?.pending_revision?.id!),
     {
       onSuccess: () => {
-        // refetch();
+        queryClient.invalidateQueries({
+          queryKey: ["serviceRevisionData", id],
+        });
       },
     }
   );
 
   const rejectServiceRevisionMutation = useApiMutation(
     (formData: any) => {
-      return rejectServiceRevision(id!, {
+      return rejectServiceRevision(serviceData?.pending_revision?.id!, {
         reason: formData?.reason,
       });
     },
@@ -93,7 +96,9 @@ const ServiceReview = () => {
       onSuccess: () => {
         setIsModalOpen(false);
         rejectServiceRef.current?.resetForm();
-        // refetch();
+        queryClient.invalidateQueries({
+          queryKey: ["serviceRevisionData", id],
+        });
       },
     }
   );
@@ -284,7 +289,9 @@ const ServiceReview = () => {
 
               <Form.Item<ServiceData> label="مبلغ الخدمة يبدأ من">
                 <Input
-                  value={serviceData?.min_price || "-"}
+                  value={ConvertToNumber(
+                    serviceData?.min_price?.toString() || "-"
+                  )}
                   type="number"
                   readOnly
                   className="bg-gray-50"

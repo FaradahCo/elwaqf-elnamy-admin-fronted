@@ -23,14 +23,14 @@ export const getFields = async () => {
   return AoiService.get<Field[]>(`/provider/fields`);
 };
 
-export const approveServiceRevision = async (serviceId: string) => {
+export const approveServiceRevision = async (serviceId: number) => {
   return AoiService.post<unknown, unknown>(
     `/admin/revisions/${serviceId}/approve`
   );
 };
 
 export const rejectServiceRevision = async (
-  serviceId: string,
+  serviceId: number,
   data: { reason: string }
 ) => {
   return AoiService.post<{ reason: string }, unknown>(
