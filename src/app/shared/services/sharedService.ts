@@ -7,6 +7,7 @@ import {
 } from "@shared/model/shared.model";
 
 export const ServiceClassificationConfig: Record<string, { label: string }> = {
+  all: { label: "الكل" },
   service: { label: "خدمة" },
   package: { label: "باقة" },
 };
@@ -85,6 +86,10 @@ export enum ServiceStatusEnum {
   active = "active",
   hold = "hold",
   removed = "removed",
+  scheduled = "scheduled",
+  canceled = "canceled",
+  testing = "testing",
+  expired = "expired",
 }
 
 export const getStatusTag = (status: ServiceStatusEnum | string) => {
@@ -102,6 +107,11 @@ export const getStatusTag = (status: ServiceStatusEnum | string) => {
     [ServiceStatusEnum.active]: { color: "#52c41a", text: "مفعل" },
     [ServiceStatusEnum.hold]: { color: "#fa8c16", text: "معلق" },
     [ServiceStatusEnum.removed]: { color: "#8c8c8c", text: "محذوف" },
+    [ServiceStatusEnum.scheduled]: { color: "#fa8c16", text: "مجدول" },
+    [ServiceStatusEnum.canceled]: { color: "#ff4d4f", text: "ملغي" },
+    [ServiceStatusEnum.testing]: { color: "#722ed1", text: "تجريبي" },
+    [ServiceStatusEnum.expired]: { color: "#ff4d4f", text: "منتهي" },
+
     [ServiceStatusEnum.revision_pending]: {
       color: "#722ed1",
       text: "بانتظار المراجعة",

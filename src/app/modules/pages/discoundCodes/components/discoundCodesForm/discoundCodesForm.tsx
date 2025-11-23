@@ -20,6 +20,14 @@ import type {
 import { getServices } from "../../../serviceManagement/serviceManagementService";
 import type { DiscoundCodeItem } from "../../model/discoundCodesModel";
 
+const codeStatusOptions = [
+  { value: "active", label: "مفعل" },
+  { value: "inactive", label: "غير مفعل" },
+  { value: "scheduled", label: "مجدول" },
+  { value: "canceled", label: "ملغي" },
+  { value: "testing", label: "تجريبي" },
+];
+
 interface DiscoundCodesFormProps {
   onSubmit: (values: DiscoundCodeItem) => void;
   onCancel: () => void;
@@ -40,7 +48,7 @@ const DiscoundCodesForm = ({
 
   const { Option } = Select;
   const [filter, setFilter] = useState<ServiceManagementQuery>({
-    type: "service",
+    type: editingItem?.type || "service",
   });
 
   const handleSubmit = useCallback(
@@ -172,11 +180,7 @@ const DiscoundCodesForm = ({
             />
           </Form.Item>
 
-          <Form.Item<DiscoundCodeItem>
-            name="type"
-            label="نوع الكود"
-            rules={[{ required: true, message: "يرجى اختيار نوع الكود" }]}
-          >
+          <Form.Item<DiscoundCodeItem> name="type" label="نوع الكود">
             <Select
               placeholder="اختر نوع الكود"
               size="large"
@@ -191,8 +195,8 @@ const DiscoundCodesForm = ({
             </Select>
           </Form.Item>
 
-          {/* <Form.Item
-            name="codeStatus"
+          <Form.Item
+            name="status"
             label="حالة الكود"
             rules={[{ required: true, message: "يرجى اختيار حالة الكود" }]}
           >
@@ -201,7 +205,7 @@ const DiscoundCodesForm = ({
               options={codeStatusOptions}
               size="large"
             />
-          </Form.Item> */}
+          </Form.Item>
 
           <Form.Item<DiscoundCodeItem>
             name="service_ids"
