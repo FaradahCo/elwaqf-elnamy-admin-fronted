@@ -31,7 +31,7 @@ const ConsultationForm = () => {
               answerType: undefined,
               canBeSkipped: false,
               allowOther: false,
-              options:[{}]
+              options: [{}],
             },
           ],
         }}
@@ -42,9 +42,9 @@ const ConsultationForm = () => {
             <>
               <div className="mb-2 flex">
                 <Button
-                size="large"
-                onClick={() => add({options:[{}]})}
-                className="bg-white border-2 border-primary! text-primary! hover:bg-primary! hover:text-white!"
+                  size="large"
+                  onClick={() => add({ options: [{}] })}
+                  className="bg-white border-2 border-primary! text-primary! hover:bg-primary! hover:text-white!"
                 >
                   + اضافة سؤال اخر
                 </Button>
@@ -70,7 +70,11 @@ const ConsultationForm = () => {
                   <Collapse.Panel
                     key={index}
                     header={
-                      <ConsultationPanelHeader index={index} remove={remove} field={field}/>
+                      <ConsultationPanelHeader
+                        index={index}
+                        remove={remove}
+                        field={field}
+                      />
                     }
                   >
                     <Form.Item
@@ -83,7 +87,11 @@ const ConsultationForm = () => {
                         },
                       ]}
                     >
-                      <Input size="large" type="text" placeholder="يرجى كتابة السؤال بصياغة مختصرة وسهلة الفهم للعميل" />
+                      <Input
+                        size="large"
+                        type="text"
+                        placeholder="يرجى كتابة السؤال بصياغة مختصرة وسهلة الفهم للعميل"
+                      />
                     </Form.Item>
                     <Row className="flex items-center" gutter={12}>
                       <Col xs={24} md={12}>
@@ -116,84 +124,94 @@ const ConsultationForm = () => {
                         </Form.Item>
                       </Col>
                     </Row>
-                  <div className="mt-4">
-  <h2 className="text-start text-base font-semibold my-4">
-    الاجابة  
-  </h2>
-  
-  <Form.List name={[field.name, "options"]}>
-    {(subFields, subOpt) => (
-      <>
-        {subFields.map((subField, subIndex) => (
-          <Form.Item 
-            key={subField.key}
-            name={[subField.name, "option"]} 
-            label=""
-          >
-            <Row gutter={8}>
-              <Col xs={20} md={22}>
-                <Input type="text"  size="large" placeholder="اضافة خيار اخر"/>
-              </Col>
-              <Col xs={4} md={2}>
-                <Tooltip placement="right" title="حذف">
-                  <Button
-                    className="rounded-full! bg-transparent! border-0!"
-                    onClick={() => subOpt.remove(subField.name)}
-                    icon={<img src="/images/delete-icon-2.svg" alt="delete icon" />}
-                  />
-                </Tooltip>
-              </Col>
-            </Row>
-          </Form.Item>
-        ))}
-        
-        <Button
-          onClick={() => subOpt.add()}
-          size="large"
-          className="bg-white border-2 border-primary! text-primary! hover:bg-primary! hover:text-white!"
-          icon={<PlusOutlined />}
-        >
-          إضافة خيار آخر
-        </Button>
-      </>
-    )}
-  </Form.List>
-  
-  <Form.Item
-    name={[field.name, "allowOther"]}
-    className="mb-0"
-    valuePropName="checked"
-  >
-    <Checkbox className="text-sm text-gray-700">
-      السماح بخيار "أخرى"
-    </Checkbox>
-  </Form.Item>
-</div>
+                    <div className="mt-4">
+                      <h2 className="text-start text-base font-semibold my-4">
+                        الاجابة
+                      </h2>
+
+                      <Form.List name={[field.name, "options"]}>
+                        {(subFields, subOpt) => (
+                          <>
+                            {subFields.map((subField, subIndex) => (
+                              <Form.Item
+                                key={subField.key}
+                                name={[subField.name, "option"]}
+                                label=""
+                              >
+                                <Row gutter={8}>
+                                  <Col xs={20} md={22}>
+                                    <Input
+                                      type="text"
+                                      size="large"
+                                      placeholder="اضافة خيار اخر"
+                                    />
+                                  </Col>
+                                  <Col xs={4} md={2}>
+                                    <Tooltip placement="right" title="حذف">
+                                      <Button
+                                        className="rounded-full! bg-transparent! border-0!"
+                                        onClick={() =>
+                                          subOpt.remove(subField.name)
+                                        }
+                                        icon={
+                                          <img
+                                            src="/images/delete-icon-2.svg"
+                                            alt="delete icon"
+                                          />
+                                        }
+                                      />
+                                    </Tooltip>
+                                  </Col>
+                                </Row>
+                              </Form.Item>
+                            ))}
+
+                            <Button
+                              onClick={() => subOpt.add()}
+                              size="large"
+                              className="bg-white border-2 border-primary! text-primary! hover:bg-primary! hover:text-white!"
+                              icon={<PlusOutlined />}
+                            >
+                              إضافة خيار آخر
+                            </Button>
+                          </>
+                        )}
+                      </Form.List>
+
+                      <Form.Item
+                        name={[field.name, "allowOther"]}
+                        className="mb-0"
+                        valuePropName="checked"
+                      >
+                        <Checkbox className="text-sm text-gray-700">
+                          السماح بخيار "أخرى"
+                        </Checkbox>
+                      </Form.Item>
+                    </div>
                   </Collapse.Panel>
                 </Collapse>
               ))}
             </>
           )}
         </Form.List>
-          <Row className="justify-between items-center">
-          
-        <Button 
-        className="bg-white border-2 border-primary! text-primary! hover:bg-primary! hover:text-white!"
-        icon={<img  src="/images/eye-icon.svg" alt="eye icon"/>}
-        >
-          معاينة الأسئلة
-        </Button>
-                <Form.Item className="flex justify-end">
+        <Row className="justify-between items-center">
           <Button
-            className="!p-4 !px-12 mt-4"
-            size="large"
-            htmlType="submit"
-            type="primary"
+            className="bg-white border-2 border-primary! text-primary! hover:bg-primary! hover:text-white!"
+            icon={<img src="/images/eye-icon.svg" alt="eye icon" />}
           >
-            نشر
+            معاينة الأسئلة
           </Button>
-        </Form.Item>
-          </Row>
+          <Form.Item className="flex justify-end">
+            <Button
+              className="!p-4 !px-12 mt-4"
+              size="large"
+              htmlType="submit"
+              type="primary"
+            >
+              نشر
+            </Button>
+          </Form.Item>
+        </Row>
       </Form>
     </>
   );

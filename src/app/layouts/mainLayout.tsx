@@ -240,7 +240,7 @@ const MainLayout: React.FC = () => {
   const selectedKeys = getSelectedKey();
 
   return (
-    <Layout className="h-screen main-layout">
+    <Layout className="main-layout">
       <Sider
         trigger={null}
         collapsible
@@ -272,10 +272,11 @@ const MainLayout: React.FC = () => {
           />
         </Header>
         <Content
-          className="h-screen! overflow-auto"
+          className="overflow-auto"
           style={{
             margin: "0 16px",
             padding: "15px 5px",
+            scrollbarWidth: "none",
             borderRadius: borderRadiusLG,
           }}
         >

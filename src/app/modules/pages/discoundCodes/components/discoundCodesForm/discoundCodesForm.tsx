@@ -187,6 +187,7 @@ const DiscoundCodesForm = ({
               allowClear
               onChange={(value) => setFilter({ ...filter, type: value })}
             >
+              {/* <Option value="null">الكل</Option> */}
               {convertEnumToArrayList(ServiceClassification).map((option) => (
                 <Option key={option.value} value={option.value}>
                   {ServiceClassificationConfig[option.value].label}
