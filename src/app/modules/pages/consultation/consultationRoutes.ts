@@ -2,25 +2,18 @@ import type { RouteObject } from "react-router";
 
 const consultationRoutes: RouteObject[] = [
   {
-    path:"",
+    index: true,
     lazy: () =>
-      import("./Consultation").then((m) => ({
+      import(
+        "./pages/consultationManagementList/consultationManagementList"
+      ).then((m) => ({
         Component: m.default,
       })),
-    children:[
-        {
-        index:true,
-        lazy: () =>
-        import("./pages/ConsultationForm").then((m) => ({
-            Component: m.default,
-        })),
-  },
-    ],
   },
 ];
 
 export default consultationRoutes;
 
 export const consultationRoutePath = {
-  CONSULTATION: "/admin/consultation",
+  CONSULTATION: "/admin/consultation-management",
 };

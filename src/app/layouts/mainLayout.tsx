@@ -10,6 +10,7 @@ import { consultationRoutePath } from "../modules/pages/consultation/consultatio
 import { pagesRoutePath } from "../modules/pages/pages.routes";
 import { serviceProviderRoutePath } from "../modules/pages/serviceProvider/serviceProviderRoutes";
 import { walletRoutePath } from "../modules/pages/wallet/walletRoutes";
+import { consultantsManagementRoutePath } from "../modules/pages/consultantsManagement/consultantsManagementRoutes";
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -143,7 +144,7 @@ const MainLayout: React.FC = () => {
         },
         {
           key: "4-2",
-          path: "/user",
+          path: consultantsManagementRoutePath.CONSULTANTS_MANAGEMENT_LIST,
           icon: (
             <img
               src="/images/consultations.svg"
