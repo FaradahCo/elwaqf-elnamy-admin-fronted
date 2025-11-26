@@ -1,81 +1,82 @@
 import {
   Checkbox,
   Col,
-  Collapse,
   Form,
   Input,
   Row,
   Select,
   Tooltip,
   Button,
+  Spin,
+  
 } from "antd";
-import { useForm } from "antd/es/form/Form";
-import { CaretRightFilled, PlusOutlined } from "@ant-design/icons";
-import type { ConsulationFormPayload } from "../model/consultationModel";
+import {  EyeOutlined, PlusOutlined } from "@ant-design/icons";
+import { OptionType, type ConsulationFormPayload, type ConsulationQuestionsResponse } from "../model/consultationModel";
+import { useApiMutation, useApiQuery } from "@shared/services/api";
+import { createUpdateQuestions, getAllQuestions, transformFormValues } from "../consultationService";
 import ConsultationPanelHeader from "../components/consultationPanelHeader/consultationPanelHeader";
-
+import { useCallback, useMemo } from "react";
 const ConsultationForm = () => {
-  const [form] = useForm();
+  const [form] = Form.useForm();
+  const { data: questionsRes,isLoading } = useApiQuery<ConsulationQuestionsResponse>(
+    ["questions"],getAllQuestions);
+  const initialValues = useMemo(() => ({
+    questions: transformFormValues(questionsRes?.data)
+  }), [questionsRes?.data]);
+  const createUpdateQuestionsMutation = useApiMutation(createUpdateQuestions)
+
+  const onChangeType = useCallback((value:string,index:number)=>{
+    const questions = [...form.getFieldValue("questions")];
+    const updatedQuestion = {...questions[index],type:value};
+    if(value === OptionType.TEXT) updatedQuestion.options =[];
+    questions[index] = updatedQuestion;
+    form.setFieldValue("questions",questions);
+  },[])
   const onFinish = (values: ConsulationFormPayload) => {
-    console.log(values);
+    createUpdateQuestionsMutation.mutate(values);
   };
+  if(isLoading){ 
+    return <Spin/>
+  }
   return (
     <>
       <Form
         form={form}
         layout="vertical"
-        initialValues={{
-          questions: [
-            {
-              question: "",
-              answerType: undefined,
-              canBeSkipped: false,
-              allowOther: false,
-              options:[{}]
-            },
-          ],
-        }}
         onFinish={onFinish}
-      >
+        initialValues={initialValues}
+        >
         <Form.List name="questions">
           {(fields, { add, remove }) => (
             <>
-              <div className="mb-2 flex">
+              <div className="mb-8 flex">
                 <Button
                 size="large"
-                onClick={() => add({options:[{}]})}
-                className="bg-white border-2 border-primary! text-primary! hover:bg-primary! hover:text-white!"
+                onClick={() => add(
+            {
+              text: "",
+              type:OptionType.SINGLE,
+              is_required: false,
+              has_other_option: false,
+              order:fields.length+1,
+              options:[{order:1}],
+              is_active:true
+            },
+          )}
+                className="bg-white border-2 py-6! border-primary! text-primary! hover:bg-primary! hover:text-white!"
                 >
-                  + اضافة سؤال اخر
+                  + إضافة سؤال جديد
                 </Button>
               </div>
 
-              {fields.map((field, index) => (
-                <Collapse
-                  key={field.key}
-                  expandIconPosition="end"
-                  bordered={false}
-                  className="border! !bg-white border-[#D2D2D2]! mb-4"
-                  expandIcon={({ isActive }) => (
-                    <CaretRightFilled
-                      className={`text-lg! mt-2! ${
-                        isActive ? "bg-[#028AC01A]!" : "bg-[#D2D2D2]!"
-                      } ${
-                        isActive ? "text-[#064f6b]!" : "text-[#566a72]!"
-                      } p-2 rounded-full!`}
-                      rotate={isActive ? 270 : 90}
-                    />
-                  )}
-                >
-                  <Collapse.Panel
-                    key={index}
-                    header={
-                      <ConsultationPanelHeader index={index} remove={remove} field={field}/>
-                    }
-                  >
+              {fields.map((field, index) =>{
+              const optionType = form.getFieldValue("questions")[index].type;
+              return(
+                <div key={field.key} className="shadow-sm mb-8 border-gray-300 border-1 border-solid p-4 rounded-lg">
+                  <ConsultationPanelHeader index={index} remove={remove} field={field}/>
+                    <Form.Item name={[field.name, "order"]} hidden/>
                     <Form.Item
-                      name={[field.name, "question"]}
-                      label="السؤال"
+                      name={[field.name, "text"]}
                       rules={[
                         {
                           required: true,
@@ -85,10 +86,11 @@ const ConsultationForm = () => {
                     >
                       <Input size="large" type="text" placeholder="يرجى كتابة السؤال بصياغة مختصرة وسهلة الفهم للعميل" />
                     </Form.Item>
-                    <Row className="flex items-center" gutter={12}>
+                    <Row className="flex items-center" gutter={24}>
                       <Col xs={24} md={12}>
                         <Form.Item
-                          name={[field.name, "answerType"]}
+                        className="font-semibold!"
+                          name={[field.name, "type"]}
                           label="نوع الاجابة"
                           rules={[
                             {
@@ -97,103 +99,105 @@ const ConsultationForm = () => {
                             },
                           ]}
                         >
-                          <Select size="large" placeholder="اختيار من متعدد">
-                            <Select.Option value="1">1</Select.Option>
-                            <Select.Option value="2">2</Select.Option>
-                            <Select.Option value="3">3</Select.Option>
+                          <Select onChange={(value) => onChangeType(value,index)} size="large" placeholder="اختر نوع الاجابة">
+                            <Select.Option value={OptionType.SINGLE}>اجابة واحدة</Select.Option>
+                            <Select.Option value={OptionType.MULTIPLE}>اختيار من متعدد</Select.Option>
+                            <Select.Option value={OptionType.TEXT}>نص</Select.Option>
                           </Select>
                         </Form.Item>
                       </Col>
                       <Col xs={24} md={12}>
                         <Form.Item
-                          name={[field.name, "canBeSkipped"]}
+                          name={[field.name, "is_required"]}
                           label=" "
+      valuePropName="checked"
                         >
-                          <div className="flex items-center gap-2">
-                            <Checkbox />
-                            <p>إمكانية تخطي هذا السؤال</p>
-                          </div>
+                            <Checkbox >
+                        إمكانية تخطي هذا السؤال
+                            </Checkbox>
                         </Form.Item>
                       </Col>
                     </Row>
-                  <div className="mt-4">
-  <h2 className="text-start text-base font-semibold my-4">
-    الاجابة  
-  </h2>
-  
-  <Form.List name={[field.name, "options"]}>
-    {(subFields, subOpt) => (
-      <>
-        {subFields.map((subField, subIndex) => (
-          <Form.Item 
-            key={subField.key}
-            name={[subField.name, "option"]} 
-            label=""
-          >
-            <Row gutter={8}>
-              <Col xs={20} md={22}>
-                <Input type="text"  size="large" placeholder="اضافة خيار اخر"/>
-              </Col>
-              <Col xs={4} md={2}>
-                <Tooltip placement="right" title="حذف">
-                  <Button
-                    className="rounded-full! bg-transparent! border-0!"
-                    onClick={() => subOpt.remove(subField.name)}
-                    icon={<img src="/images/delete-icon-2.svg" alt="delete icon" />}
-                  />
-                </Tooltip>
-              </Col>
-            </Row>
-          </Form.Item>
-        ))}
-        
-        <Button
-          onClick={() => subOpt.add()}
-          size="large"
-          className="bg-white border-2 border-primary! text-primary! hover:bg-primary! hover:text-white!"
-          icon={<PlusOutlined />}
-        >
-          إضافة خيار آخر
-        </Button>
-      </>
-    )}
-  </Form.List>
-  
-  <Form.Item
-    name={[field.name, "allowOther"]}
-    className="mb-0"
-    valuePropName="checked"
-  >
-    <Checkbox className="text-sm text-gray-700">
-      السماح بخيار "أخرى"
-    </Checkbox>
-  </Form.Item>
-</div>
-                  </Collapse.Panel>
-                </Collapse>
-              ))}
+                  {(optionType === OptionType.SINGLE || optionType === OptionType.MULTIPLE) && (
+                      <div className="mt-4">
+                        <h2 className="text-start text-base font-semibold my-4">
+                          الاجابة
+                        </h2>
+
+                        <Form.List name={[field.name, "options"]}>
+                          {(subFields, subOpt) => (
+                            <>
+                              {subFields.map((subField, subIndex) => (
+                                <div key={subField.key} className="flex justify-between">
+                                  <Form.Item
+                                    name={[subField.name, "option_text"]}
+                                    label=""
+                                    className="mb-2! flex-1"
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: "يرجى إضافة اجابة"
+                                      }
+                                    ]}
+                                  >
+                                    <Input type="text" size="large" placeholder="اضافة خيار اخر" />
+                                  </Form.Item>
+                                  <Tooltip placement="right" title="حذف">
+                                    <Button
+                                      className="rounded-full! bg-transparent! border-0!"
+                                      onClick={() => subOpt.remove(subField.name)}
+                                      icon={<img src="/images/delete-icon-2.svg" alt="delete icon" />}
+                                    />
+                                  </Tooltip>
+                                </div>
+                              ))}
+
+                              <Button
+                                onClick={() => subOpt.add({ order: subFields.length + 1 })}
+                                size="large"
+                                className="bg-white border-2 py-4! border-primary! text-primary! hover:bg-primary! hover:text-white!"
+                                icon={<PlusOutlined />}
+                              >
+                                إضافة خيار اخر
+                              </Button>
+                            </>
+                          )}
+                        </Form.List>
+
+                        <Form.Item
+                          name={[field.name, "has_other_option"]}
+                          className="mb-0 mt-4!"
+                          valuePropName="checked"
+                        >
+                          <Checkbox className="text-sm text-gray-700">
+                            السماح بخيار "أخرى"
+                          </Checkbox>
+                        </Form.Item>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </>
           )}
         </Form.List>
-          <Row className="justify-between items-center">
-          
-        <Button 
-        className="bg-white border-2 border-primary! text-primary! hover:bg-primary! hover:text-white!"
-        icon={<img  src="/images/eye-icon.svg" alt="eye icon"/>}
-        >
-          معاينة الأسئلة
-        </Button>
-                <Form.Item className="flex justify-end">
+        <Row className="justify-between items-center">
           <Button
-            className="!p-4 !px-12 mt-4"
+            className="bg-white border-2 py-6! border-primary! text-primary! hover:bg-primary! hover:text-white!"
+            icon={<EyeOutlined />}
+          >
+            معاينة الأسئلة
+          </Button>
+          <Button
+            className="!p-6 !px-12"
             size="large"
             htmlType="submit"
             type="primary"
+            disabled={createUpdateQuestionsMutation.isPending}
           >
             نشر
           </Button>
-        </Form.Item>
-          </Row>
+        </Row>
       </Form>
     </>
   );
