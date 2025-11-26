@@ -1,8 +1,4 @@
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 import MainHeader from "@shared/components/mainHeader/mainHeader";
 import { Layout, Menu, theme } from "antd";
 import Sider from "antd/es/layout/Sider";
@@ -10,10 +6,10 @@ import { Content, Header } from "antd/es/layout/layout";
 import React, { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { useLogOut } from "../hooks/useLogOut";
-import { pagesRoutePath } from "../modules/pages/pages.routes";
-import { walletRoutePath } from "../modules/pages/wallet/walletRoutes";
-import { serviceProviderRoutePath } from "../modules/pages/serviceProvider/serviceProviderRoutes";
 import { consultationRoutePath } from "../modules/pages/consultation/consultationRoutes";
+import { pagesRoutePath } from "../modules/pages/pages.routes";
+import { serviceProviderRoutePath } from "../modules/pages/serviceProvider/serviceProviderRoutes";
+import { walletRoutePath } from "../modules/pages/wallet/walletRoutes";
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
