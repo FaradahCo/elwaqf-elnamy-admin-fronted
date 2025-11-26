@@ -4,8 +4,9 @@ import { ServiceProviderRoutes } from "./serviceProvider/serviceProviderRoutes";
 import { serviceManagementRoutes } from "./serviceManagement/serviceManagementRoutes";
 import DiscoundCodesRoutes from "./discoundCodes/discoundCodesRoutes";
 import walletRoutes from "./wallet/walletRoutes";
-import consultationRoutes from "./consultation/consultationRoutes";
 import { consultantsManagementRoutes } from "./consultantsManagement/consultantsManagementRoutes";
+import { staticPagesRoutes } from "./staticPages/staticPagesRoutes";
+import consultationRoutes from "./consultation/consultationRoutes";
 
 export const pagesRoutes: RouteObject[] = [
   {
@@ -37,11 +38,15 @@ export const pagesRoutes: RouteObject[] = [
       },
       {
         path: "consultation",
-        children:[...consultationRoutes],
+        children: [...consultationRoutes],
       },
       {
         path: "consultants-management",
         children: [...consultantsManagementRoutes],
+      },
+      {
+        path: "static-pages",
+        children: [...staticPagesRoutes],
       },
       {
         path: "*",
@@ -63,4 +68,5 @@ export const pagesRoutePath = {
   WALLET_TRANSACTIONS: "/admin/wallet/transactions",
   WALLET_BALANCES: "/admin/wallet/balances",
   CONSULTANTS_MANAGEMENT_LIST: "/admin/consultants-management",
+  STATIC_PAGES_LIST: "/admin/static-pages",
 };
