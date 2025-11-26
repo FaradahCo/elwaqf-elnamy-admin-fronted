@@ -2,19 +2,19 @@ import type { RouteObject } from "react-router";
 
 const consultationRoutes: RouteObject[] = [
   {
-    path:"",
+    path: "",
     lazy: () =>
-      import("./Consultation").then((m) => ({
+      import("./pages/ConsultationForm").then((m) => ({
         Component: m.default,
       })),
-    children:[
-        {
-        index:true,
+    children: [
+      {
+        index: true,
         lazy: () =>
-        import("./pages/ConsultationForm").then((m) => ({
+          import("./pages/ConsultationForm").then((m) => ({
             Component: m.default,
-        })),
-  },
+          })),
+      },
     ],
   },
 ];
