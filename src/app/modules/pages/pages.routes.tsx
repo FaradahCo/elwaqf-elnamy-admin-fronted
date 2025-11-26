@@ -5,6 +5,7 @@ import { serviceManagementRoutes } from "./serviceManagement/serviceManagementRo
 import DiscoundCodesRoutes from "./discoundCodes/discoundCodesRoutes";
 import walletRoutes from "./wallet/walletRoutes";
 import consultationRoutes from "./consultation/consultationRoutes";
+import { consultantsManagementRoutes } from "./consultantsManagement/consultantsManagementRoutes";
 
 export const pagesRoutes: RouteObject[] = [
   {
@@ -39,6 +40,10 @@ export const pagesRoutes: RouteObject[] = [
         children:[...consultationRoutes],
       },
       {
+        path: "consultants-management",
+        children: [...consultantsManagementRoutes],
+      },
+      {
         path: "*",
         lazy: () =>
           import("@shared/components/underCreation").then((m) => ({
@@ -57,4 +62,5 @@ export const pagesRoutePath = {
   WALLET: "/admin/wallet",
   WALLET_TRANSACTIONS: "/admin/wallet/transactions",
   WALLET_BALANCES: "/admin/wallet/balances",
+  CONSULTANTS_MANAGEMENT_LIST: "/admin/consultants-management",
 };
