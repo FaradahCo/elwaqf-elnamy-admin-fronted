@@ -149,10 +149,17 @@ const ServiceReview = () => {
         <>
           <div className="bg-white shadow rounded-lg p-6">
             <main className="flex gap-4 justify-start items-center">
-              <img src="/images/alphax.svg" />
+              <img
+                src={serviceData?.provider?.logo}
+                className="w-60 object-contain"
+              />
               <div>
-                <p className="text-lg">مجموعة ألفا للاستشارات المهنية</p>
-                <span className="text-gray-500">منذ 13 أكتوبر 2025</span>
+                <p className="text-lg">
+                  {serviceData?.provider?.business_name}
+                </p>
+                <span className="text-gray-500">
+                  منذ {serviceData?.created_at}
+                </span>
               </div>
             </main>
             <div className="flex justify-between items-center">

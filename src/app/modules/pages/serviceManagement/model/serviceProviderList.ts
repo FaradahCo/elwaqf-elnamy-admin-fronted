@@ -17,6 +17,7 @@ export interface ServiceData {
   duration?: Duration;
   type?: string;
   field_id?: number;
+  provider?: ProviderId;
   pending_revision: ServiceRevision;
   description?: string;
   duration_type?: string;
@@ -25,11 +26,13 @@ export interface ServiceData {
   requirements?: { title: string; id?: number; order: number }[];
   outputs?: { title: string; id?: number; order: number }[];
   scopes?: { title: string; id?: number; order: number }[];
+  created_at?: string;
 }
 
 export type ProviderId = {
   id: number;
   business_name: string;
+  logo: string;
 };
 
 export type Field = {

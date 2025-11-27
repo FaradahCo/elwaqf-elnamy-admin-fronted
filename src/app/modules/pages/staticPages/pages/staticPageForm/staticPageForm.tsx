@@ -1,53 +1,39 @@
-import React, { useCallback, useEffect } from "react";
-import {
-  Form,
-  Input,
-  Select,
-  Checkbox,
-  Radio,
-  Button,
-  Card,
-  Row,
-  Col,
-} from "antd";
 import { EyeOutlined } from "@ant-design/icons";
-import { useNavigate, useParams } from "react-router";
-import { useApiQuery, useApiMutation } from "@shared/services/api";
+import RichTextEditor from "@shared/components/richTextEditor/richTextEditor";
+import { useApiMutation, useApiQuery } from "@shared/services/api";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  getStaticPage,
-  createStaticPage,
-  updateStaticPage,
-} from "../../staticPagesService";
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  Form,
+  Input,
+  Radio,
+  Row,
+  Spin,
+} from "antd";
+import React, { useCallback, useMemo } from "react";
+import { useNavigate, useParams } from "react-router";
 import type { StaticPageItem } from "../../model/staticPagesModel";
 import { staticPagesRoutePath } from "../../staticPagesRoutes";
-
-const { TextArea } = Input;
-
-const statusOptions = [
-  { value: "active", label: "نشط" },
-  { value: "inactive", label: "غير نشط" },
-  { value: "draft", label: "مسودة" },
-];
-
-const userTypeOptions = [
-  { value: "provider", label: "مزود خدمة" },
-  { value: "waqf", label: "وقف" },
-  { value: "both", label: "كلاهما" },
-];
+import {
+  createStaticPage,
+  getStaticPageById,
+  updateStaticPage,
+} from "../../staticPagesService";
 
 const StaticPageForm: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
   const queryClient = useQueryClient();
-  const isEditMode = !!id;
 
   const { data: staticPage, isLoading } = useApiQuery<StaticPageItem>(
     ["static-page", id],
-    () => getStaticPage(id!),
+    () => getStaticPageById(+id!),
     {
-      enabled: isEditMode,
+      enabled: !!id,
       retry: false,
     }
   );
@@ -63,8 +49,7 @@ const StaticPageForm: React.FC = () => {
   );
 
   const updateMutation = useApiMutation<StaticPageItem, StaticPageItem>(
-    (data: StaticPageItem) =>
-      updateStaticPage(Number(id), data).then((res) => res.data),
+    (data: StaticPageItem) => updateStaticPage(Number(id!), data),
     {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["static-pages"] });
@@ -73,45 +58,55 @@ const StaticPageForm: React.FC = () => {
     }
   );
 
-  useEffect(() => {
-    if (staticPage && isEditMode) {
-      form.setFieldsValue({
-        title: staticPage.title,
-        slug: staticPage.slug,
-        content: staticPage.content,
-        status: staticPage.status,
-        show_in_registration: staticPage.show_in_registration,
-        show_in_footer: staticPage.show_in_footer,
-        show_in_menu: staticPage.show_in_menu,
-        user_type: staticPage.user_type || "both",
-      });
-    }
-  }, [staticPage, isEditMode, form]);
-
   const handleSubmit = useCallback(
     (values: any) => {
       const payload: StaticPageItem = {
         ...values,
-        id: isEditMode ? Number(id) : undefined,
       };
 
-      if (isEditMode) {
+      if (!!id) {
         updateMutation.mutate(payload);
       } else {
         createMutation.mutate(payload);
       }
     },
-    [isEditMode, id, createMutation, updateMutation]
+    [id, createMutation, updateMutation]
   );
 
   const handlePreview = useCallback(() => {
-    const values = form.getFieldsValue();
     // TODO: Implement preview functionality
-    console.log("Preview page:", values);
-  }, [form]);
+  }, []);
 
-  if (isLoading && isEditMode) {
-    return <div>Loading...</div>;
+  // Compute initial values from staticPage data
+  const initialValues = useMemo(() => {
+    if (staticPage && !!id) {
+      return {
+        title: staticPage.title,
+        slug: staticPage.slug,
+        content: staticPage.content,
+        is_published:
+          staticPage.status === "active" || staticPage.status === "published",
+        show_in_registration: staticPage.show_in_registration,
+        show_in_footer: staticPage.show_in_footer,
+        show_in_menu: staticPage.show_in_menu,
+        scope: staticPage.scope || "both",
+      };
+    }
+    return {
+      scope: "both",
+      show_in_registration: false,
+      show_in_footer: false,
+      show_in_menu: false,
+      is_published: false,
+    };
+  }, [staticPage, id]);
+
+  if (isLoading && !!id) {
+    return (
+      <div className="flex justify-center items-center">
+        <Spin size="large" />
+      </div>
+    );
   }
 
   return (
@@ -119,7 +114,7 @@ const StaticPageForm: React.FC = () => {
       <Card>
         <div>
           <h1 className="text-xl font-bold text-second-primary">
-            {isEditMode ? "تعديل الصفحة" : "صفحة جديدة"}
+            {!!id ? "تعديل الصفحة" : "صفحة جديدة"}
           </h1>
           <p className="w-16 h-1 bg-primary mt-2 rounded mb-10"></p>
         </div>
@@ -128,13 +123,8 @@ const StaticPageForm: React.FC = () => {
           form={form}
           layout="vertical"
           onFinish={handleSubmit}
-          initialValues={{
-            user_type: "both",
-            show_in_registration: false,
-            show_in_footer: false,
-            show_in_menu: false,
-            status: "draft",
-          }}
+          initialValues={initialValues}
+          key={staticPage?.id || "new"}
         >
           {/* First Row: Title and Slug */}
           <Row gutter={16}>
@@ -159,63 +149,42 @@ const StaticPageForm: React.FC = () => {
           </Row>
 
           {/* Second Row: Checkboxes and Radio */}
-          <Row gutter={16}>
-            <Col xs={24} md={6}>
-              <Form.Item name="show_in_registration" valuePropName="checked">
-                <Checkbox>عرض في صفحة التسجيل</Checkbox>
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={6}>
-              <Form.Item name="show_in_footer" valuePropName="checked">
-                <Checkbox>عرض في تذييل الصفحة</Checkbox>
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={6}>
-              <Form.Item name="show_in_menu" valuePropName="checked">
-                <Checkbox>عرض في قائمة الصفحة</Checkbox>
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={6}>
-              <Form.Item
-                name="user_type"
-                label="نوع المستخدم"
-                rules={[
-                  { required: true, message: "يرجى اختيار نوع المستخدم" },
-                ]}
-              >
-                <Radio.Group options={userTypeOptions} />
-              </Form.Item>
-            </Col>
-          </Row>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
+            <Form.Item name="show_in_registration" valuePropName="checked">
+              <Checkbox>عرض في صفحة التسجيل</Checkbox>
+            </Form.Item>
 
-          {/* Status Dropdown */}
-          <Row gutter={16}>
-            <Col xs={24} md={12}>
-              <Form.Item
-                name="status"
-                label="الحالة"
-                rules={[{ required: true, message: "يرجى اختيار الحالة" }]}
-              >
-                <Select
-                  placeholder="اختر الحالة"
-                  size="large"
-                  options={statusOptions}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
+            <Form.Item name="show_in_footer" valuePropName="checked">
+              <Checkbox>عرض في تذييل الصفحة</Checkbox>
+            </Form.Item>
 
-          {/* Markdown Content */}
+            <Form.Item name="show_in_menu" valuePropName="checked">
+              <Checkbox>عرض في قائمة الصفحة</Checkbox>
+            </Form.Item>
+
+            <Form.Item
+              name="scope"
+              label="نوع المستخدم"
+              rules={[{ required: true, message: "يرجى اختيار نوع المستخدم" }]}
+            >
+              <Radio.Group size="large" className="main-radio">
+                <Radio.Button value="both">كلاهما</Radio.Button>
+                <Radio.Button value="client">عميل</Radio.Button>
+                <Radio.Button value="provider">مزود خدمة</Radio.Button>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item name="is_published" valuePropName="checked">
+              <Checkbox>نشر الصفحة</Checkbox>
+            </Form.Item>
+          </div>
+
+          {/* Rich Text Content */}
           <Form.Item
             name="content"
-            label="محتوى الصفحة (Markdown)"
+            label="محتوى الصفحة"
             rules={[{ required: true, message: "يرجى إدخال محتوى الصفحة" }]}
           >
-            <TextArea
-              rows={12}
-              placeholder="أدخل محتوى الصفحة بصيغة Markdown..."
-              size="large"
-            />
+            <RichTextEditor placeholder="أدخل محتوى الصفحة..." />
           </Form.Item>
 
           {/* Action Buttons */}

@@ -11,6 +11,7 @@ import { pagesRoutePath } from "../modules/pages/pages.routes";
 import { serviceProviderRoutePath } from "../modules/pages/serviceProvider/serviceProviderRoutes";
 import { walletRoutePath } from "../modules/pages/wallet/walletRoutes";
 import { consultantsManagementRoutePath } from "../modules/pages/consultantsManagement/consultantsManagementRoutes";
+import { staticPagesRoutePath } from "../modules/pages/staticPages/staticPagesRoutes";
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -174,9 +175,9 @@ const MainLayout: React.FC = () => {
         },
         {
           key: "5-2",
-          path: "privacy-policy",
           icon: <img src="/images/privacy.svg" alt="privacy icon" />,
           label: "سياسة الخصوصية",
+          path: staticPagesRoutePath.STATIC_PAGES_LIST,
         },
         {
           key: "5-3",

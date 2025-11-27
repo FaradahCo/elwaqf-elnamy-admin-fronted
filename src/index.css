@@ -88,3 +88,22 @@
 .walet-card .ant-tabs-nav::before {
   display: none;
 }
+
+/* React Quill RTL Support */
+.quill {
+  direction: rtl;
+}
+
+.quill .ql-editor {
+  direction: rtl;
+  text-align: right;
+}
+
+.quill .ql-toolbar {
+  direction: rtl;
+  text-align: right;
+}
+
+.quill .ql-container {
+  direction: rtl;
+}

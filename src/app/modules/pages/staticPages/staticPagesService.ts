@@ -8,33 +8,27 @@ import { transformFilterParams } from "@shared/services/sharedService";
 
 export const getStaticPages = async (params?: StaticPagesListParams) => {
   return AoiService.get<PaginatedResponse<StaticPageItem>>(
-    "/admin/static-pages",
+    "/admin/pages",
     transformFilterParams(params)
   );
 };
 
-export const getStaticPage = async (staticPageId: string) => {
-  return AoiService.get<StaticPageItem>(`/admin/static-pages/${staticPageId}`);
+export const getStaticPageById = async (id: number) => {
+  return AoiService.get<StaticPageItem>(`/admin/pages/${id}`);
 };
 
 export const createStaticPage = async (data: StaticPageItem) => {
-  return await AoiService.post<StaticPageItem, StaticPageItem>(
-    "/admin/static-pages",
-    data
-  );
+  return AoiService.post<StaticPageItem, StaticPageItem>("/admin/pages", data);
 };
 
-export const updateStaticPage = async (
-  id: number,
-  data: Partial<StaticPageItem>
-) => {
-  return await AoiService.patch<Partial<StaticPageItem>, StaticPageItem>(
-    `/admin/static-pages/${id}`,
+export const updateStaticPage = async (id: number, data: StaticPageItem) => {
+  const response = await AoiService.patch<StaticPageItem, StaticPageItem>(
+    `/admin/pages/${id}`,
     data
   );
+  return response.data;
 };
 
 export const deleteStaticPage = async (id: number) => {
-  return AoiService.delete(`/admin/static-pages/${id}`);
+  return AoiService.delete(`/admin/pages/${id}`);
 };
-

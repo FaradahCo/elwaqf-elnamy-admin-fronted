@@ -27,5 +27,5 @@ export const staticPagesRoutes: RouteObject[] = [
 export const staticPagesRoutePath = {
   STATIC_PAGES_LIST: "/admin/static-pages",
   NEW_PAGE: "/admin/static-pages/new-page",
-  EDIT_PAGE: "/admin/static-pages/edit/:id",
+  EDIT_PAGE: (id: number) => `/admin/static-pages/edit/${id}`,
 };
