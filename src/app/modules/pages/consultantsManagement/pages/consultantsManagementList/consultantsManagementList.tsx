@@ -7,10 +7,11 @@ import {
 import type {
   ConsultantItem,
   ConsultantsListParams,
+  UpdateConsultantStatusPayload,
 } from "../../model/consultantsManagementModel";
 import { useApiMutation, useApiQuery } from "@shared/services/api";
 import type { PaginatedResponse } from "@shared/model/shared.model";
-import { Pagination, Spin } from "antd";
+import { Button, Form, Pagination, Spin } from "antd";
 import { useQueryClient } from "@tanstack/react-query";
 
 const ConsultantsManagementList: React.FC = () => {
@@ -18,7 +19,7 @@ const ConsultantsManagementList: React.FC = () => {
     page: 1,
     per_page: 10,
   });
-
+  const [form] = Form.useForm();
   const queryClient = useQueryClient();
 
   const { data: consultantsManagement, isLoading } = useApiQuery<
@@ -33,10 +34,8 @@ const ConsultantsManagementList: React.FC = () => {
   );
 
   const updateConsultantStatusMutation = useApiMutation(
-    (payload: { team_id: number; status: string }) => {
-      return updateConsultantStatus(payload.team_id, {
-        status: payload.status,
-      });
+    (payload: UpdateConsultantStatusPayload) => {
+      return updateConsultantStatus(payload);
     },
     {
       onSuccess: () => {
@@ -53,6 +52,9 @@ const ConsultantsManagementList: React.FC = () => {
     );
   }
 
+  const onFinish = (values: UpdateConsultantStatusPayload) => {
+    updateConsultantStatusMutation.mutate(values);
+  };
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
       <div>
@@ -61,16 +63,28 @@ const ConsultantsManagementList: React.FC = () => {
         </h1>
         <p className="w-16 h-1 bg-primary mt-2 rounded mb-10"></p>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {consultantsManagement?.data?.map((consultant) => (
-          <ConsultationManagementItem
-            key={consultant.team_id}
-            consultant={consultant}
-            onUpdateConsultantStatus={updateConsultantStatusMutation.mutate}
-          />
-        ))}
-      </div>
+      <Form layout="vertical" onFinish={onFinish} form={form}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {consultantsManagement?.data?.map((consultant, index) => (
+            <ConsultationManagementItem
+              index={index}
+              key={consultant.team_id}
+              consultant={consultant}
+            />
+          ))}
+        </div>
+        <div className="flex justify-end mt-8">
+          <Button
+            htmlType="submit"
+            size="large"
+            type="primary"
+            className="py-6! px-8!"
+            disabled={updateConsultantStatusMutation.isPending}
+          >
+            حفظ
+          </Button>
+        </div>
+      </Form>
 
       <div className="mt-6 flex justify-center">
         <Pagination

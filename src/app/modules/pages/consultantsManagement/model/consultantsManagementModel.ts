@@ -25,3 +25,9 @@ export type ConsultantsListParams = PaginatedParams & {
   business_name?: string;
   field_id?: number;
 };
+export type UpdateConsultantStatusPayload = {
+  items: {
+    team_id: number;
+    status: boolean;
+  }[];
+};
