@@ -18,22 +18,41 @@ import {
 import { useApiMutation, useApiQuery } from "@shared/services/api";
 import {
   createUpdateQuestions,
+  deleteQuestion,
   getAllQuestions,
   transformFormValues,
 } from "../consultationService";
 import ConsultationPanelHeader from "../components/consultationPanelHeader/consultationPanelHeader";
 import { useCallback, useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 const ConsultationForm = () => {
   const [form] = Form.useForm();
+  const queryClient = useQueryClient();
   const { data: questionsRes, isLoading } =
     useApiQuery<ConsulationQuestionsResponse>(["questions"], getAllQuestions);
+  const deleteQuestionMuation = useApiMutation(
+    (id?: number) => deleteQuestion({ status: false }, id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["questions"] });
+      },
+    }
+  );
+
   const initialValues = useMemo(
     () => ({
       questions: transformFormValues(questionsRes?.data),
     }),
     [questionsRes?.data]
   );
-  const createUpdateQuestionsMutation = useApiMutation(createUpdateQuestions);
+  const createUpdateQuestionsMutation = useApiMutation(createUpdateQuestions, {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["questions"] });
+      form.setFieldsValue({
+        questions: data,
+      });
+    },
+  });
 
   const onChangeType = useCallback((value: string, index: number) => {
     const questions = [...form.getFieldValue("questions")];
@@ -44,6 +63,10 @@ const ConsultationForm = () => {
   }, []);
   const onFinish = (values: ConsulationFormPayload) => {
     createUpdateQuestionsMutation.mutate(values);
+  };
+  const handleDeleteQuestion = (id?: number) => {
+    if (!id) return;
+    deleteQuestionMuation.mutate(id);
   };
   if (isLoading) {
     return <Spin />;
@@ -90,6 +113,9 @@ const ConsultationForm = () => {
                       index={index}
                       remove={remove}
                       field={field}
+                      onDeleteQuestion={() =>
+                        handleDeleteQuestion(questionsRes?.data[index]?.id)
+                      }
                     />
                     <Form.Item name={[field.name, "order"]} hidden />
                     <Form.Item
