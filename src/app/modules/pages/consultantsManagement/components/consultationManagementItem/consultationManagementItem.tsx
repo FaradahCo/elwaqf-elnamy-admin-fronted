@@ -1,28 +1,14 @@
-import { Checkbox, Modal, Tag } from "antd";
+import { Checkbox, Form, Tag } from "antd";
 import { Link } from "react-router";
 import type { ConsultantItem } from "../../model/consultantsManagementModel";
 import { getStatusTag } from "@shared/services/sharedService";
-import Alert from "@shared/components/alert/alert";
-import { useState } from "react";
-
 const ConsultationManagementItem = ({
   consultant,
-  onUpdateConsultantStatus,
+  index,
 }: {
   consultant: ConsultantItem;
-  onUpdateConsultantStatus: (
-    payload: {
-      team_id: number;
-      status: string;
-    },
-    options?: { onSuccess: () => void }
-  ) => void;
+  index: number;
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCheckboxChecked, setIsCheckboxChecked] = useState(
-    consultant.status === "active"
-    // consultant.is_consultant === 1
-  );
   return (
     <div className="border border-gray-200 rounded-lg p-4 text-center flex flex-col justify-center items-center gap-4">
       <main className="flex flex-col justify-center items-center">
@@ -58,48 +44,22 @@ const ConsultationManagementItem = ({
         >
           عرض الحساب
         </Link>
-        <Checkbox
-          onClick={() => setIsModalOpen(true)}
-          checked={isCheckboxChecked}
+        <Form.Item
+          name={["items", index, "team_id"]}
+          initialValue={consultant.team_id}
+          hidden
         >
-          تعيين كمستشار
-        </Checkbox>
-        <Modal
-          open={isModalOpen}
-          onOk={() =>
-            onUpdateConsultantStatus(
-              {
-                team_id: consultant.team_id,
-                // status: consultant.is_consultant === 1 ? "inactive" : "active",
-                status: consultant.status === "active" ? "inactive" : "active",
-              },
-              {
-                onSuccess: () => {
-                  setIsModalOpen(false);
-                  setIsCheckboxChecked(
-                    (isCheckboxChecked) => !isCheckboxChecked
-                  );
-                },
-              }
-            )
-          }
-          onCancel={() => {
-            setIsModalOpen(false);
-            setIsCheckboxChecked((isCheckboxChecked) => isCheckboxChecked);
-          }}
+          <input type="hidden" />
+        </Form.Item>
+
+        <Form.Item
+          name={["items", index, "status"]}
+          valuePropName="checked"
+          initialValue={!!consultant.is_consultant}
+          noStyle
         >
-          <>
-            <Alert
-              title="هل انت متأكد؟"
-              description={`${
-                consultant.status === "active"
-                  ? "بإلغاء تعيين هذا الفريق كمستشار، فلن يتمكن من الوصول إلى ميزات المستشارين."
-                  : "بتعيين هذا الفريق كمستشار، فسوف يتمكن من الوصول إلى ميزات المستشارين."
-              } `}
-              alertIcon="/images/approved.svg"
-            />
-          </>
-        </Modal>
+          <Checkbox>تعيين كمستشار</Checkbox>
+        </Form.Item>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import AoiService from "@shared/services/api";
 import type {
   ConsultantItem,
   ConsultantsListParams,
+  UpdateConsultantStatusPayload,
 } from "./model/consultantsManagementModel";
 import type { PaginatedResponse } from "@shared/model/shared.model";
 import { transformFilterParams } from "@shared/services/sharedService";
@@ -16,11 +17,10 @@ export const getConsultantsManagement = async (
 };
 
 export const updateConsultantStatus = async (
-  team_id: number,
-  payload: { status: string }
+  payload: UpdateConsultantStatusPayload
 ) => {
-  return AoiService.patch<{ status: string }, ConsultantItem>(
-    `/admin/providers/${team_id}/update`,
+  return AoiService.patch<UpdateConsultantStatusPayload, ConsultantItem>(
+    `admin/providers/consultant`,
     payload
   );
 };
