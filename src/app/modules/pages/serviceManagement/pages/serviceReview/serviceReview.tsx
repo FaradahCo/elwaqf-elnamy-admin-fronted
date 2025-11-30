@@ -16,7 +16,7 @@ import {
   Select,
   Spin,
 } from "antd";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { type ServiceData } from "../../model/serviceProviderList";
 import {
   getService,
@@ -38,7 +38,7 @@ const ServiceReview = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const rejectServiceRef = useRef<RejectServiceRef>(null);
   const queryClient = useQueryClient();
-
+  const navigate = useNavigate();
   const handleOk = async () => {
     const formData = await rejectServiceRef.current?.validateForm();
     rejectServiceRevisionMutation.mutate(formData);
@@ -79,9 +79,7 @@ const ServiceReview = () => {
     () => approveServiceRevision(serviceData?.pending_revision?.id!),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["serviceRevisionData", id],
-        });
+        navigate("/admin/service-management");
       },
     }
   );
@@ -96,9 +94,7 @@ const ServiceReview = () => {
       onSuccess: () => {
         setIsModalOpen(false);
         rejectServiceRef.current?.resetForm();
-        queryClient.invalidateQueries({
-          queryKey: ["serviceRevisionData", id],
-        });
+        navigate("/admin/service-management");
       },
     }
   );
@@ -110,10 +106,9 @@ const ServiceReview = () => {
       });
     },
     {
-      onSuccess: (res) => {
-        queryClient.setQueryData(["serviceRevisionData", id], {
-          ...serviceData,
-          status: res.status,
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["serviceRevisionData", id],
         });
       },
     }
