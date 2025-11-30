@@ -14,6 +14,15 @@ export const createUpdateQuestions = async (
     payload
   );
 };
+export const deleteQuestion = async (
+  payload: { status: boolean },
+  id?: number
+) => {
+  return AoiService.patch<{ status: boolean }, unknown>(
+    `admin/questions/${id}/status`,
+    payload
+  );
+};
 
 export const getAllQuestions = async () => {
   return await AoiService.get<ConsulationQuestionsResponse>(`/admin/questions`);
