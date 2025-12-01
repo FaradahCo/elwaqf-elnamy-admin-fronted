@@ -61,7 +61,7 @@ export const CustomTable = <T extends Record<string, any>>({
 
   const paginationConfig: TablePaginationConfig = {
     current: paginationMeta?.current_page || 1,
-    pageSize: paginationMeta?.per_page,
+    pageSize: paginationMeta?.per_page || defaultPageSize,
     total: paginationMeta?.total || 0,
     showSizeChanger: true,
     showQuickJumper: false,
@@ -70,10 +70,7 @@ export const CustomTable = <T extends Record<string, any>>({
     pageSizeOptions: ["5", "10", "15", "20"],
     onChange: (page, size) => {
       if (onPaginationChange) {
-        onPaginationChange(
-          page,
-          size || paginationMeta?.per_page || defaultPageSize
-        );
+        onPaginationChange(page, size);
       }
     },
     onShowSizeChange: (_current, size) => {

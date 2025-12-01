@@ -5,27 +5,25 @@ import type {
   ServiceStatus,
 } from "@shared/model/shared.model";
 import { useApiQuery } from "@shared/services/api";
-import { useState, useCallback } from "react";
-import { useSearchParams } from "react-router";
+import { getSeriviceStatus } from "@shared/services/sharedService";
+import { useCallback, useState } from "react";
 import ServiceManagementFilter from "../../components/serviceManagementFilter/serviceManagementFilter";
 import {
   type ServiceData,
   type ServiceManagementQuery,
 } from "../../model/serviceProviderList";
-import { getColumnsList } from "./serviceManagementListConfig";
 import { getServices } from "../../serviceManagementService";
-import { getSeriviceStatus } from "@shared/services/sharedService";
+import { getColumnsList } from "./serviceManagementListConfig";
 
 export const ServiceManagementList = () => {
-  const [searchParams] = useSearchParams();
   const [serviceType, setServiceType] = useState<string>("service");
 
   // Initialize filter from URL params
   const [filter, setFilter] = useState<ServiceManagementQuery>(() => {
-    const currentPage = Number(searchParams.get("page")) || 1;
     return {
       type: "service",
-      page: currentPage,
+      page: 1,
+      per_page: 5,
     };
   });
 
@@ -33,17 +31,11 @@ export const ServiceManagementList = () => {
     setServiceType(type);
   }, []);
 
-  const handleSelectionChange = useCallback(
-    (_selectedRowKeys: React.Key[], selectedRows: ServiceData[]) => {
-      console.log("Selected services:", selectedRows);
-    },
-    []
-  );
-
-  const handlePaginationChange = useCallback((page: number) => {
+  const handlePaginationChange = useCallback((page: number, size: number) => {
     setFilter((prevFilter) => ({
       ...prevFilter,
       page,
+      per_page: size,
     }));
   }, []);
 
@@ -132,7 +124,6 @@ export const ServiceManagementList = () => {
           columns={getColumnsList(serviceType)}
           dataSource={serviceData?.data ?? []}
           showSelection={true}
-          onSelectionChange={handleSelectionChange}
           className={["mt-6"]}
           loading={isLoading}
           paginationMeta={serviceData?.meta}

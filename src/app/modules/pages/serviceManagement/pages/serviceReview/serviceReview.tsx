@@ -162,7 +162,11 @@ const ServiceReview = () => {
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">حالة الخدمة:</span>
                 <Select
-                  value={serviceData?.status}
+                  value={
+                    serviceData?.pending_revision
+                      ? serviceData?.pending_revision?.status
+                      : serviceData?.status
+                  }
                   onChange={handleStatusChange}
                   loading={updateStatusMutation.isPending}
                   disabled={updateStatusMutation.isPending}
@@ -200,7 +204,11 @@ const ServiceReview = () => {
             <Form layout="vertical" className="space-y-4">
               <Form.Item<ServiceData> label="اسم الخدمة">
                 <Input
-                  value={serviceData?.title || "-"}
+                  value={
+                    serviceData?.pending_revision
+                      ? serviceData?.pending_revision?.data?.title
+                      : serviceData?.title || "-"
+                  }
                   readOnly
                   className="bg-gray-50"
                   size="large"
@@ -228,8 +236,12 @@ const ServiceReview = () => {
 
               <Form.Item<ServiceData> label="مخرجات الخدمة">
                 <div className="space-y-2">
-                  {serviceData?.outputs?.length ? (
-                    serviceData?.outputs?.map((output, index) => (
+                  {serviceData?.pending_revision ||
+                  serviceData?.outputs?.length ? (
+                    (serviceData?.pending_revision
+                      ? serviceData?.pending_revision?.data?.items?.outputs
+                      : serviceData?.outputs
+                    )?.map((output, index) => (
                       <Input
                         key={index}
                         value={output.title || "-"}
@@ -246,8 +258,12 @@ const ServiceReview = () => {
 
               <Form.Item<ServiceData> label="نطاق الخدمة">
                 <div className="space-y-2">
-                  {serviceData?.scopes?.length ? (
-                    serviceData?.scopes?.map((scope, index) => (
+                  {serviceData?.scopes?.length ||
+                  serviceData?.pending_revision ? (
+                    (serviceData?.pending_revision
+                      ? serviceData?.pending_revision?.data?.items?.scopes
+                      : serviceData?.scopes
+                    )?.map((scope, index) => (
                       <Input
                         key={index}
                         value={scope.title || "-"}
@@ -269,7 +285,11 @@ const ServiceReview = () => {
             <Form layout="vertical" className="space-y-4">
               <Form.Item<ServiceData> label="نوع المدة" className="main-radio">
                 <Radio.Group
-                  value={serviceData?.duration?.type || "day"}
+                  value={
+                    serviceData?.pending_revision
+                      ? serviceData?.pending_revision?.data?.duration_type
+                      : serviceData?.duration?.type || "day"
+                  }
                   size="large"
                   disabled
                 >
@@ -281,7 +301,11 @@ const ServiceReview = () => {
 
               <Form.Item label="مدة التنفيذ">
                 <Input
-                  value={serviceData?.duration?.time || "-"}
+                  value={
+                    serviceData?.pending_revision
+                      ? serviceData?.pending_revision?.data?.duration_time
+                      : serviceData?.duration?.time || "-"
+                  }
                   type="number"
                   size="large"
                   readOnly
@@ -292,7 +316,9 @@ const ServiceReview = () => {
               <Form.Item<ServiceData> label="مبلغ الخدمة يبدأ من">
                 <Input
                   value={ConvertToNumber(
-                    serviceData?.min_price?.toString() || "-"
+                    serviceData?.pending_revision
+                      ? serviceData?.pending_revision?.data?.min_price?.toString()!
+                      : serviceData?.min_price?.toString() || "-"
                   )}
                   type="number"
                   readOnly
@@ -319,8 +345,12 @@ const ServiceReview = () => {
             <Form layout="vertical" className="space-y-4">
               <Form.Item<ServiceData> label="متطلبات الاستفادة">
                 <div className="space-y-2">
-                  {serviceData?.requirements?.length ? (
-                    serviceData?.requirements?.map((requirement, index) => (
+                  {serviceData?.requirements?.length ||
+                  serviceData?.pending_revision ? (
+                    (serviceData?.pending_revision
+                      ? serviceData?.pending_revision?.data?.items?.requirements
+                      : serviceData?.requirements
+                    )?.map((requirement, index) => (
                       <Input
                         key={index}
                         value={requirement.title || "-"}

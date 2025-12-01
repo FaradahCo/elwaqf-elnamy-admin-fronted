@@ -23,6 +23,11 @@ export interface ServiceData {
   duration_type?: string;
   duration_time?: number;
   response_time?: number;
+  items?: {
+    outputs?: { title: string; id?: number; order: number }[];
+    requirements?: { title: string; id?: number; order: number }[];
+    scopes?: { title: string; id?: number; order: number }[];
+  };
   requirements?: { title: string; id?: number; order: number }[];
   outputs?: { title: string; id?: number; order: number }[];
   scopes?: { title: string; id?: number; order: number }[];
@@ -55,7 +60,7 @@ export interface ServiceManagementQuery extends PaginatedParams {
 
 export type ServiceRevision = {
   id: number;
-  status: string;
+  status: ServiceStatusEnum;
   previous_status: string;
   note: string;
   data: ServiceData;
