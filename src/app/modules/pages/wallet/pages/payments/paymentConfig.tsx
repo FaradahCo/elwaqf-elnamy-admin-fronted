@@ -64,9 +64,11 @@ export const paymentClientsColumns: ColumnsType<PaymentClientItem> = [
   },
   {
     title: "الخدمة",
-    dataIndex: "service",
-    key: "service",
+    dataIndex: "items",
+    key: "items",
     width: 100,
+    render: (items: PaymentClientItem["items"]) =>
+      items?.map((item) => item?.service?.title),
     ellipsis: true,
   },
   {
@@ -91,15 +93,19 @@ export const paymentClientsColumns: ColumnsType<PaymentClientItem> = [
   },
   {
     title: "نسبة المنصة",
-    dataIndex: "",
-    key: "",
+    dataIndex: "items",
+    key: "items",
     width: 100,
+    render: (items: PaymentClientItem["items"]) =>
+      items?.map((item) => item?.platform_commission_rate),
     ellipsis: true,
   },
   {
     title: "الربح",
-    dataIndex: "",
-    key: "",
+    dataIndex: "items",
+    key: "items",
+    render: (items: PaymentClientItem["items"]) =>
+      items?.map((item) => item?.provider_earning),
     width: 100,
     ellipsis: true,
   },

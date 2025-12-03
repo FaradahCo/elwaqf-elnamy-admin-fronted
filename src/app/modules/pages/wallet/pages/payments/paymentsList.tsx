@@ -61,7 +61,7 @@ const PaymentsList = () => {
   return (
     <div className="mt-10 bg-white shadow rounded-lg p-4 walet-card">
       <h1 className="text-xl font-bold text-second-primary">
-        المعاملات المالية
+        جدول وبيانات المعاملات المالية
       </h1>
       <Tabs
         defaultActiveKey="1"
