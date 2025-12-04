@@ -1,4 +1,4 @@
-import type { TabsProps } from "antd";
+import { Tag, type TabsProps } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { Link } from "react-router";
 import type {
@@ -9,6 +9,7 @@ import type {
 import PaymentClientsList from "./paymentClientsList";
 import PaymentsProvider from "./paymentsProvider";
 import type { PaginatedResponse } from "@shared/model/shared.model";
+import { getStatusTag } from "@shared/services/sharedService";
 
 export const getTabsItems = (
   paymentClients: PaginatedResponse<PaymentClientItem>,
@@ -56,30 +57,17 @@ export const paymentClientsColumns: ColumnsType<PaymentClientItem> = [
     ellipsis: true,
   },
   {
-    title: "رقم الطلب",
+    title: "الصفة",
+  },
+  {
+    title: "رقم المرجع",
     dataIndex: "code",
     key: "code",
     width: 100,
     ellipsis: true,
   },
   {
-    title: "الخدمة",
-    dataIndex: "items",
-    key: "items",
-    width: 100,
-    render: (items: PaymentClientItem["items"]) =>
-      items?.map((item) => item?.service?.title),
-    ellipsis: true,
-  },
-  {
-    title: "مزود الخدمة",
-    dataIndex: "provider",
-    key: "provider",
-    width: 100,
-    ellipsis: true,
-  },
-  {
-    title: "قيمة العرض",
+    title: "المبلغ",
     dataIndex: "total_paid",
     key: "total_paid",
     width: 100,
@@ -91,23 +79,19 @@ export const paymentClientsColumns: ColumnsType<PaymentClientItem> = [
       </div>
     ),
   },
+  // {
+  //   title: "المبلغ",
+  //   dataIndex: "items",
+  //   key: "items",
+  //   render: (items: PaymentClientItem["items"]) =>
+  //     items?.map((item) => item?.price),
+  //   width: 100,
+  //   ellipsis: true,
+  // },
   {
-    title: "نسبة المنصة",
-    dataIndex: "items",
-    key: "items",
-    width: 100,
-    render: (items: PaymentClientItem["items"]) =>
-      items?.map((item) => item?.platform_commission_rate),
-    ellipsis: true,
-  },
-  {
-    title: "الربح",
-    dataIndex: "items",
-    key: "items",
-    render: (items: PaymentClientItem["items"]) =>
-      items?.map((item) => item?.provider_earning),
-    width: 100,
-    ellipsis: true,
+    title: "وثيقة الدفع",
+    dataIndex: "payment_method_label",
+    key: "payment_method_label",
   },
   {
     title: "تاريخ المعاملة",
@@ -115,6 +99,19 @@ export const paymentClientsColumns: ColumnsType<PaymentClientItem> = [
     key: "created_at",
     width: 100,
     ellipsis: true,
+  },
+  {
+    title: "الحالة",
+    dataIndex: "items",
+    key: "items",
+    width: 100,
+    ellipsis: true,
+    render: (items: PaymentClientItem["items"]) =>
+      items?.map((item) => (
+        <Tag color={getStatusTag(item?.status)?.color} className="mx-2!">
+          {item?.status_label}
+        </Tag>
+      )),
   },
 ];
 
@@ -135,20 +132,14 @@ export const paymentsProviderColumns: ColumnsType<WithdrawItem> = [
     render: (owner: WithdrawItem["owner"]) => owner?.name,
   },
   {
-    title: "الصفة",
-    dataIndex: "owner",
-    key: "type",
-    width: 100,
-    ellipsis: true,
-    render: () => "مزود خدمة",
+    title: "اسم المنظمة",
   },
   {
-    title: "نوع الطلب",
-    dataIndex: "item_id",
-    key: "item_id",
+    title: "رقم المرجع",
+    dataIndex: "code",
+    key: "code",
     width: 100,
     ellipsis: true,
-    render: () => "سحب أرباح",
   },
   {
     title: "المبلغ",
@@ -191,5 +182,17 @@ export const paymentsProviderColumns: ColumnsType<WithdrawItem> = [
     key: "created_at",
     width: 100,
     ellipsis: true,
+  },
+  {
+    title: " الحالة",
+    dataIndex: "status",
+    key: "status",
+    width: 100,
+    ellipsis: true,
+    render: (status: string) => (
+      <Tag color={getStatusTag(status)?.color} className="mx-2!">
+        {status}
+      </Tag>
+    ),
   },
 ];
