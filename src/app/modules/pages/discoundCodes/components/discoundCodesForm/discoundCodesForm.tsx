@@ -20,13 +20,13 @@ import type {
 import { getServices } from "../../../serviceManagement/serviceManagementService";
 import type { DiscoundCodeItem } from "../../model/discoundCodesModel";
 
-const codeStatusOptions = [
-  { value: "active", label: "مفعل" },
-  { value: "inactive", label: "غير مفعل" },
-  { value: "scheduled", label: "مجدول" },
-  { value: "canceled", label: "ملغي" },
-  { value: "testing", label: "تجريبي" },
-];
+// const codeStatusOptions = [
+//   { value: "active", label: "مفعل" },
+//   { value: "inactive", label: "غير مفعل" },
+//   { value: "scheduled", label: "مجدول" },
+//   { value: "canceled", label: "ملغي" },
+//   { value: "testing", label: "تجريبي" },
+// ];
 
 interface DiscoundCodesFormProps {
   onSubmit: (values: DiscoundCodeItem) => void;
@@ -88,7 +88,6 @@ const DiscoundCodesForm = ({
     }
   );
 
-  // Format initial values to handle date fields properly
   const formatInitialValues = (item: DiscoundCodeItem | null) => {
     if (!item) return undefined;
 
@@ -115,15 +114,20 @@ const DiscoundCodesForm = ({
     },
     [form, serviceData]
   );
-  // Update form values when editingItem changes
+
   useEffect(() => {
     if (editingItem) {
-      // Set form values for edit mode
       const formattedValues = formatInitialValues(editingItem);
       form.setFieldsValue(formattedValues);
+
+      if (editingItem.type) {
+        setFilter({ type: editingItem.type });
+      } else {
+        setFilter({ type: "service" });
+      }
     } else {
-      // Reset form for create mode
       form.resetFields();
+      setFilter({ type: "service" });
     }
   }, [editingItem, form]);
 
@@ -185,9 +189,15 @@ const DiscoundCodesForm = ({
               placeholder="اختر نوع الكود"
               size="large"
               allowClear
-              onChange={(value) => setFilter({ ...filter, type: value })}
+              onChange={(value) => {
+                if (value === "all" || !value) {
+                  setFilter({});
+                } else {
+                  setFilter({ type: value });
+                }
+              }}
             >
-              {/* <Option value="null">الكل</Option> */}
+              <Option value="all">الكل</Option>
               {convertEnumToArrayList(ServiceClassification).map((option) => (
                 <Option key={option.value} value={option.value}>
                   {ServiceClassificationConfig[option.value].label}
@@ -196,7 +206,7 @@ const DiscoundCodesForm = ({
             </Select>
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             name="status"
             label="حالة الكود"
             rules={[{ required: true, message: "يرجى اختيار حالة الكود" }]}
@@ -206,16 +216,26 @@ const DiscoundCodesForm = ({
               options={codeStatusOptions}
               size="large"
             />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item<DiscoundCodeItem>
             name="service_ids"
-            label={filter.type === "service" ? "اسم الخدمة" : "اسم الباقة"}
+            label={
+              !filter.type
+                ? "اسم الخدمه / الباقة"
+                : filter.type === "service"
+                ? "اسم الخدمة"
+                : "اسم الباقة"
+            }
             rules={[{ required: true, message: "يرجى إدخال اسم الخدمة" }]}
           >
             <Select
               placeholder={
-                filter.type === "service" ? "اختر الخدمة" : "اختر الباقة"
+                !filter.type
+                  ? "اختر الخدمة / الباقة"
+                  : filter.type === "service"
+                  ? "اختر الخدمة"
+                  : "اختر الباقة"
               }
               size="large"
               mode="multiple"
@@ -283,7 +303,6 @@ const DiscoundCodesForm = ({
                 message: "يجب أن يكون العدد أكبر من 0",
               },
             ]}
-            // className="md:col-span-2"
           >
             <InputNumber
               placeholder="أدخل عدد مرات الاستخدام"
@@ -295,7 +314,14 @@ const DiscoundCodesForm = ({
         </div>
 
         <div className="flex justify-end gap-3 mt-6">
-          <Button onClick={onCancel} disabled={loading} loading={loading}>
+          <Button
+            onClick={() => {
+              form.resetFields();
+              onCancel();
+            }}
+            disabled={loading}
+            loading={loading}
+          >
             إلغاء
           </Button>
           <Button

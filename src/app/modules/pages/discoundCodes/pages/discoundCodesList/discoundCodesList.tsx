@@ -163,6 +163,7 @@ const DiscoundCodesList = () => {
       <Modal
         open={isModalOpen || (isEditMode && !!editingItem)}
         onCancel={handleModalCancel}
+        closable={false}
         footer={null}
         width={700}
         title={editingItem ? "تعديل كود الخصم" : "إضافة كود خصم جديد"}
@@ -177,6 +178,7 @@ const DiscoundCodesList = () => {
       <Modal
         open={!!deleteItem}
         onCancel={() => dispatch(clearDeleteItem())}
+        closable={false}
         footer={null}
         width={400}
         title="حذف كود الخصم"

@@ -10,7 +10,7 @@ export type DiscoundCodeItem = {
   created_at: string;
   updated_at: string;
   percentage?: number;
-  type?: "service" | "package";
+  type?: "service" | "package" | "all";
   remaining_uses?: number;
   expires_at?: string;
   service_ids?: number[];
