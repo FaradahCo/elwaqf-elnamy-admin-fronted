@@ -73,14 +73,6 @@ export const balancesColumns: ColumnsType<Wallet> = [
     render: (id: number) => `#${id}`,
   },
   {
-    title: "الخدمة",
-    dataIndex: "",
-    key: "service",
-    width: 100,
-    ellipsis: true,
-    render: () => "-",
-  },
-  {
     title: "مزود الخدمة",
     dataIndex: "ownerable",
     key: "provider",
@@ -101,14 +93,6 @@ export const balancesColumns: ColumnsType<Wallet> = [
         <img src="/images/SAR.svg" alt="wallet" />
       </div>
     ),
-  },
-  {
-    title: "نسبة المنصة",
-    dataIndex: "",
-    key: "platform_percentage",
-    width: 100,
-    ellipsis: true,
-    render: () => "-",
   },
   {
     title: "الربح",

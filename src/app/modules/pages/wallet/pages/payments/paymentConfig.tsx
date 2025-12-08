@@ -83,18 +83,17 @@ export const paymentClientsColumns: ColumnsType<PaymentClientItem> = [
     width: 100,
     ellipsis: true,
   },
+
   {
     title: "الحالة",
-    dataIndex: "items",
-    key: "items",
+    dataIndex: "status",
+    key: "status",
     width: 100,
     ellipsis: true,
-    render: (items: PaymentClientItem["items"]) =>
-      items?.map((item) => (
-        <Tag color={getStatusTag(item?.status)?.color} className="mx-2!">
-          {item?.status_label}
-        </Tag>
-      )),
+    render: (status: string) => {
+      const config = getStatusTag(status);
+      return <Tag color={config.color}>{config.text}</Tag>;
+    },
   },
 ];
 
