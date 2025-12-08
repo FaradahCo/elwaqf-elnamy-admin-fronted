@@ -64,31 +64,23 @@ export const balancesColumns: ColumnsType<Wallet> = [
     ellipsis: true,
     render: (ownerable: Wallet["ownerable"]) => ownerable?.name || "-",
   },
-  {
-    title: "رقم الطلب",
-    dataIndex: "id",
-    key: "order_number",
-    width: 100,
-    ellipsis: true,
-    render: (id: number) => `#${id}`,
-  },
-  {
-    title: "الخدمة",
-    dataIndex: "",
-    key: "service",
-    width: 100,
-    ellipsis: true,
-    render: () => "-",
-  },
-  {
-    title: "مزود الخدمة",
-    dataIndex: "ownerable",
-    key: "provider",
-    width: 100,
-    ellipsis: true,
-    render: (ownerable: Wallet["ownerable"]) =>
-      ownerable?.type === "Provider" ? ownerable.name : "-",
-  },
+  // {
+  //   title: "رقم الطلب",
+  //   dataIndex: "id",
+  //   key: "order_number",
+  //   width: 100,
+  //   ellipsis: true,
+  //   render: (id: number) => `#${id}`,
+  // },
+  // {
+  //   title: "مزود الخدمة",
+  //   dataIndex: "ownerable",
+  //   key: "provider",
+  //   width: 100,
+  //   ellipsis: true,
+  //   render: (ownerable: Wallet["ownerable"]) =>
+  //     ownerable?.type === "Provider" ? ownerable.name : "-",
+  // },
   {
     title: "قيمة العرض",
     dataIndex: "total_transactions",
@@ -101,14 +93,6 @@ export const balancesColumns: ColumnsType<Wallet> = [
         <img src="/images/SAR.svg" alt="wallet" />
       </div>
     ),
-  },
-  {
-    title: "نسبة المنصة",
-    dataIndex: "",
-    key: "platform_percentage",
-    width: 100,
-    ellipsis: true,
-    render: () => "-",
   },
   {
     title: "الربح",

@@ -90,6 +90,10 @@ export enum ServiceStatusEnum {
   canceled = "canceled",
   testing = "testing",
   expired = "expired",
+  completed = "completed",
+  pending_payment = "pending_payment",
+  pending_verification = "pending_verification",
+  failed = "failed",
 }
 
 export const getStatusTag = (status: ServiceStatusEnum | string) => {
@@ -99,12 +103,22 @@ export const getStatusTag = (status: ServiceStatusEnum | string) => {
   > = {
     [ServiceStatusEnum.approved]: { color: "#52c41a", text: "معتمد" },
     [ServiceStatusEnum.pending]: { color: "#fa8c16", text: "بانتظار الاعتماد" },
+    [ServiceStatusEnum.pending_payment]: {
+      color: "#fa8c16",
+      text: "بانتظار الدفع",
+    },
+    [ServiceStatusEnum.pending_verification]: {
+      color: "#fa8c16",
+      text: "قيد الاعتماد",
+    },
     [ServiceStatusEnum.draft]: { color: "#1890ff", text: "مسودة" },
     [ServiceStatusEnum.rejected]: { color: "#ff4d4f", text: "مرفوض" },
+    [ServiceStatusEnum.failed]: { color: "#ff4d4f", text: "فاشلة" },
     [ServiceStatusEnum.inactive]: { color: "#ff4d4f", text: "غير نشط" },
     [ServiceStatusEnum.disabled]: { color: "#8c8c8c", text: "معطل" },
     [ServiceStatusEnum.hidden]: { color: "#8c8c8c", text: "مخفي" },
     [ServiceStatusEnum.active]: { color: "#52c41a", text: "مفعل" },
+    [ServiceStatusEnum.completed]: { color: "#52c41a", text: "مكتملة" },
     [ServiceStatusEnum.hold]: { color: "#fa8c16", text: "معلق" },
     [ServiceStatusEnum.removed]: { color: "#8c8c8c", text: "محذوف" },
     [ServiceStatusEnum.scheduled]: { color: "#fa8c16", text: "مجدول" },
