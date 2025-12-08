@@ -50,16 +50,6 @@ export const paymentClientsColumns: ColumnsType<PaymentClientItem> = [
     ellipsis: true,
   },
   {
-    title: "الاسم",
-    dataIndex: "name",
-    key: "name",
-    width: 100,
-    ellipsis: true,
-  },
-  {
-    title: "الصفة",
-  },
-  {
     title: "رقم المرجع",
     dataIndex: "code",
     key: "code",
@@ -79,19 +69,12 @@ export const paymentClientsColumns: ColumnsType<PaymentClientItem> = [
       </div>
     ),
   },
-  // {
-  //   title: "المبلغ",
-  //   dataIndex: "items",
-  //   key: "items",
-  //   render: (items: PaymentClientItem["items"]) =>
-  //     items?.map((item) => item?.price),
-  //   width: 100,
-  //   ellipsis: true,
-  // },
   {
     title: "وثيقة الدفع",
     dataIndex: "payment_method_label",
     key: "payment_method_label",
+    width: 100,
+    ellipsis: true,
   },
   {
     title: "تاريخ المعاملة",
@@ -130,9 +113,6 @@ export const paymentsProviderColumns: ColumnsType<WithdrawItem> = [
     width: 100,
     ellipsis: true,
     render: (owner: WithdrawItem["owner"]) => owner?.name,
-  },
-  {
-    title: "اسم المنظمة",
   },
   {
     title: "رقم المرجع",
