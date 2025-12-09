@@ -32,6 +32,7 @@ export interface ServiceData {
   outputs?: { title: string; id?: number; order: number }[];
   scopes?: { title: string; id?: number; order: number }[];
   created_at?: string;
+  status_label?: string;
 }
 
 export type ProviderId = {
