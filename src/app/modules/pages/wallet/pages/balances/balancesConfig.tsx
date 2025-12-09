@@ -65,23 +65,6 @@ export const balancesColumns: ColumnsType<Wallet> = [
     render: (ownerable: Wallet["ownerable"]) => ownerable?.name || "-",
   },
   {
-    title: "رقم الطلب",
-    dataIndex: "id",
-    key: "order_number",
-    width: 100,
-    ellipsis: true,
-    render: (id: number) => `#${id}`,
-  },
-  {
-    title: "مزود الخدمة",
-    dataIndex: "ownerable",
-    key: "provider",
-    width: 100,
-    ellipsis: true,
-    render: (ownerable: Wallet["ownerable"]) =>
-      ownerable?.type === "Provider" ? ownerable.name : "-",
-  },
-  {
     title: "قيمة العرض",
     dataIndex: "total_transactions",
     key: "offer_value",

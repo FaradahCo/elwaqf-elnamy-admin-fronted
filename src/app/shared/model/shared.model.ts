@@ -30,3 +30,12 @@ export type ServiceStatus = {
   status: string;
   count: number;
 };
+
+export type MediaItem = {
+  id?: number;
+  mime_type?: string;
+  name?: string;
+  size?: number;
+  url?: string;
+  uuid?: string;
+};

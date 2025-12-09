@@ -90,6 +90,7 @@ export enum ServiceStatusEnum {
   canceled = "canceled",
   testing = "testing",
   expired = "expired",
+  complete = "complete",
   completed = "completed",
   pending_payment = "pending_payment",
   pending_verification = "pending_verification",
@@ -119,6 +120,7 @@ export const getStatusTag = (status: ServiceStatusEnum | string) => {
     [ServiceStatusEnum.hidden]: { color: "#8c8c8c", text: "مخفي" },
     [ServiceStatusEnum.active]: { color: "#52c41a", text: "مفعل" },
     [ServiceStatusEnum.completed]: { color: "#52c41a", text: "مكتملة" },
+    [ServiceStatusEnum.complete]: { color: "#52c41a", text: "مكتملة" },
     [ServiceStatusEnum.hold]: { color: "#fa8c16", text: "معلق" },
     [ServiceStatusEnum.removed]: { color: "#8c8c8c", text: "محذوف" },
     [ServiceStatusEnum.scheduled]: { color: "#fa8c16", text: "مجدول" },
@@ -178,4 +180,29 @@ export const getSeriviceStatus = async (params?: { type: string }) => {
     `/admin/services-status`,
     transformFilterParams(params)
   );
+};
+
+export const handleDownloadAttachment = async (
+  endpoint: string
+): Promise<void> => {
+  try {
+    const blob = await AoiService.getBlob(endpoint);
+
+    const blobUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = blobUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // تنظيف الـ blob
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 200);
+  } catch (error) {
+    console.error("Download error:", error);
+    throw error;
+  }
 };

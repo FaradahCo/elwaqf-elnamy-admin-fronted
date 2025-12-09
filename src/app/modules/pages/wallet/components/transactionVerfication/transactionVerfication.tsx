@@ -69,7 +69,7 @@ const TransactionVerfication = ({
       <div className="mt-4">
         <p className="">صورة الايصال</p>
         <img
-          src={selectedBankTransferData?.transfer_receipt_url}
+          src={selectedBankTransferData?.transfer_receipt?.url}
           alt="wallet"
         />
       </div>
