@@ -60,6 +60,18 @@ const AoiService = {
     const res = await axiosInstance.delete(url);
     return res.data;
   },
+
+  getBlob: async (url: string, params?: any): Promise<Blob> => {
+    const res = await axiosInstance.get(url, {
+      params: params,
+      responseType: "blob",
+      paramsSerializer: {
+        indexes: null,
+      },
+    });
+    // interceptor returns response.data, which will be a Blob
+    return res as unknown as Blob;
+  },
 };
 
 export function useApiMutation<TPayload, TResponse>(

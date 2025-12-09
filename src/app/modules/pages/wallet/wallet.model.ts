@@ -1,4 +1,4 @@
-import type { PaginatedParams } from "@shared/model/shared.model";
+import type { MediaItem, PaginatedParams } from "@shared/model/shared.model";
 
 export type WalletDashboard = {
   total_profits: string;
@@ -52,7 +52,7 @@ export type BankTransferItem = {
   status?: string;
   status_label?: string;
   sender_name?: string;
-  transfer_receipt_url?: string;
+  transfer_receipt?: MediaItem;
   admin_notes?: string;
   verified_at?: string;
   created_at?: string;

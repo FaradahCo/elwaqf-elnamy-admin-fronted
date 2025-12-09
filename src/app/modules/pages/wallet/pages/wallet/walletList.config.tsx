@@ -1,4 +1,13 @@
+import { store } from "@/app/store";
+import {
+  setSelectedBankTransfer,
+  setSelectedWithdraw,
+} from "@/app/store/slices/walletSlice";
 import type { PaginatedResponse } from "@shared/model/shared.model";
+import {
+  handleDownloadAttachment,
+  ownerTypeConfig,
+} from "@shared/services/sharedService";
 import type { TabsProps } from "antd";
 import { Button } from "antd/es/radio";
 import type { ColumnsType } from "antd/es/table";
@@ -11,12 +20,6 @@ import type {
 } from "../../wallet.model";
 import DepositeList from "./depositeList";
 import WithdrawList from "./withdrawList";
-import { ownerTypeConfig } from "@shared/services/sharedService";
-import {
-  setSelectedBankTransfer,
-  setSelectedWithdraw,
-} from "@/app/store/slices/walletSlice";
-import { store } from "@/app/store";
 
 export const getTabsItems = (
   withdrawList: PaginatedResponse<WithdrawItem>,
@@ -182,21 +185,23 @@ export const bankTransferListColumns: ColumnsType<BankTransferItem> = [
   },
   {
     title: "وثيقة الدفع",
-    dataIndex: "transfer_receipt_url",
-    key: "transfer_receipt_url",
+
     width: 100,
     ellipsis: true,
-    render: (transfer_receipt_url: string) => (
-      <div className="flex items-center gap-2">
-        <Link
-          to={transfer_receipt_url}
-          target="_blank"
-          className="text-primary! underline! cursor-pointer"
-        >
-          صوره الفاتورة
-        </Link>
-      </div>
-    ),
+    render: (item: BankTransferItem) => {
+      return (
+        <div className="flex items-center gap-2">
+          <p
+            onClick={() =>
+              handleDownloadAttachment(item?.transfer_receipt?.url!)
+            }
+            className="text-primary! underline! cursor-pointer"
+          >
+            صوره الفاتورة
+          </p>
+        </div>
+      );
+    },
   },
   {
     title: "تاريخ المعاملة",

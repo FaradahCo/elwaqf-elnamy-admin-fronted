@@ -168,10 +168,9 @@ export const paymentsProviderColumns: ColumnsType<WithdrawItem> = [
     key: "status",
     width: 100,
     ellipsis: true,
-    render: (status: string) => (
-      <Tag color={getStatusTag(status)?.color} className="mx-2!">
-        {status}
-      </Tag>
-    ),
+    render: (status: string) => {
+      const config = getStatusTag(status);
+      return <Tag color={config.color}>{config.text}</Tag>;
+    },
   },
 ];
