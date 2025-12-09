@@ -1,27 +1,12 @@
 import { CustomTable } from "@shared/components/customTable/customtable";
 import { useApiMutation, useApiQuery } from "@shared/services/api";
-import {
-  getSeriviceStatus,
-  getStatusTag,
-  ServiceStatusEnum,
-} from "@shared/services/sharedService";
-import { useQueryClient } from "@tanstack/react-query";
-import {
-  Button,
-  Collapse,
-  Form,
-  Input,
-  Modal,
-  Radio,
-  Select,
-  Spin,
-} from "antd";
+import { getStatusTag } from "@shared/services/sharedService";
+import { Button, Collapse, Form, Input, Modal, Radio, Spin, Tag } from "antd";
 import { useNavigate, useParams } from "react-router";
 import { type ServiceData } from "../../model/serviceProviderList";
 import {
   getService,
   getRevisionsByServiceId,
-  updateService,
   approveServiceRevision,
   rejectServiceRevision,
 } from "../../serviceManagementService";
@@ -37,7 +22,6 @@ const ServiceReview = () => {
   const { id } = useParams<{ id: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const rejectServiceRef = useRef<RejectServiceRef>(null);
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const handleOk = async () => {
     const formData = await rejectServiceRef.current?.validateForm();
@@ -54,15 +38,6 @@ const ServiceReview = () => {
     () => getService(id!),
     {
       enabled: !!id,
-    }
-  );
-
-  const { data: serviceStatusOptions } = useApiQuery(
-    ["service-status-options"],
-    () => getSeriviceStatus({ type: serviceData?.type! }),
-    {
-      retry: false,
-      enabled: !!serviceData,
     }
   );
 
@@ -98,25 +73,6 @@ const ServiceReview = () => {
       },
     }
   );
-
-  const updateStatusMutation = useApiMutation(
-    (status) => {
-      return updateService(serviceData?.id!, {
-        status: status as ServiceStatusEnum,
-      });
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["serviceRevisionData", id],
-        });
-      },
-    }
-  );
-
-  const handleStatusChange = (newStatus: ServiceStatusEnum) => {
-    updateStatusMutation.mutate(newStatus);
-  };
 
   const serviceLogCollapseItems = [
     {
@@ -161,40 +117,22 @@ const ServiceReview = () => {
               <p>تم تفعيل الحساب بناء على موافقة الإدارة</p>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">حالة الخدمة:</span>
-                <Select
-                  value={
-                    serviceData?.pending_revision
-                      ? serviceData?.pending_revision?.status
-                      : serviceData?.status
+                <div>
+                  {
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" />
+                      {
+                        <Tag
+                          color={
+                            getStatusTag(serviceData?.status as string)?.color
+                          }
+                        >
+                          {serviceData?.status_label}
+                        </Tag>
+                      }
+                    </div>
                   }
-                  onChange={handleStatusChange}
-                  loading={updateStatusMutation.isPending}
-                  disabled={updateStatusMutation.isPending}
-                  className="min-w-40"
-                >
-                  {serviceStatusOptions?.data
-                    ?.filter(
-                      (item) =>
-                        item.status === ServiceStatusEnum.hold ||
-                        item.status === ServiceStatusEnum.approved ||
-                        item.status === ServiceStatusEnum.inactive ||
-                        item.status === ServiceStatusEnum.removed
-                    )
-                    ?.map((option) => (
-                      <Select.Option key={option.status} value={option.status}>
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="w-3 h-3 rounded-full"
-                            style={{
-                              backgroundColor: getStatusTag(option.status)
-                                .color,
-                            }}
-                          />
-                          <span>{option.label}</span>
-                        </div>
-                      </Select.Option>
-                    ))}
-                </Select>
+                </div>
               </div>
             </div>
           </div>
