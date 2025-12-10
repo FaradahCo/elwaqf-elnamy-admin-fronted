@@ -11,7 +11,6 @@ import {
 import type { TabsProps } from "antd";
 import { Button } from "antd/es/radio";
 import type { ColumnsType } from "antd/es/table";
-import { Link } from "react-router";
 import type {
   BankTransferItem,
   Owner,
@@ -98,19 +97,16 @@ export const withDrawListColumns: ColumnsType<WithdrawItem> = [
   },
   {
     title: "وثيقة الدفع",
-    dataIndex: "invoice",
-    key: "invoice",
     width: 100,
     ellipsis: true,
-    render: (invoice: string) => (
+    render: (item: WithdrawItem) => (
       <div className="flex items-center gap-2">
-        <Link
-          to={invoice}
-          target="_blank"
+        <p
+          onClick={() => handleDownloadAttachment(item?.invoice?.url!)}
           className="text-primary! underline! cursor-pointer"
         >
           صوره الفاتورة
-        </Link>
+        </p>
       </div>
     ),
   },
@@ -172,13 +168,11 @@ export const bankTransferListColumns: ColumnsType<BankTransferItem> = [
   },
   {
     title: "المبلغ",
-    dataIndex: "amount",
-    key: "amount",
     width: 100,
     ellipsis: true,
-    render: (amount: string) => (
+    render: (item: BankTransferItem) => (
       <div className="flex items-center gap-2">
-        <span>{amount}</span>
+        <span>{item?.payment?.total_paid}</span>
         <img src="/images/SAR.svg" alt="wallet" />
       </div>
     ),

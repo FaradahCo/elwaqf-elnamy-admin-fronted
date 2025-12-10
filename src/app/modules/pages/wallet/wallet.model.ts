@@ -16,7 +16,7 @@ export type WithdrawItem = {
   amount: string;
   status: string;
   note: string;
-  invoice: string;
+  invoice: MediaItem;
   receipt: string[];
   owner: Owner;
   bank_account: BankAccount;
