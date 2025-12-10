@@ -163,13 +163,50 @@ const ConsultationForm = () => {
                           </Select>
                         </Form.Item>
                       </Col>
-                      <Col xs={24} md={12}>
+                      {/* <Col xs={24} md={12}>
                         <Form.Item
                           name={[field.name, "is_required"]}
                           label=" "
                           valuePropName="checked"
+                          getValueFromEvent={(checked) => !checked}
+                          getValueProps={(value) => ({ checked: !value })}
                         >
                           <Checkbox>إمكانية تخطي هذا السؤال</Checkbox>
+                        </Form.Item>
+                      </Col> */}
+                      <Col xs={24} md={12}>
+                        <Form.Item shouldUpdate noStyle>
+                          {() => {
+                            const isRequired = form.getFieldValue([
+                              "questions",
+                              field.name,
+                              "is_required",
+                            ]);
+                            return (
+                              <div className="ant-form-item">
+                                <div className="ant-form-item-label">
+                                  <label> </label>
+                                </div>
+                                <div className="ant-form-item-control">
+                                  <Checkbox
+                                    checked={!isRequired}
+                                    onChange={(e) => {
+                                      form.setFieldValue(
+                                        [
+                                          "questions",
+                                          field.name,
+                                          "is_required",
+                                        ],
+                                        !e.target.checked
+                                      );
+                                    }}
+                                  >
+                                    إمكانية تخطي هذا السؤال
+                                  </Checkbox>
+                                </div>
+                              </div>
+                            );
+                          }}
                         </Form.Item>
                       </Col>
                     </Row>
