@@ -164,12 +164,10 @@ const ConsultationForm = () => {
                         </Form.Item>
                       </Col>
                       <Col xs={24} md={12}>
-                        <Form.Item
-                          name={[field.name, "is_required"]}
-                          label=" "
-                          valuePropName="checked"
-                        >
-                          <Checkbox>إمكانية تخطي هذا السؤال</Checkbox>
+                        <Form.Item name={[field.name, "is_required"]} label=" ">
+                          <InvertedCheckbox>
+                            إمكانية تخطي هذا السؤال
+                          </InvertedCheckbox>
                         </Form.Item>
                       </Col>
                     </Row>
@@ -274,5 +272,11 @@ const ConsultationForm = () => {
     </>
   );
 };
-
+const InvertedCheckbox = ({ value, onChange, children }: any) => {
+  return (
+    <Checkbox checked={!value} onChange={(e) => onChange(!e.target.checked)}>
+      {children}
+    </Checkbox>
+  );
+};
 export default ConsultationForm;
