@@ -1,4 +1,3 @@
-import "@ant-design/v5-patch-for-react-19";
 import { ConfigProvider, App as AntApp } from "antd";
 import arEG from "antd/locale/ar_EG";
 import { createRoot } from "react-dom/client";
