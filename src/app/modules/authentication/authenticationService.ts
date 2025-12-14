@@ -12,7 +12,10 @@ import type {
 
 export const AuthenticationService = {
   login: async (data: LoginPayload) => {
-    return AoiService.post<LoginPayload, LoginResponse>("/auth/login", data);
+    return AoiService.post<LoginPayload, LoginResponse>(
+      "/auth/admin-login",
+      data
+    );
   },
 
   register: async (data: RegisterPayload, type: string = "provider") => {
