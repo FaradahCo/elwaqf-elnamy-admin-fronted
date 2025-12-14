@@ -1,6 +1,6 @@
 import type { RouteObject } from "react-router";
 import MainLayout from "../../layouts/mainLayout";
-import { ServiceProviderRoutes } from "./serviceProvider/serviceProviderRoutes";
+import { ServiceProviderRoutes } from "./serviceProvider/serviceProvidersRoutes";
 import { serviceManagementRoutes } from "./serviceManagement/serviceManagementRoutes";
 import DiscoundCodesRoutes from "./discoundCodes/discoundCodesRoutes";
 import walletRoutes from "./wallet/walletRoutes";

@@ -1,22 +1,18 @@
 import CardStatistic from "@shared/components/cardStatistic/cardStatistic";
+import CustomTable from "@shared/components/customTable/customtable";
 import { useApiQuery } from "@shared/services/api";
-import { getServiceRequests } from "../../followRequestsService";
-
-import { useState, useCallback } from "react";
-import type {
-  FollowRequest,
-  FollowRequestFilterQuery,
-} from "../../model/followRequestsModel";
 import {
   getSeriviceStatus,
   ServiceStatusEnum,
 } from "@shared/services/sharedService";
-import FollowRequestListFilter from "../../components/followRequestsFilter/followRequestListFilter";
-import CustomTable from "@shared/components/customTable/customtable";
-import { followRequestsColumns } from "./followRequestsListConfig";
+import { useCallback, useState } from "react";
+import type { ServiceProvidersListFilterQuery } from "../../serviceProviders.model";
+import { getServiceProviders } from "../../serviceProvidersServices";
+import { serviceProvidersListColumns } from "./serviceProvidersListConfig";
+import ServiceProvidersListFilter from "../../components/serviceProvidersListFilter/serviceProvidersListFilter";
 
-const FollowRequestsList = () => {
-  const [filter, setFilter] = useState<FollowRequestFilterQuery | null>({
+const ServiceProvidersList = () => {
+  const [filter, setFilter] = useState<ServiceProvidersListFilterQuery>({
     page: 1,
     per_page: 10,
   });
@@ -28,7 +24,7 @@ const FollowRequestsList = () => {
   );
 
   const handleFilterChange = useCallback(
-    (filterValues: FollowRequestFilterQuery) => {
+    (filterValues: ServiceProvidersListFilterQuery) => {
       setFilter((prevFilter) => ({
         ...prevFilter,
         ...filterValues,
@@ -45,10 +41,10 @@ const FollowRequestsList = () => {
     }));
   }, []);
 
-  const { data: serviceData, isLoading } = useApiQuery(
+  const { data: serviceProvidersData, isLoading } = useApiQuery(
     ["getServiceRequests", filter],
     () => {
-      return getServiceRequests(filter!);
+      return getServiceProviders(filter!);
     },
     { retry: false, enabled: !!filter }
   );
@@ -57,9 +53,9 @@ const FollowRequestsList = () => {
     <div className="py-10">
       <div className="flex gap-5 flex-wrap flex-row flex-center justify-start">
         <CardStatistic
-          title="إجمالي الطلبات"
+          title="إجمالي الخدمات"
           icon="/images/elements_1.svg"
-          value={serviceData?.meta?.total ?? 0}
+          value={serviceProvidersData?.meta?.total ?? 0}
           classesName={[
             "border border-second-primary p-4 rounded-xl w-64 min-w-64",
           ]}
@@ -68,8 +64,8 @@ const FollowRequestsList = () => {
           title="الطلبات المكتملة"
           icon="/images/elements_2.svg"
           value={
-            serviceData?.data?.filter(
-              (item) => item.status === ServiceStatusEnum.completed
+            serviceProvidersData?.data?.filter(
+              (item) => item.status === ServiceStatusEnum.active
             ).length ?? 0
           }
           classesName={[
@@ -81,7 +77,7 @@ const FollowRequestsList = () => {
           title="جاري العمل"
           icon="/images/elements_3.svg"
           value={
-            serviceData?.data?.filter(
+            serviceProvidersData?.data?.filter(
               (item) => item.status === ServiceStatusEnum.in_progress
             ).length ?? 0
           }
@@ -91,10 +87,10 @@ const FollowRequestsList = () => {
         />
 
         <CardStatistic
-          title="بانتظار عرض السعر"
+          title="الرصيد معلق"
           icon="/images/elements_4.svg"
           value={
-            serviceData?.data?.filter(
+            serviceProvidersData?.data?.filter(
               (item) => item.status === ServiceStatusEnum.pending
             ).length ?? 0
           }
@@ -104,20 +100,21 @@ const FollowRequestsList = () => {
         />
       </div>
       <div className="bg-white shadow rounded-lg p-4 mt-5">
-        <h1 className="text-lg font-semibold">متابعة الطلبات</h1>
+        <h1 className="text-lg font-semibold">قائمة مزوديّ الخدمات</h1>
         <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
-        <FollowRequestListFilter
+        <ServiceProvidersListFilter
           onFilterChange={handleFilterChange}
           serviceStatus={serviceStatus?.data ?? []}
+          // serviceProvidersFields={serviceProvidersFields ?? []}
         />
 
-        <CustomTable<FollowRequest>
-          columns={followRequestsColumns}
-          dataSource={serviceData?.data ?? []}
+        <CustomTable
+          columns={serviceProvidersListColumns}
+          dataSource={serviceProvidersData?.data ?? []}
           showSelection={false}
           className={["mt-6 overflow-x-auto"]}
           loading={isLoading}
-          paginationMeta={serviceData?.meta}
+          paginationMeta={serviceProvidersData?.meta}
           onPaginationChange={handlePaginationChange}
         />
       </div>
@@ -125,4 +122,4 @@ const FollowRequestsList = () => {
   );
 };
 
-export default FollowRequestsList;
+export default ServiceProvidersList;
