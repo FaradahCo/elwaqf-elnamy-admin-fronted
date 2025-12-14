@@ -12,6 +12,7 @@ import { serviceProviderRoutePath } from "../modules/pages/serviceProvider/servi
 import { walletRoutePath } from "../modules/pages/wallet/walletRoutes";
 import { consultantsManagementRoutePath } from "../modules/pages/consultantsManagement/consultantsManagementRoutes";
 import { staticPagesRoutePath } from "../modules/pages/staticPages/staticPagesRoutes";
+import { followRequestsRoutePath } from "../modules/pages/followRequests/followRequestsRoutes";
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -60,7 +61,7 @@ const MainLayout: React.FC = () => {
           key: "2-2",
           icon: <img src="/images/services.svg" alt="services" />,
           label: "متابعه الطلبات",
-          path: "/provider/services-management",
+          path: followRequestsRoutePath.FOLLOW_REQUESTS,
         },
         {
           key: "2-3",
