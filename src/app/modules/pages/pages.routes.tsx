@@ -7,6 +7,7 @@ import walletRoutes from "./wallet/walletRoutes";
 import { consultantsManagementRoutes } from "./consultantsManagement/consultantsManagementRoutes";
 import { staticPagesRoutes } from "./staticPages/staticPagesRoutes";
 import consultationRoutes from "./consultation/consultationRoutes";
+import { followRequestsRoutes } from "./followRequests/followRequestsRoutes";
 
 export const pagesRoutes: RouteObject[] = [
   {
@@ -23,6 +24,10 @@ export const pagesRoutes: RouteObject[] = [
       {
         path: "service-management",
         children: [...serviceManagementRoutes],
+      },
+      {
+        path: "follow-requests",
+        children: [...followRequestsRoutes],
       },
       {
         path: "service-providers",

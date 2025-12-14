@@ -39,3 +39,10 @@ export type MediaItem = {
   url?: string;
   uuid?: string;
 };
+
+export const SERVICE_TYPE = {
+  service: "خدمة",
+  consultation: "استشارة",
+  training: "تدريب",
+  package: "باقة",
+};
