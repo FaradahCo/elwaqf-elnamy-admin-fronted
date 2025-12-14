@@ -4,7 +4,7 @@ export const ServiceProviderRoutes: RouteObject[] = [
   {
     index: true,
     lazy: () =>
-      import("./pages/serviceProvider").then((m) => ({
+      import("./pages/serviceProvidersList/serviceProvidersList").then((m) => ({
         Component: m.default,
       })),
   },
