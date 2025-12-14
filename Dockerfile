@@ -1,13 +1,14 @@
 # ------------------------------------------------------------------
-# Stage 1: "builder" – Install dependencies & build the Vite app
+# Stage 1: “builder” – Install dependencies & build the Vite app
 # ------------------------------------------------------------------
-FROM node:22 AS node-builder
+FROM node:22-alpine AS node-builder
 
 WORKDIR /app
 
 # Install dependencies based on lockfile to leverage caching
 COPY package.json package-lock.json ./
-RUN npm ci --no-audit --loglevel=error
+# Verify lockfile is in sync, then install
+RUN npm ci --no-audit
 
 # Copy source and build
 COPY . .
