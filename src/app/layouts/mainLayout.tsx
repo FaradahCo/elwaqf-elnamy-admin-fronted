@@ -8,7 +8,7 @@ import { Outlet, useLocation, useNavigate } from "react-router";
 import { useLogOut } from "../hooks/useLogOut";
 import { consultationRoutePath } from "../modules/pages/consultation/consultationRoutes";
 import { pagesRoutePath } from "../modules/pages/pages.routes";
-import { serviceProviderRoutePath } from "../modules/pages/serviceProvider/serviceProviderRoutes";
+import { serviceProviderRoutePath } from "../modules/pages/serviceProvider/serviceProvidersRoutes";
 import { walletRoutePath } from "../modules/pages/wallet/walletRoutes";
 import { consultantsManagementRoutePath } from "../modules/pages/consultantsManagement/consultantsManagementRoutes";
 import { staticPagesRoutePath } from "../modules/pages/staticPages/staticPagesRoutes";
