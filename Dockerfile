@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------
-# Stage 1: “builder” – Install dependencies & build the Vite app
+# Stage 1: "builder" – Install dependencies & build the Vite app
 # ------------------------------------------------------------------
-FROM node:22-alpine AS node-builder
+FROM node:22 AS node-builder
 
 WORKDIR /app
 

@@ -1,7 +1,21 @@
 import { CustomTable } from "@shared/components/customTable/customtable";
 import { useApiMutation, useApiQuery } from "@shared/services/api";
-import { getStatusTag } from "@shared/services/sharedService";
-import { Button, Collapse, Form, Input, Modal, Radio, Spin, Tag } from "antd";
+import {
+  getSeriviceStatus,
+  getStatusTag,
+  ServiceStatusEnum,
+} from "@shared/services/sharedService";
+import {
+  Button,
+  Collapse,
+  Form,
+  Input,
+  Modal,
+  Radio,
+  Select,
+  Spin,
+  Tag,
+} from "antd";
 import { useNavigate, useParams } from "react-router";
 import { type ServiceData } from "../../model/serviceProviderList";
 import {
@@ -9,12 +23,14 @@ import {
   getRevisionsByServiceId,
   approveServiceRevision,
   rejectServiceRevision,
+  updateService,
 } from "../../serviceManagementService";
 import { serviceLogColumns } from "./serviceReviewConfig";
 import { useRef, useState } from "react";
 import type { RejectServiceRef } from "../../components/rejectService/rejectService";
 import RejectService from "../../components/rejectService/rejectService";
 import { ConvertToNumber } from "@/app/utilites/transformData";
+import { useQueryClient } from "@tanstack/react-query";
 
 const { TextArea } = Input;
 
@@ -22,6 +38,7 @@ const ServiceReview = () => {
   const { id } = useParams<{ id: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const rejectServiceRef = useRef<RejectServiceRef>(null);
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const handleOk = async () => {
     const formData = await rejectServiceRef.current?.validateForm();
@@ -89,6 +106,33 @@ const ServiceReview = () => {
       ),
     },
   ];
+  const updateStatusMutation = useApiMutation(
+    (status) => {
+      return updateService(serviceData?.id!, {
+        status: status as ServiceStatusEnum,
+      });
+    },
+    {
+      onSuccess: (res) => {
+        queryClient.setQueryData(["serviceRevisionData", id], {
+          ...serviceData,
+          status: res.status,
+        });
+      },
+    }
+  );
+
+  const { data: serviceStatusOptions } = useApiQuery(
+    ["service-status-options"],
+    () => getSeriviceStatus({ type: serviceData?.type! }),
+    {
+      retry: false,
+      enabled: !!serviceData,
+    }
+  );
+  const handleStatusChange = (newStatus: ServiceStatusEnum) => {
+    updateStatusMutation.mutate(newStatus);
+  };
 
   return (
     <>
@@ -117,22 +161,54 @@ const ServiceReview = () => {
               <p>تم تفعيل الحساب بناء على موافقة الإدارة</p>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">حالة الخدمة:</span>
-                <div>
-                  {
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" />
-                      {
-                        <Tag
-                          color={
-                            getStatusTag(serviceData?.status as string)?.color
+                {serviceData?.pending_revision ? (
+                  <Tag
+                    color={getStatusTag(serviceData?.status as string)?.color}
+                  >
+                    {serviceData?.status_label}
+                  </Tag>
+                ) : (
+                  <Select
+                    value={serviceData?.status}
+                    onChange={handleStatusChange}
+                    loading={updateStatusMutation.isPending}
+                    disabled={updateStatusMutation.isPending}
+                    className="min-w-40"
+                  >
+                    {serviceStatusOptions?.data
+                      ?.filter(
+                        (item) =>
+                          item.status === ServiceStatusEnum.hold ||
+                          item.status === ServiceStatusEnum.approved ||
+                          item.status === ServiceStatusEnum.inactive ||
+                          item.status === ServiceStatusEnum.removed ||
+                          item.status === ServiceStatusEnum.pending ||
+                          item.status === ServiceStatusEnum.revision_pending
+                      )
+                      ?.map((option) => (
+                        <Select.Option
+                          key={option.status}
+                          value={option.status}
+                          disabled={
+                            option?.status === ServiceStatusEnum?.pending ||
+                            option?.status ===
+                              ServiceStatusEnum?.revision_pending
                           }
                         >
-                          {serviceData?.status_label}
-                        </Tag>
-                      }
-                    </div>
-                  }
-                </div>
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-3 h-3 rounded-full"
+                              style={{
+                                backgroundColor: getStatusTag(option?.status)
+                                  ?.color,
+                              }}
+                            />
+                            <span>{option.label}</span>
+                          </div>
+                        </Select.Option>
+                      ))}
+                  </Select>
+                )}
               </div>
             </div>
           </div>
