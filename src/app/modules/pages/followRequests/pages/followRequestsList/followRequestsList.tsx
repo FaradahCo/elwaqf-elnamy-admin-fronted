@@ -16,7 +16,6 @@ import CustomTable from "@shared/components/customTable/customtable";
 import { followRequestsColumns } from "./followRequestsListConfig";
 
 const FollowRequestsList = () => {
-  // const navigate = useNavigate();
   const [filter, setFilter] = useState<FollowRequestFilterQuery | null>({
     page: 1,
     per_page: 10,
@@ -120,10 +119,6 @@ const FollowRequestsList = () => {
           loading={isLoading}
           paginationMeta={serviceData?.meta}
           onPaginationChange={handlePaginationChange}
-          // onRow={(record) => ({
-          //   onClick: () => navigate(`/provider/follow-requests/${record.id}`),
-          //   className: "cursor-pointer hover:bg-gray-50",
-          // })}
         />
       </div>
     </div>

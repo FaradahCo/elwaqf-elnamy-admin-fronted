@@ -15,29 +15,29 @@ export const followRequestsColumns = [
   },
   {
     title: "التصنيف",
-    dataIndex: "service",
-    key: "type",
-    render: (service: ServiceData) => (
-      <span>{SERVICE_TYPE[service.type as keyof typeof SERVICE_TYPE]}</span>
+    render: (item: FollowRequest) => (
+      <span>
+        {SERVICE_TYPE[item?.service?.type as keyof typeof SERVICE_TYPE]}
+      </span>
     ),
   },
   {
     title: "اسم العميل",
     dataIndex: "client",
     key: "name",
-    render: (client: Client) => <span>{client.name}</span>,
+    render: (client: Client) => <span>{client?.name}</span>,
   },
   {
     title: "اسم الخدمة",
     dataIndex: "service",
     key: "service",
-    render: (service: ServiceData) => <span>{service.title}</span>,
+    render: (service: ServiceData) => <span>{service?.title}</span>,
   },
   {
     title: "مجال الخدمة",
     dataIndex: "service",
     key: "service",
-    render: (service: ServiceData) => <span>{service.field?.name}</span>,
+    render: (service: ServiceData) => <span>{service?.field?.name}</span>,
   },
   {
     title: "السعر",
@@ -58,7 +58,7 @@ export const followRequestsColumns = [
     render: (item: FollowRequest) => (
       <Tag
         className="px-2! py-1! text-[13px]!"
-        color={getStatusTag(item.status!).color}
+        color={getStatusTag(item?.status!).color}
       >
         {item.status_label}
       </Tag>

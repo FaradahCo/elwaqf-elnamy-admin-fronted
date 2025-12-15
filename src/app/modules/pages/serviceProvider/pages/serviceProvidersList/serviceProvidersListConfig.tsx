@@ -23,7 +23,7 @@ export const serviceProvidersListColumns = [
     dataIndex: "fields",
     key: "fields",
     render: (fields: Fields) => (
-      <p className="text-xs">{fields.map((field) => field.name).join(", ")}</p>
+      <p className="text-xs">{fields?.map((field) => field.name).join(", ")}</p>
     ),
   },
   {
