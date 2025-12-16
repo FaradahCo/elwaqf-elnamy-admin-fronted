@@ -1,7 +1,12 @@
 import type { ServiceStatusEnum } from "@shared/services/sharedService";
 import type { ServiceData } from "../../serviceManagement/model/serviceProviderList";
+import type { PaginatedParams } from "@shared/model/shared.model";
 
-export interface FollowRequestFilterQuery {}
+export interface FollowRequestFilterQuery extends PaginatedParams {
+  type?: string;
+  status?: ServiceStatusEnum;
+  title?: string;
+}
 
 export interface FollowRequest {
   id: number;

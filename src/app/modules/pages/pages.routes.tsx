@@ -8,6 +8,7 @@ import { consultantsManagementRoutes } from "./consultantsManagement/consultants
 import { staticPagesRoutes } from "./staticPages/staticPagesRoutes";
 import consultationRoutes from "./consultation/consultationRoutes";
 import { followRequestsRoutes } from "./followRequests/followRequestsRoutes";
+import { alwaqfRoutes } from "./alwaqf/alwaqfRoutes";
 
 export const pagesRoutes: RouteObject[] = [
   {
@@ -32,6 +33,10 @@ export const pagesRoutes: RouteObject[] = [
       {
         path: "service-providers",
         children: [...ServiceProviderRoutes],
+      },
+      {
+        path: "alwaqf-list",
+        children: [...alwaqfRoutes],
       },
       {
         path: "discound-codes",

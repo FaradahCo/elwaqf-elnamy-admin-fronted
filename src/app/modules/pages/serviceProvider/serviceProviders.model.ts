@@ -1,4 +1,11 @@
-export interface ServiceProvidersListFilterQuery {}
+import type { PaginatedParams } from "@shared/model/shared.model";
+import type { ServiceStatusEnum } from "@shared/services/sharedService";
+
+export interface ServiceProvidersListFilterQuery extends PaginatedParams {
+  user_name?: string;
+  status?: ServiceStatusEnum;
+  field?: string;
+}
 
 export type ServiceProviders = {
   team_id?: number;
