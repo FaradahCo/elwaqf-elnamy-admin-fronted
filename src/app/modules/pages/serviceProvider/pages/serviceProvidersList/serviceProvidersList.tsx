@@ -22,11 +22,7 @@ const ServiceProvidersList = () => {
     () => getSeriviceStatus(),
     { retry: false }
   );
-  // const { data: serviceProvidersFields } = useApiQuery(
-  //   ["serviceProvidersFields"],
-  //   () => getServiceProvidersFields(),
-  //   { retry: false }
-  // );
+
   const handleFilterChange = useCallback(
     (filterValues: ServiceProvidersListFilterQuery) => {
       setFilter((prevFilter) => ({

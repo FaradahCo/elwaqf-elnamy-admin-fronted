@@ -183,7 +183,8 @@ const ServiceReview = () => {
                           item.status === ServiceStatusEnum.inactive ||
                           item.status === ServiceStatusEnum.removed ||
                           item.status === ServiceStatusEnum.pending ||
-                          item.status === ServiceStatusEnum.revision_pending
+                          item.status === ServiceStatusEnum.revision_pending ||
+                          item.status === ServiceStatusEnum.draft
                       )
                       ?.map((option) => (
                         <Select.Option
@@ -192,7 +193,8 @@ const ServiceReview = () => {
                           disabled={
                             option?.status === ServiceStatusEnum?.pending ||
                             option?.status ===
-                              ServiceStatusEnum?.revision_pending
+                              ServiceStatusEnum?.revision_pending ||
+                            option?.status === ServiceStatusEnum?.draft
                           }
                         >
                           <div className="flex items-center gap-2">
