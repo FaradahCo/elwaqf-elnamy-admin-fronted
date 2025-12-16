@@ -11,7 +11,14 @@ import {
 import { Button, DatePicker, Form, Input, InputNumber, Select } from "antd";
 import enUS from "antd/es/date-picker/locale/en_US";
 import dayjs from "dayjs";
-import { memo, useCallback, useEffect, useState } from "react";
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 import type {
   ServiceData,
@@ -20,26 +27,20 @@ import type {
 import { getServices } from "../../../serviceManagement/serviceManagementService";
 import type { DiscoundCodeItem } from "../../model/discoundCodesModel";
 
-// const codeStatusOptions = [
-//   { value: "active", label: "مفعل" },
-//   { value: "inactive", label: "غير مفعل" },
-//   { value: "scheduled", label: "مجدول" },
-//   { value: "canceled", label: "ملغي" },
-//   { value: "testing", label: "تجريبي" },
-// ];
-
 interface DiscoundCodesFormProps {
   onSubmit: (values: DiscoundCodeItem) => void;
   onCancel: () => void;
   loading?: boolean;
-  onReset?: () => void;
 }
 
-const DiscoundCodesForm = ({
-  onSubmit,
-  onCancel,
-  loading = false,
-}: DiscoundCodesFormProps) => {
+export interface DiscoundCodesFormRef {
+  resetForm: () => void;
+}
+
+const DiscoundCodesForm = forwardRef<
+  DiscoundCodesFormRef,
+  DiscoundCodesFormProps
+>(({ onSubmit, onCancel, loading = false }, ref) => {
   const editingItem = useSelector(
     (state: RootState) => state.discountCodes.editingItem
   );
@@ -53,7 +54,6 @@ const DiscoundCodesForm = ({
 
   const handleSubmit = useCallback(
     (values: DiscoundCodeItem) => {
-      // Filter out "select-all" and "clear-all" from service_ids if present
       const filteredServiceIds = Array.isArray(values.service_ids)
         ? values.service_ids.filter((id) => {
             if (typeof id === "string") {
@@ -131,6 +131,18 @@ const DiscoundCodesForm = ({
     }
   }, [editingItem, form]);
 
+  // Expose reset method to parent component
+  useImperativeHandle(
+    ref,
+    () => ({
+      resetForm: () => {
+        form.resetFields();
+        setFilter({ type: "service" });
+      },
+    }),
+    [form]
+  );
+
   return (
     <>
       <main className="flex flex-col items-center justify-center gap-3">
@@ -205,18 +217,6 @@ const DiscoundCodesForm = ({
               ))}
             </Select>
           </Form.Item>
-
-          {/* <Form.Item
-            name="status"
-            label="حالة الكود"
-            rules={[{ required: true, message: "يرجى اختيار حالة الكود" }]}
-          >
-            <Select
-              placeholder="اختر حالة الكود"
-              options={codeStatusOptions}
-              size="large"
-            />
-          </Form.Item> */}
 
           <Form.Item<DiscoundCodeItem>
             name="service_ids"
@@ -336,6 +336,8 @@ const DiscoundCodesForm = ({
       </Form>
     </>
   );
-};
+});
+
+DiscoundCodesForm.displayName = "DiscoundCodesForm";
 
 export default memo(DiscoundCodesForm);

@@ -101,7 +101,7 @@ const TransactionVerfication = ({
         footer={null}
       >
         <Confirm
-          title="سحب الأرباح"
+          title="اعتماد حوالة"
           description="سيتم اعتماد عملية سحب الأرباح وتحويل المبلغ إلى حساب المزوّد المسجل. يرجى التأكد من مطابقة المبلغ وبيانات الحساب قبل المتابعة"
           confirmText="تأكيد السحب"
           cancelText="إلغاء"

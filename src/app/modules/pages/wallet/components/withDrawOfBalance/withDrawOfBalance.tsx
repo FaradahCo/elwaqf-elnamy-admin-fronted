@@ -169,7 +169,7 @@ const WithDrawOfBalance = ({
         footer={null}
       >
         <Confirm
-          title="سحب الأرباح"
+          title="اعتماد سحب ارباح"
           description="سيتم اعتماد عملية سحب الأرباح وتحويل المبلغ إلى حساب المزوّد المسجل. يرجى التأكد من مطابقة المبلغ وبيانات الحساب قبل المتابعة"
           confirmText="تأكيد السحب"
           cancelText="إلغاء"

@@ -39,5 +39,14 @@ export type Quotation = {
   status?: ServiceStatusEnum;
   status_label?: string;
 };
+export type FollowRequestStatus = {
+  label?: string;
+  status?: string;
+  count?: number;
+};
+export type FollowRequestStatusResponse = {
+  data?: FollowRequestStatus[];
+  total?: number;
+};
 
 export type FollowRequestsResponse = {};

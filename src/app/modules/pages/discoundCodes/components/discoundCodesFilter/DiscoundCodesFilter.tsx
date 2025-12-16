@@ -1,6 +1,6 @@
 import { typeOptions } from "@shared/services/sharedService";
 import { Card, Col, Form, Row, Select } from "antd";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import type { DiscoundListParams } from "../../model/discoundCodesModel";
 
 const { Option } = Select;
@@ -39,15 +39,6 @@ const DiscoundCodesFilter = ({ onFilterChange }: DiscoundCodesFilterProps) => {
       handleFormChange();
     }, 500); // 500ms delay for all fields
   }, [handleFormChange]);
-
-  // Cleanup timer on unmount
-  useEffect(() => {
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-    };
-  }, []);
 
   return (
     <Card className="mb-6">

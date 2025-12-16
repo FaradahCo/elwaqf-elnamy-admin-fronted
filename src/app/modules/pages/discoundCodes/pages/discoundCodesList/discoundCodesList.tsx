@@ -9,9 +9,11 @@ import CustomTable from "@shared/components/customTable/customtable";
 import { useApiMutation, useApiQuery } from "@shared/services/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Card, Modal } from "antd";
-import { useCallback, useState, useMemo } from "react";
+import { useCallback, useState, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import DiscoundCodesForm from "../../components/discoundCodesForm/discoundCodesForm";
+import DiscoundCodesForm, {
+  type DiscoundCodesFormRef,
+} from "../../components/discoundCodesForm/discoundCodesForm";
 import DiscoundCodesFilter from "../../components/discoundCodesFilter/DiscoundCodesFilter";
 import {
   CreateDiscoundCode,
@@ -30,6 +32,7 @@ import type { PaginatedResponse } from "@shared/model/shared.model";
 const DiscoundCodesList = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
+  const formRef = useRef<DiscoundCodesFormRef>(null);
 
   // Redux state - memoized to prevent unnecessary re-renders
   const discountCodesState = useSelector(
@@ -42,7 +45,7 @@ const DiscoundCodesList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filter, setFilter] = useState<Partial<DiscoundListParams>>({
     page: 1,
-    type: "service",
+    per_page: 10,
   });
 
   const { data: discoundCodes, isLoading } = useApiQuery<
@@ -66,11 +69,10 @@ const DiscoundCodesList = () => {
       : (data: DiscoundCodeItem) => CreateDiscoundCode(data),
     {
       onSuccess: () => {
+        formRef.current?.resetForm();
         dispatch(resetDiscountCodesState());
         setIsModalOpen(false);
-
         queryClient.invalidateQueries({ queryKey: ["discound-codes"] });
-        // Form will be reset when modal closes and reopens
       },
     }
   );
@@ -169,6 +171,7 @@ const DiscoundCodesList = () => {
         title={editingItem ? "تعديل كود الخصم" : "إضافة كود خصم جديد"}
       >
         <DiscoundCodesForm
+          ref={formRef}
           onSubmit={handleFormSubmit}
           onCancel={handleModalCancel}
           loading={codeDiscoundMutation.isPending}

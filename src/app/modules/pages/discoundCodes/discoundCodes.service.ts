@@ -4,11 +4,12 @@ import type {
   DiscoundListParams,
 } from "./model/discoundCodesModel";
 import type { PaginatedResponse } from "@shared/model/shared.model";
+import { transformFilterParams } from "@shared/services/sharedService";
 
 export const DiscoundCodes = async (params?: DiscoundListParams) => {
   return AoiService.get<PaginatedResponse<DiscoundCodeItem>>(
     "/admin/discount-codes",
-    params
+    transformFilterParams(params)
   );
 };
 
