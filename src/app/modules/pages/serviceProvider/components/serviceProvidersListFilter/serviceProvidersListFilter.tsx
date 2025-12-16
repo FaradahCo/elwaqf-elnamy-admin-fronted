@@ -4,20 +4,19 @@ import { memo, useMemo, useRef } from "react";
 import type {
   Fields,
   ServiceProvidersListFilterQuery,
+  serviceProvidersStatus,
 } from "../../serviceProviders.model";
-import { type ServiceStatus } from "@shared/model/shared.model";
-
 interface ServiceProvidersFilterProps {
   onFilterChange?: (filter: ServiceProvidersListFilterQuery) => void;
   onServiceTypeChange?: (type: string) => void;
-  serviceStatus?: ServiceStatus[];
+  serviceProvidersStatus?: serviceProvidersStatus[];
   serviceProvidersFields?: Fields;
 }
 
 const ServiceProvidersListFilter = memo(
   ({
     onFilterChange,
-    serviceStatus,
+    serviceProvidersStatus,
     serviceProvidersFields,
   }: ServiceProvidersFilterProps) => {
     const [form] = Form.useForm();
@@ -67,13 +66,14 @@ const ServiceProvidersListFilter = memo(
             <Col xs={24} md={6}>
               <Form.Item name="status" label="الحالة">
                 <Select placeholder="اختر الحالة" className="w-full" allowClear>
-                  {serviceStatus?.map((option) => (
+                  {serviceProvidersStatus?.map((option) => (
                     <Option key={option.status} value={option.status}>
                       <div className="flex items-center gap-2">
                         <div
                           className="w-3 h-3 rounded-full"
                           style={{
-                            backgroundColor: getStatusTag(option.status).color,
+                            backgroundColor: getStatusTag(option?.status || "")
+                              ?.color,
                           }}
                         />
                         <span>{option.label}</span>

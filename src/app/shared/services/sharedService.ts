@@ -96,6 +96,7 @@ export enum ServiceStatusEnum {
   pending_verification = "pending_verification",
   failed = "failed",
   in_progress = "in_progress",
+  review = "review",
 }
 
 export const getStatusTag = (status: ServiceStatusEnum | string) => {
@@ -123,6 +124,7 @@ export const getStatusTag = (status: ServiceStatusEnum | string) => {
     [ServiceStatusEnum.completed]: { color: "#52c41a", text: "مكتملة" },
     [ServiceStatusEnum.complete]: { color: "#52c41a", text: "مكتملة" },
     [ServiceStatusEnum.hold]: { color: "#fa8c16", text: "معلق" },
+    [ServiceStatusEnum.review]: { color: "#fa8c16", text: "معلق" },
     [ServiceStatusEnum.in_progress]: { color: "#fa8c16", text: "جاري العمل" },
     [ServiceStatusEnum.removed]: { color: "#8c8c8c", text: "محذوف" },
     [ServiceStatusEnum.scheduled]: { color: "#fa8c16", text: "مجدول" },

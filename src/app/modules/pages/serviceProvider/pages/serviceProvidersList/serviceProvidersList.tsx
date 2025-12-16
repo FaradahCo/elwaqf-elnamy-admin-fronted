@@ -1,13 +1,13 @@
 import CardStatistic from "@shared/components/cardStatistic/cardStatistic";
 import CustomTable from "@shared/components/customTable/customtable";
 import { useApiQuery } from "@shared/services/api";
-import {
-  getSeriviceStatus,
-  ServiceStatusEnum,
-} from "@shared/services/sharedService";
+import { ServiceStatusEnum } from "@shared/services/sharedService";
 import { useCallback, useState } from "react";
 import type { ServiceProvidersListFilterQuery } from "../../serviceProviders.model";
-import { getServiceProviders } from "../../serviceProvidersServices";
+import {
+  getSeriviceProvidersStatus,
+  getServiceProviders,
+} from "../../serviceProvidersServices";
 import { serviceProvidersListColumns } from "./serviceProvidersListConfig";
 import ServiceProvidersListFilter from "../../components/serviceProvidersListFilter/serviceProvidersListFilter";
 
@@ -17,9 +17,9 @@ const ServiceProvidersList = () => {
     per_page: 10,
   });
 
-  const { data: serviceStatus } = useApiQuery(
-    ["serviceStatus"],
-    () => getSeriviceStatus(),
+  const { data: serviceProvidersStatus } = useApiQuery(
+    ["serviceProvidersStatus"],
+    () => getSeriviceProvidersStatus(),
     { retry: false }
   );
 
@@ -55,7 +55,7 @@ const ServiceProvidersList = () => {
         <CardStatistic
           title="إجمالي الخدمات"
           icon="/images/elements_1.svg"
-          value={serviceProvidersData?.meta?.total ?? 0}
+          value={serviceProvidersStatus?.total ?? 0}
           classesName={[
             "border border-second-primary p-4 rounded-xl w-64 min-w-64",
           ]}
@@ -64,9 +64,9 @@ const ServiceProvidersList = () => {
           title="الطلبات المكتملة"
           icon="/images/elements_2.svg"
           value={
-            serviceProvidersData?.data?.filter(
-              (item) => item.status === ServiceStatusEnum.active
-            ).length ?? 0
+            serviceProvidersStatus?.data?.find(
+              (item) => item?.status === ServiceStatusEnum.active
+            )?.count ?? 0
           }
           classesName={[
             "border border-green-dark text-green-dark rounded-lg p-4 rounded-xl bg-green-light w-64 min-w-64",
@@ -77,9 +77,9 @@ const ServiceProvidersList = () => {
           title="جاري العمل"
           icon="/images/elements_3.svg"
           value={
-            serviceProvidersData?.data?.filter(
-              (item) => item.status === ServiceStatusEnum.in_progress
-            ).length ?? 0
+            serviceProvidersStatus?.data?.find(
+              (item) => item?.status === ServiceStatusEnum.in_progress
+            )?.count ?? 0
           }
           classesName={[
             "border border-blue-dark text-blue-dark rounded-lg p-4 rounded-xl bg-blue-light w-64 min-w-64",
@@ -90,9 +90,9 @@ const ServiceProvidersList = () => {
           title="الرصيد معلق"
           icon="/images/elements_4.svg"
           value={
-            serviceProvidersData?.data?.filter(
-              (item) => item.status === ServiceStatusEnum.pending
-            ).length ?? 0
+            serviceProvidersStatus?.data?.find(
+              (item) => item?.status === ServiceStatusEnum.review
+            )?.count ?? 0
           }
           classesName={[
             "border border-orange-dark bg-orange-light text-orange-dark rounded-lg p-4 rounded-xl w-64 min-w-64",
@@ -104,7 +104,7 @@ const ServiceProvidersList = () => {
         <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
         <ServiceProvidersListFilter
           onFilterChange={handleFilterChange}
-          serviceStatus={serviceStatus?.data ?? []}
+          serviceProvidersStatus={serviceProvidersStatus?.data ?? []}
           // serviceProvidersFields={serviceProvidersFields ?? []}
         />
 
