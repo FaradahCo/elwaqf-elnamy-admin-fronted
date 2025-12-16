@@ -13,6 +13,7 @@ import { walletRoutePath } from "../modules/pages/wallet/walletRoutes";
 import { consultantsManagementRoutePath } from "../modules/pages/consultantsManagement/consultantsManagementRoutes";
 import { staticPagesRoutePath } from "../modules/pages/staticPages/staticPagesRoutes";
 import { followRequestsRoutePath } from "../modules/pages/followRequests/followRequestsRoutes";
+import { alwaqfRoutePath } from "../modules/pages/alwaqf/alwaqfRoutes";
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -78,7 +79,7 @@ const MainLayout: React.FC = () => {
           key: "2-4",
           icon: <img src="/images/awqaf.svg" alt="awqaf icon" />,
           label: "الإوقاف",
-          path: "/waqf/list",
+          path: alwaqfRoutePath.ALWAQF_LIST,
         },
       ],
     },
