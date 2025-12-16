@@ -2,6 +2,7 @@ import type { PaginatedResponse } from "@shared/model/shared.model";
 import type {
   ServiceProviders,
   ServiceProvidersListFilterQuery,
+  serviceProvidersStatusResponse,
 } from "./serviceProviders.model";
 import { transformFilterParams } from "@shared/services/sharedService";
 import AoiService from "@shared/services/api";
@@ -16,3 +17,8 @@ export const getServiceProviders = async (
 };
 export const getServiceProvidersFields = async () =>
   AoiService.get("/provider/fields");
+
+export const getSeriviceProvidersStatus = async () =>
+  await AoiService.get<serviceProvidersStatusResponse>(
+    `/admin/providers/status-counts`
+  );

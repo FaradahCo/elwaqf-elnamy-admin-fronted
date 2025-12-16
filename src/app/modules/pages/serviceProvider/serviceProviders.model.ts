@@ -27,3 +27,12 @@ export type Field = {
   slug?: string;
   selected?: boolean;
 };
+export type serviceProvidersStatus = {
+  status?: string;
+  label?: string;
+  count?: number;
+};
+export type serviceProvidersStatusResponse = {
+  data?: serviceProvidersStatus[];
+  total?: number;
+};
