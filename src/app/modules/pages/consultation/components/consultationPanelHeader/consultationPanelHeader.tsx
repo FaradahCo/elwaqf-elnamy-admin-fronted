@@ -1,19 +1,17 @@
 import Alert from "@shared/components/alert/alert";
 import { Button, Modal, Tooltip } from "antd";
+import { useState } from "react";
 
 type ConsultationPanelHeaderProps = {
   onDeleteQuestion(): void;
   isDeleting: boolean;
-  isModalOpen: boolean;
-  setIsModalOpen: (value: boolean) => void;
 };
 
 const ConsultationPanelHeader = ({
   onDeleteQuestion,
   isDeleting,
-  isModalOpen,
-  setIsModalOpen,
 }: ConsultationPanelHeaderProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <>
       <div className="flex items-center justify-between gap-2 mb-4">

@@ -24,10 +24,10 @@ import {
   transformFormValues,
 } from "../consultationService";
 import ConsultationPanelHeader from "../components/consultationPanelHeader/consultationPanelHeader";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 const ConsultationForm = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
@@ -78,7 +78,6 @@ const ConsultationForm = () => {
             data: updatedQuestions,
           });
           form.setFieldValue("questions", updatedQuestions);
-          setIsModalOpen(false);
         },
       });
     },
@@ -86,7 +85,11 @@ const ConsultationForm = () => {
   );
 
   if (isLoading) {
-    return <Spin />;
+    return (
+      <div className="flex items-center justify-center">
+        <Spin />;
+      </div>
+    );
   }
   return (
     <>
@@ -128,19 +131,18 @@ const ConsultationForm = () => {
                   >
                     <ConsultationPanelHeader
                       isDeleting={deleteQuestionMuation?.isPending}
-                      isModalOpen={isModalOpen}
-                      setIsModalOpen={setIsModalOpen}
                       onDeleteQuestion={() => {
                         handleDeleteQuestion(
                           questionsRes?.data[index]?.id,
                           () => {
-                            setIsModalOpen(false);
                             remove(field.name)!;
                           }
                         );
                       }}
                     />
-                    <Form.Item name={[field.name, "order"]} hidden />
+                    <Form.Item name={[field.name, "order"]}>
+                      <Input hidden />
+                    </Form.Item>
                     <Form.Item
                       name={[field.name, "text"]}
                       rules={[
