@@ -42,6 +42,7 @@ const DiscoundCodesList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filter, setFilter] = useState<Partial<DiscoundListParams>>({
     page: 1,
+    per_page: 10,
     type: "service",
   });
 
@@ -91,23 +92,26 @@ const DiscoundCodesList = () => {
         editingItem ? { ...values, id: editingItem.id } : values
       );
     },
-    [codeDiscoundMutation]
+    [codeDiscoundMutation, editingItem]
   );
-
-  const handlePaginationChange = useCallback((page: number) => {
+  const handleFilterChange = useCallback((filterValues: DiscoundListParams) => {
     setFilter((prevFilter) => ({
       ...prevFilter,
-      page,
+      ...filterValues,
+    }));
+  }, []);
+
+  const handlePaginationChange = useCallback((page: number, size: number) => {
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      page: page,
+      per_page: size,
     }));
   }, []);
 
   const handleAddCode = useCallback(() => {
     dispatch(resetDiscountCodesState());
     setIsModalOpen(true);
-  }, []);
-
-  const handleFilterChange = useCallback((newFilter: DiscoundListParams) => {
-    setFilter(newFilter);
   }, []);
 
   return (
