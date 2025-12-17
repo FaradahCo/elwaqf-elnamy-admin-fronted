@@ -34,7 +34,7 @@ export const transformFormValues = (data?: Question[]) => {
       {
         text: "",
         type: OptionType.SINGLE,
-        is_required: false,
+        is_required: true,
         has_other_option: false,
         order: 1,
         options: [{ order: 1 }],

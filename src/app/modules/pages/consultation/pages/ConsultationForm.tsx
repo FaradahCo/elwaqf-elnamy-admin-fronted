@@ -14,6 +14,7 @@ import {
   OptionType,
   type ConsulationFormPayload,
   type ConsulationQuestionsResponse,
+  type Question,
 } from "../model/consultationModel";
 import { useApiMutation, useApiQuery } from "@shared/services/api";
 import {
@@ -23,22 +24,18 @@ import {
   transformFormValues,
 } from "../consultationService";
 import ConsultationPanelHeader from "../components/consultationPanelHeader/consultationPanelHeader";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 const ConsultationForm = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
   const { data: questionsRes, isLoading } =
     useApiQuery<ConsulationQuestionsResponse>(["questions"], getAllQuestions);
-  const deleteQuestionMuation = useApiMutation(
-    (id?: number) => deleteQuestion({ status: false }, id),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["questions"] });
-      },
-    }
+  const deleteQuestionMuation = useApiMutation((id?: number) =>
+    deleteQuestion({ status: false }, id)
   );
-
   const initialValues = useMemo(
     () => ({
       questions: transformFormValues(questionsRes?.data),
@@ -58,16 +55,36 @@ const ConsultationForm = () => {
     const questions = [...form.getFieldValue("questions")];
     const updatedQuestion = { ...questions[index], type: value };
     if (value === OptionType.TEXT) updatedQuestion.options = [];
+    else updatedQuestion.options = [{}];
     questions[index] = updatedQuestion;
     form.setFieldValue("questions", questions);
   }, []);
   const onFinish = (values: ConsulationFormPayload) => {
     createUpdateQuestionsMutation.mutate(values);
   };
-  const handleDeleteQuestion = (id?: number) => {
-    if (!id) return;
-    deleteQuestionMuation.mutate(id);
-  };
+  const handleDeleteQuestion = useCallback(
+    (id?: number, callback?: () => void) => {
+      if (!id) {
+        callback?.();
+        return;
+      }
+      deleteQuestionMuation.mutate(id, {
+        onSuccess: () => {
+          const questions = form.getFieldValue("questions");
+          const updatedQuestions = questions.filter(
+            (q: Question) => q.id !== id
+          );
+          queryClient.setQueryData(["questions"], {
+            data: updatedQuestions,
+          });
+          form.setFieldValue("questions", updatedQuestions);
+          setIsModalOpen(false);
+        },
+      });
+    },
+    [deleteQuestionMuation, form, queryClient]
+  );
+
   if (isLoading) {
     return <Spin />;
   }
@@ -89,7 +106,7 @@ const ConsultationForm = () => {
                     add({
                       text: "",
                       type: OptionType.SINGLE,
-                      is_required: false,
+                      is_required: true,
                       has_other_option: false,
                       order: fields.length + 1,
                       options: [{ order: 1 }],
@@ -110,12 +127,18 @@ const ConsultationForm = () => {
                     className="shadow-sm mb-8 border-gray-300 border-1 border-solid p-4 rounded-lg"
                   >
                     <ConsultationPanelHeader
-                      index={index}
-                      remove={remove}
-                      field={field}
-                      onDeleteQuestion={() =>
-                        handleDeleteQuestion(questionsRes?.data[index]?.id)
-                      }
+                      isDeleting={deleteQuestionMuation?.isPending}
+                      isModalOpen={isModalOpen}
+                      setIsModalOpen={setIsModalOpen}
+                      onDeleteQuestion={() => {
+                        handleDeleteQuestion(
+                          questionsRes?.data[index]?.id,
+                          () => {
+                            setIsModalOpen(false);
+                            remove(field.name)!;
+                          }
+                        );
+                      }}
                     />
                     <Form.Item name={[field.name, "order"]} hidden />
                     <Form.Item
@@ -181,7 +204,7 @@ const ConsultationForm = () => {
                         <Form.List name={[field.name, "options"]}>
                           {(subFields, subOpt) => (
                             <>
-                              {subFields.map((subField) => (
+                              {subFields.map((subField, index) => (
                                 <div
                                   key={subField.key}
                                   className="flex justify-between"
@@ -203,20 +226,22 @@ const ConsultationForm = () => {
                                       placeholder="اضافة خيار اخر"
                                     />
                                   </Form.Item>
-                                  <Tooltip placement="right" title="حذف">
-                                    <Button
-                                      className="rounded-full! bg-transparent! border-0!"
-                                      onClick={() =>
-                                        subOpt.remove(subField.name)
-                                      }
-                                      icon={
-                                        <img
-                                          src="/images/delete-icon-2.svg"
-                                          alt="delete icon"
-                                        />
-                                      }
-                                    />
-                                  </Tooltip>
+                                  {index !== 0 && (
+                                    <Tooltip placement="right" title="حذف">
+                                      <Button
+                                        className="rounded-full! bg-transparent! border-0!"
+                                        onClick={() =>
+                                          subOpt.remove(subField.name)
+                                        }
+                                        icon={
+                                          <img
+                                            src="/images/delete-icon-2.svg"
+                                            alt="delete icon"
+                                          />
+                                        }
+                                      />
+                                    </Tooltip>
+                                  )}
                                 </div>
                               ))}
 
@@ -255,6 +280,8 @@ const ConsultationForm = () => {
           <Button
             className="bg-white border-2 py-6! border-primary! text-primary! hover:bg-primary! hover:text-white!"
             icon={<EyeOutlined />}
+            loading={createUpdateQuestionsMutation.isPending}
+            disabled={createUpdateQuestionsMutation.isPending}
           >
             معاينة الأسئلة
           </Button>
@@ -263,6 +290,7 @@ const ConsultationForm = () => {
             size="large"
             htmlType="submit"
             type="primary"
+            loading={createUpdateQuestionsMutation.isPending}
             disabled={createUpdateQuestionsMutation.isPending}
           >
             نشر

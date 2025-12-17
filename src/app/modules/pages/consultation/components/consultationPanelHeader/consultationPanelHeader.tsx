@@ -1,21 +1,19 @@
 import Alert from "@shared/components/alert/alert";
 import { Button, Modal, Tooltip } from "antd";
-import type { FormListFieldData } from "antd/es/form";
-import { useState } from "react";
 
 type ConsultationPanelHeaderProps = {
-  index: number;
-  remove: (index: number | number[]) => void;
-  field: FormListFieldData;
   onDeleteQuestion(): void;
+  isDeleting: boolean;
+  isModalOpen: boolean;
+  setIsModalOpen: (value: boolean) => void;
 };
 
 const ConsultationPanelHeader = ({
-  remove,
-  field,
   onDeleteQuestion,
+  isDeleting,
+  isModalOpen,
+  setIsModalOpen,
 }: ConsultationPanelHeaderProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <>
       <div className="flex items-center justify-between gap-2 mb-4">
@@ -28,7 +26,6 @@ const ConsultationPanelHeader = ({
               onClick={() => {
                 setIsModalOpen(true);
               }}
-              // disabled={index === 0}
               className="rounded-full! border-none! bg-transparent!"
               icon={<img src="/images/delete-icon.svg" alt="delete icon" />}
             />
@@ -37,10 +34,15 @@ const ConsultationPanelHeader = ({
       </div>
       <Modal
         open={isModalOpen}
-        onOk={() => {
-          remove(field.name);
-          onDeleteQuestion();
+        okButtonProps={{
+          loading: isDeleting,
+          disabled: isDeleting,
         }}
+        cancelButtonProps={{
+          loading: isDeleting,
+          disabled: isDeleting,
+        }}
+        onOk={onDeleteQuestion}
         onCancel={() => setIsModalOpen(false)}
       >
         <Alert
