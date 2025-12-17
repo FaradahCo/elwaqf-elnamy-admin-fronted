@@ -93,23 +93,26 @@ const DiscoundCodesList = () => {
         editingItem ? { ...values, id: editingItem.id } : values
       );
     },
-    [codeDiscoundMutation]
+    [codeDiscoundMutation, editingItem]
   );
-
-  const handlePaginationChange = useCallback((page: number) => {
+  const handleFilterChange = useCallback((filterValues: DiscoundListParams) => {
     setFilter((prevFilter) => ({
       ...prevFilter,
-      page,
+      ...filterValues,
+    }));
+  }, []);
+
+  const handlePaginationChange = useCallback((page: number, size: number) => {
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      page: page,
+      per_page: size,
     }));
   }, []);
 
   const handleAddCode = useCallback(() => {
     dispatch(resetDiscountCodesState());
     setIsModalOpen(true);
-  }, []);
-
-  const handleFilterChange = useCallback((newFilter: DiscoundListParams) => {
-    setFilter(newFilter);
   }, []);
 
   return (
