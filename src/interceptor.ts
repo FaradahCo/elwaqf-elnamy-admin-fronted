@@ -5,7 +5,7 @@ import type {
   InternalAxiosRequestConfig,
 } from "axios";
 import axios from "axios";
-import environment from "./app/enviroments/environment.prod";
+import environment from "./app/enviroments/environemnt.dev";
 import { triggerForceLogoutForInterceptor } from "@shared/services/sharedService";
 
 // Define response type structure
