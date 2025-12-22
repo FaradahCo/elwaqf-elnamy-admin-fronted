@@ -5,64 +5,113 @@ import type {
   ServiceStatus,
 } from "@shared/model/shared.model";
 import { useApiQuery } from "@shared/services/api";
-import { getSeriviceStatus } from "@shared/services/sharedService";
-import { useCallback, useState } from "react";
-import ServiceManagementFilter from "../../components/serviceManagementFilter/serviceManagementFilter";
+import {
+  getSeriviceStatus,
+  getStatusTag,
+} from "@shared/services/sharedService";
+import { useMemo } from "react";
 import {
   type ServiceData,
   type ServiceManagementQuery,
 } from "../../model/serviceProviderList";
 import { getServices } from "../../serviceManagementService";
 import { getColumnsList } from "./serviceManagementListConfig";
-
+import { Select } from "antd";
+import type { CustomFilterType } from "@shared/components/custom-filter/custom-filter";
+import { useListHook } from "@/app/hooks/listHook";
+import CustomFilter from "@shared/components/custom-filter/custom-filter";
+const TYPE_OPTIONS = [
+  { label: "الخدمات", value: "service" },
+  { label: "الباقات", value: "package" },
+];
+const PACKAGE_TYPES = [
+  { value: "healthcare", label: "الرعاية الصحية" },
+  { value: "education", label: "التعليم" },
+  { value: "technology", label: "التكنولوجيا" },
+  { value: "social", label: "الخدمات الاجتماعية" },
+];
 export const ServiceManagementList = () => {
-  const [serviceType, setServiceType] = useState<string>("service");
-
-  // Initialize filter from URL params
-  const [filter, setFilter] = useState<ServiceManagementQuery>(() => {
-    return {
+  const {
+    data: serviceData,
+    isLoading,
+    handleFilterChange,
+    filter,
+    handlePaginationChange,
+  } = useListHook<PaginatedResponse<ServiceData>, ServiceManagementQuery>({
+    queryKey: "admin/services",
+    fetchFn: getServices,
+    initialFilter: {
       type: "service",
       page: 1,
       per_page: 5,
-    };
-  });
-
-  const handleServiceTypeChange = useCallback((type: string) => {
-    setServiceType(type);
-  }, []);
-
-  const handlePaginationChange = useCallback((page: number, size: number) => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      page,
-      per_page: size,
-    }));
-  }, []);
-
-  const handleFilterChange = useCallback(
-    (newFilter: ServiceManagementQuery) => {
-      setFilter(() => ({
-        ...newFilter,
-        page: 1,
-      }));
     },
-    []
-  );
-
+    queryOptions: { retry: false },
+  });
   const { data: serviceStatus } = useApiQuery<PaginatedResponse<ServiceStatus>>(
-    ["serviceStatus", serviceType],
-    () => getSeriviceStatus({ type: serviceType }),
+    ["serviceStatus", filter.type],
+    () => getSeriviceStatus({ type: filter?.type ?? "service" }),
     {
-      enabled: !!serviceType,
+      enabled: !!filter.type,
     }
   );
-
-  const { data: serviceData, isLoading } = useApiQuery<
-    PaginatedResponse<ServiceData>
-  >(["admin/services", filter], () => getServices(filter), {
-    retry: false,
-  });
-
+  const filters = useMemo(
+    () => [
+      {
+        name: "title",
+        type: "input" as CustomFilterType,
+        placeholder:
+          filter.type === "service"
+            ? "ابحث عن اسم الخدمة"
+            : "ابحث عن اسم الباقة",
+        label: filter.type === "service" ? "اسم الخدمة" : "اسم الباقة",
+      },
+      {
+        type: "select" as CustomFilterType,
+        placeholder:
+          filter.type === "service" ? "اختر مجال الخدمات" : "اختر مجال الباقات",
+        label: filter.type === "service" ? "مجال الخدمات" : "مجال الباقات",
+        name: "field",
+        options: PACKAGE_TYPES,
+      },
+      {
+        type: "select" as CustomFilterType,
+        placeholder: "اختر الحالة",
+        label: "الحالة",
+        name: "status",
+        options: (
+          <>
+            {serviceStatus?.data?.map((option) => (
+              <Select.Option key={option?.status} value={option?.status}>
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{
+                      backgroundColor: getStatusTag(option?.status ?? "")
+                        ?.color,
+                    }}
+                  />
+                  <span>{option?.label}</span>
+                </div>
+              </Select.Option>
+            ))}
+          </>
+        ),
+      },
+      {
+        type: "radio" as CustomFilterType,
+        name: "type",
+        label: "",
+        placeholder: "",
+        options: TYPE_OPTIONS,
+        props: {
+          defaultValue: filter?.type,
+          buttonStyle: "solid",
+          optionType: "button",
+        },
+      },
+    ],
+    [serviceStatus?.data, filter?.type]
+  );
   return (
     <div className="py-10">
       <div className="flex gap-5 flex-wrap flex-row flex-center justify-between">
@@ -114,14 +163,10 @@ export const ServiceManagementList = () => {
       <div className="bg-white shadow rounded-lg p-4 mt-5">
         <h1 className="text-lg font-semibold">إدارة الخدمات</h1>
         <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
-        <ServiceManagementFilter
-          serviceStatus={serviceStatus?.data ?? []}
-          onFilterChange={handleFilterChange}
-          onServiceTypeChange={handleServiceTypeChange}
-        />
+        <CustomFilter filters={filters} onFilterChange={handleFilterChange} />
 
         <CustomTable<ServiceData>
-          columns={getColumnsList(serviceType)}
+          columns={getColumnsList(filter?.type ?? "service")}
           dataSource={serviceData?.data ?? []}
           showSelection={true}
           className={["mt-6"]}
