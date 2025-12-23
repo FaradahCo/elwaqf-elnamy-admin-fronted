@@ -5,9 +5,9 @@ import {
 import { Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { Link } from "react-router";
+import type { Provider } from "../../../followRequests/model/followRequestsModel";
 import {
   type Duration,
-  type ProviderId,
   type ServiceData,
 } from "../../model/serviceProviderList";
 
@@ -37,16 +37,17 @@ export const servicesColumnsList: ColumnsType<ServiceData> = [
     ),
   },
   {
-    title: "مزود الخدمة",
-    dataIndex: "provider_id",
-    key: "provider_id",
+    title: "مزود الباقة",
+    dataIndex: "provider",
+    key: "provider",
     width: 150,
     ellipsis: true,
-    render: (provider_id: ProviderId) => {
-      const businessName = provider_id?.business_name || "-";
+    render: (provider: Provider) => {
+      const businessName = provider?.business_name || "-";
       return <span title={businessName}>{businessName}</span>;
     },
   },
+
   {
     title: "مجال الخدمة",
     dataIndex: "field",
@@ -124,12 +125,12 @@ export const packagesColumnsList: ColumnsType<ServiceData> = [
   },
   {
     title: "مزود الباقة",
-    dataIndex: "provider_id",
-    key: "provider_id",
+    dataIndex: "provider",
+    key: "provider",
     width: 150,
     ellipsis: true,
-    render: (provider_id: ProviderId) => {
-      const businessName = provider_id?.business_name || "-";
+    render: (provider: Provider) => {
+      const businessName = provider?.business_name || "-";
       return <span title={businessName}>{businessName}</span>;
     },
   },
