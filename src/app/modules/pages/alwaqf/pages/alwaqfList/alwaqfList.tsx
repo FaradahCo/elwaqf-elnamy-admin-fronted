@@ -1,47 +1,77 @@
 import CardStatistic from "@shared/components/cardStatistic/cardStatistic";
 import { useApiQuery } from "@shared/services/api";
 
-import { useState, useCallback } from "react";
-import { ServiceStatusEnum } from "@shared/services/sharedService";
+import { useMemo } from "react";
+import {
+  getStatusTag,
+  ServiceStatusEnum,
+} from "@shared/services/sharedService";
 import CustomTable from "@shared/components/customTable/customtable";
 import { getAlwaqfList, getAlWaqfStatus } from "../../alwaqfService";
 import type { Alwaqf, AlwaqfFilterQuery } from "../../alwaqfModel";
 import { alwaqfColumns } from "./alwaqfListConfig";
-import AlwaqfListFilter from "../../components/alwaqfListFilter/alwaqfListFilter";
+import { useListHook } from "@/app/hooks/listHook";
+import type { PaginatedResponse } from "@shared/model/shared.model";
+import type { CustomFilterType } from "@shared/components/custom-filter/custom-filter";
+import { Select } from "antd";
+import CustomFilter from "@shared/components/custom-filter/custom-filter";
 
 const AlwaqfList = () => {
-  const [filter, setFilter] = useState<AlwaqfFilterQuery | null>({
-    page: 1,
-    per_page: 10,
-  });
-
   const { data: alwaqfStatus } = useApiQuery(
     ["alwaqfStatus"],
     () => getAlWaqfStatus(),
     { retry: false }
   );
 
-  const handleFilterChange = useCallback((filterValues: AlwaqfFilterQuery) => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      ...filterValues,
-    }));
-  }, []);
-
-  const handlePaginationChange = useCallback((page: number, size: number) => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      page: page,
-      per_page: size,
-    }));
-  }, []);
-
-  const { data: alwaqfData, isLoading } = useApiQuery(
-    ["getAlwaqfList", filter],
-    () => {
-      return getAlwaqfList(filter!);
+  const {
+    data: alwaqfData,
+    isLoading,
+    handleFilterChange,
+    handlePaginationChange,
+  } = useListHook<PaginatedResponse<Alwaqf>, AlwaqfFilterQuery>({
+    queryKey: "getAlwaqfList",
+    fetchFn: getAlwaqfList,
+    initialFilter: {
+      page: 1,
+      per_page: 10,
     },
-    { retry: false, enabled: !!filter }
+    queryOptions: { retry: false },
+  });
+
+  const filters = useMemo(
+    () => [
+      {
+        type: "input" as CustomFilterType,
+        placeholder: "ابحث عن اسم الوقف",
+        label: "اسم المستخدم أو المنظمة",
+        name: "user_name",
+      },
+      {
+        type: "select" as CustomFilterType,
+        placeholder: "اختر الحالة",
+        label: "الحالة",
+        name: "status",
+        options: (
+          <>
+            {alwaqfStatus?.data?.map((option) => (
+              <Select.Option key={option?.status} value={option?.status}>
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{
+                      backgroundColor: getStatusTag(option?.status ?? "")
+                        ?.color,
+                    }}
+                  />
+                  <span>{option?.label}</span>
+                </div>
+              </Select.Option>
+            ))}
+          </>
+        ),
+      },
+    ],
+    [alwaqfStatus?.data]
   );
 
   return (
@@ -97,11 +127,7 @@ const AlwaqfList = () => {
       <div className="bg-white shadow rounded-lg p-4 mt-5">
         <h1 className="text-lg font-semibold">الأوقاف</h1>
         <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
-        <AlwaqfListFilter
-          onFilterChange={handleFilterChange}
-          aLwaqfStatus={alwaqfStatus?.data ?? []}
-        />
-
+        <CustomFilter filters={filters} onFilterChange={handleFilterChange} />
         <CustomTable<Alwaqf>
           columns={alwaqfColumns}
           dataSource={alwaqfData?.data ?? []}
