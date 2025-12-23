@@ -47,6 +47,7 @@ const ProviderConsultationsTab = () => {
         dataSource={consultations?.data ?? []}
         loading={isLoading}
         paginationMeta={consultations?.meta}
+        className={["mt-6"]}
       />
     </div>
   );

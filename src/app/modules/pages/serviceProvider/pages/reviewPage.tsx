@@ -3,7 +3,7 @@ import { useApiQuery, useApiMutation } from "@shared/services/api";
 import {
   getServiceProvider,
   updateServiceProviderStatus,
-} from "../../serviceProvidersServices";
+} from "../serviceProvidersServices";
 import {
   Button,
   Card,
@@ -32,7 +32,7 @@ const ReviewPage = () => {
 
   const { mutate: updateStatus, isPending: isUpdating } = useApiMutation(
     ({ status }: { status: string }) =>
-      updateServiceProviderStatus(id!, status),
+      updateServiceProviderStatus(id!, { status }),
     {
       onSuccess: () => {
         message.success("تم تحديث الحالة بنجاح");
@@ -56,7 +56,7 @@ const ReviewPage = () => {
     return <div>لم يتم العثور على مزود الخدمة</div>;
   }
 
-  const profile = provider.data.profile[0];
+  const profile = provider.profile[0];
 
   return (
     <div className="p-6">
@@ -72,8 +72,8 @@ const ReviewPage = () => {
           </Title>
         </div>
         <div className="flex gap-2">
-          <Tag color={getStatusTag(provider.data.status).color} className="text-lg py-1 px-3">
-            {provider.data.status_label}
+          <Tag color={getStatusTag(provider.status).color} className="text-lg py-1 px-3">
+            {provider.status_label}
           </Tag>
         </div>
 
@@ -84,16 +84,16 @@ const ReviewPage = () => {
         <Card title="المعلومات الأساسية" className="shadow-sm">
           <Descriptions column={1} bordered>
             <Descriptions.Item label="اسم المستخدم">
-              {provider.data.name}
+              {provider.name}
             </Descriptions.Item>
             <Descriptions.Item label="البريد الإلكتروني">
-              {provider.data.email}
+              {provider.email}
             </Descriptions.Item>
             <Descriptions.Item label="رقم الجوال">
-              {provider.data.phone}
+              {provider.phone}
             </Descriptions.Item>
             <Descriptions.Item label="تاريخ التسجيل">
-              {provider.data.created_at}
+              {provider.created_at}
             </Descriptions.Item>
           </Descriptions>
         </Card>

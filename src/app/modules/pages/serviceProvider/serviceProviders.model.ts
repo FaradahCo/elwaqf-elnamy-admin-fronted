@@ -93,6 +93,7 @@ export type ServiceProviderDetails = {
   region: string;
   type: string;
   status: string;
+  status_label?: string;
   image: string | null;
   last_login_at: string;
   created_at: string;

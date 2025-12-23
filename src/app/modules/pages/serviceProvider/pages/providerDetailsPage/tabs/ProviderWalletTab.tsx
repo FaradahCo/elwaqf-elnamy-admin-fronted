@@ -38,22 +38,22 @@ const ProviderWalletTab = () => {
       <Row gutter={16} className="mb-8">
         <Col span={6}>
           <Card>
-            <Statistic title="الرصيد الكلي" value={wallet?.data?.total_balance} suffix="ر.س" loading={isWalletLoading} />
+            <Statistic title="الرصيد الكلي" value={wallet?.total_balance} suffix="ر.س" loading={isWalletLoading} />
           </Card>
         </Col>
         <Col span={6}>
           <Card>
-            <Statistic title="الرصيد المتاح" value={wallet?.data?.available_balance} suffix="ر.س" loading={isWalletLoading} valueStyle={{ color: '#3f8600' }} />
+            <Statistic title="الرصيد المتاح" value={wallet?.available_balance} suffix="ر.س" loading={isWalletLoading} valueStyle={{ color: '#3f8600' }} />
           </Card>
         </Col>
         <Col span={6}>
           <Card>
-            <Statistic title="الرصيد المعلق" value={wallet?.data?.pending_balance} suffix="ر.س" loading={isWalletLoading} valueStyle={{ color: '#faad14' }} />
+            <Statistic title="الرصيد المعلق" value={wallet?.pending_balance} suffix="ر.س" loading={isWalletLoading} valueStyle={{ color: '#faad14' }} />
           </Card>
         </Col>
         <Col span={6}>
           <Card>
-            <Statistic title="الرصيد المحجوز" value={wallet?.data?.locked_balance} suffix="ر.س" loading={isWalletLoading} />
+            <Statistic title="الرصيد المحجوز" value={wallet?.locked_balance} suffix="ر.س" loading={isWalletLoading} />
           </Card>
         </Col>
       </Row>
@@ -64,6 +64,7 @@ const ProviderWalletTab = () => {
         dataSource={withdrawals?.data ?? []}
         loading={isWithdrawalsLoading}
         paginationMeta={withdrawals?.meta}
+        className={["mt-6"]}
       />
     </div>
   );

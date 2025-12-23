@@ -38,8 +38,8 @@ export const getServiceProvider = async (teamId: string) =>
 
 export const updateServiceProviderStatus = async (
   teamId: string,
-  status: string
-) => AoiService.patch(`/admin/providers/${teamId}/update`, { status });
+  data: { status: string; note?: string }
+) => AoiService.patch(`/admin/providers/${teamId}/update`, data);
 
 export const getServiceProviderDashboard = async (teamId: string) =>
   AoiService.get<ProviderDashboardStats>(`/admin/providers/${teamId}/dashboard`);

@@ -35,6 +35,7 @@ const ProviderRequestsTab = () => {
         dataSource={requests?.data ?? []}
         loading={isLoading}
         paginationMeta={requests?.meta}
+        className={["mt-6"]}
       />
     </div>
   );
