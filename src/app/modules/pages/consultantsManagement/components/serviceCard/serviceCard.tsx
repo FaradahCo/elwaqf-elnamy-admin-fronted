@@ -48,7 +48,7 @@ const ServiceCard = ({ service }: { service: ServiceItem }) => {
               {service?.min_price}
             </div>
           </div>
-          <Link to={""}>
+          <Link to={`/admin/service-management/reviews/${service?.id}`}>
             <Button
               type="primary"
               className="w-full"
