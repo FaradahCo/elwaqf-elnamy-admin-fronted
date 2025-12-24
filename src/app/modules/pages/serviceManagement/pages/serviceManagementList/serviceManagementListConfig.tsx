@@ -185,5 +185,5 @@ export const packagesColumnsList: ColumnsType<ServiceData> = [
 export const getColumnsList = (
   serviceType: string
 ): ColumnsType<ServiceData> => {
-  return serviceType === "packages" ? packagesColumnsList : servicesColumnsList;
+  return serviceType === "package" ? packagesColumnsList : servicesColumnsList;
 };

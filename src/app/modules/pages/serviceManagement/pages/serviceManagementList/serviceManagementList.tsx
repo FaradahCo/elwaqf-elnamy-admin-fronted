@@ -70,7 +70,7 @@ export const ServiceManagementList = () => {
         placeholder:
           filter.type === "service" ? "اختر مجال الخدمات" : "اختر مجال الباقات",
         label: filter.type === "service" ? "مجال الخدمات" : "مجال الباقات",
-        name: "field",
+        name: "field_id",
         options: PACKAGE_TYPES,
       },
       {
