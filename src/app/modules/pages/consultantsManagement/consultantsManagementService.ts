@@ -6,7 +6,10 @@ import type {
   ServicesListResponse,
   UpdateConsultantStatusPayload,
 } from "./model/consultantsManagementModel";
-import type { PaginatedResponse } from "@shared/model/shared.model";
+import type {
+  PaginatedParams,
+  PaginatedResponse,
+} from "@shared/model/shared.model";
 import { transformFilterParams } from "@shared/services/sharedService";
 
 export const getConsultantsManagement = async (
@@ -19,8 +22,14 @@ export const getConsultantsManagement = async (
 };
 export const getServiceProviderProfile = async (teamId?: string) =>
   AoiService.get<ProviderUser>(`/admin/providers/${teamId}`);
-export const getServiceProviderServices = async (teamId?: string) =>
-  AoiService.get<ServicesListResponse>(`/admin/providers/${teamId}/services`);
+export const getServiceProviderServices = async (
+  teamId?: string,
+  params?: PaginatedParams
+) =>
+  AoiService.get<ServicesListResponse>(
+    `/admin/providers/${teamId}/services`,
+    transformFilterParams(params)
+  );
 
 export const updateConsultantStatus = async (
   payload: UpdateConsultantStatusPayload

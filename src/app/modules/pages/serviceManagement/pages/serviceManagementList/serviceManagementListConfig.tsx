@@ -37,7 +37,7 @@ export const servicesColumnsList: ColumnsType<ServiceData> = [
     ),
   },
   {
-    title: "مزود الباقة",
+    title: "مزود الخدمة",
     dataIndex: "provider",
     key: "provider",
     width: 150,
