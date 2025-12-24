@@ -5,54 +5,80 @@ import {
   getServiceRequests,
 } from "../../followRequestsService";
 
-import { useState, useCallback } from "react";
+import { useMemo } from "react";
 import type {
   FollowRequest,
   FollowRequestFilterQuery,
 } from "../../model/followRequestsModel";
-import { ServiceStatusEnum } from "@shared/services/sharedService";
-import FollowRequestListFilter from "../../components/followRequestsFilter/followRequestListFilter";
+import {
+  getStatusTag,
+  ServiceStatusEnum,
+} from "@shared/services/sharedService";
 import CustomTable from "@shared/components/customTable/customtable";
 import { followRequestsColumns } from "./followRequestsListConfig";
+import { Select } from "antd";
+import type { CustomFilterType } from "@shared/components/custom-filter/custom-filter";
+import { type PaginatedResponse } from "@shared/model/shared.model";
+import { useListHook } from "@/app/hooks/listHook";
+import CustomFilter from "@shared/components/custom-filter/custom-filter";
 
 const FollowRequestsList = () => {
-  const [filter, setFilter] = useState<FollowRequestFilterQuery | null>({
-    page: 1,
-    per_page: 10,
-  });
-
   const { data: followRequestseStatus } = useApiQuery(
     ["followRequestseStatus"],
     () => getFollowRequestseStatus(),
     { retry: false }
   );
 
-  const handleFilterChange = useCallback(
-    (filterValues: FollowRequestFilterQuery) => {
-      setFilter((prevFilter) => ({
-        ...prevFilter,
-        ...filterValues,
-      }));
+  const {
+    data: serviceData,
+    isLoading,
+    handleFilterChange,
+    handlePaginationChange,
+  } = useListHook<PaginatedResponse<FollowRequest>, FollowRequestFilterQuery>({
+    queryKey: "getServiceRequests",
+    fetchFn: getServiceRequests,
+    initialFilter: {
+      page: 1,
+      per_page: 10,
     },
-    []
+    queryOptions: { retry: false },
+  });
+
+  const filters = useMemo(
+    () => [
+      {
+        type: "input" as CustomFilterType,
+        placeholder: "ابحث عن اسم الخدمة أو العميل...",
+        label: "ابحث عن",
+        name: "service.title",
+      },
+      {
+        type: "select" as CustomFilterType,
+        placeholder: "اختر الحالة",
+        label: "الحالة",
+        name: "status",
+        options: (
+          <>
+            {followRequestseStatus?.data?.map((option) => (
+              <Select.Option key={option?.status} value={option?.status}>
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{
+                      backgroundColor: getStatusTag(option?.status ?? "")
+                        ?.color,
+                    }}
+                  />
+                  <span>{option?.label}</span>
+                </div>
+              </Select.Option>
+            ))}
+          </>
+        ),
+      },
+    ],
+    [followRequestseStatus?.data]
   );
-
-  const handlePaginationChange = useCallback((page: number, size: number) => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      page: page,
-      per_page: size,
-    }));
-  }, []);
-
-  const { data: serviceData, isLoading } = useApiQuery(
-    ["getServiceRequests", filter],
-    () => {
-      return getServiceRequests(filter!);
-    },
-    { retry: false, enabled: !!filter }
-  );
-
   return (
     <div className="py-10">
       <div className="flex gap-5 flex-wrap flex-row flex-center justify-start">
@@ -106,11 +132,7 @@ const FollowRequestsList = () => {
       <div className="bg-white shadow rounded-lg p-4 mt-5">
         <h1 className="text-lg font-semibold">متابعة الطلبات</h1>
         <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
-        <FollowRequestListFilter
-          onFilterChange={handleFilterChange}
-          followRequestseStatus={followRequestseStatus?.data ?? []}
-        />
-
+        <CustomFilter filters={filters} onFilterChange={handleFilterChange} />
         <CustomTable<FollowRequest>
           columns={followRequestsColumns}
           dataSource={serviceData?.data ?? []}

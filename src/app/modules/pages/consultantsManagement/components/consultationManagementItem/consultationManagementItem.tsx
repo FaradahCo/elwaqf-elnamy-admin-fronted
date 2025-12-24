@@ -39,7 +39,7 @@ const ConsultationManagementItem = ({
 
       <div className="flex justify-between items-center gap-2 w-full">
         <Link
-          to={""}
+          to={`/admin/consultants-management/${consultant.team_id}`}
           className="text-primary! hover:text-primary-dark! underline!"
         >
           عرض الحساب

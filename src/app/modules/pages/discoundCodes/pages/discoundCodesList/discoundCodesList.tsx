@@ -6,15 +6,14 @@ import {
 } from "@/app/store/slices/discountCodesSlice";
 import CardStatistic from "@shared/components/cardStatistic/cardStatistic";
 import CustomTable from "@shared/components/customTable/customtable";
-import { useApiMutation, useApiQuery } from "@shared/services/api";
+import { useApiMutation } from "@shared/services/api";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Card, Modal } from "antd";
+import { Button, Card, Modal, Select } from "antd";
 import { useCallback, useState, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DiscoundCodesForm, {
   type DiscoundCodesFormRef,
 } from "../../components/discoundCodesForm/discoundCodesForm";
-import DiscoundCodesFilter from "../../components/discoundCodesFilter/DiscoundCodesFilter";
 import {
   CreateDiscoundCode,
   DeleteDiscoundCode,
@@ -28,7 +27,14 @@ import type {
 import { ColumnsList } from "./discoundCodesListConfig";
 import Confirm from "@shared/components/confirm/confirm";
 import type { PaginatedResponse } from "@shared/model/shared.model";
-
+import { useListHook } from "@/app/hooks/listHook";
+import type { CustomFilterType } from "@shared/components/custom-filter/custom-filter";
+import { getStatusTag, typeOptions } from "@shared/services/sharedService";
+import CustomFilter from "@shared/components/custom-filter/custom-filter";
+const STATUS_OPTIONS = [
+  { value: "active", label: "مفعل" },
+  { value: "inactive", label: "غير مفعل" },
+];
 const DiscoundCodesList = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -43,16 +49,6 @@ const DiscoundCodesList = () => {
     [discountCodesState]
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filter, setFilter] = useState<Partial<DiscoundListParams>>({
-    page: 1,
-    per_page: 10,
-  });
-
-  const { data: discoundCodes, isLoading } = useApiQuery<
-    PaginatedResponse<DiscoundCodeItem>
-  >(["discound-codes", filter], () => DiscoundCodes(filter), {
-    retry: false,
-  });
 
   const handleModalCancel = useCallback(() => {
     setIsModalOpen(false);
@@ -95,26 +91,65 @@ const DiscoundCodesList = () => {
     },
     [codeDiscoundMutation, editingItem]
   );
-  const handleFilterChange = useCallback((filterValues: DiscoundListParams) => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      ...filterValues,
-    }));
-  }, []);
-
-  const handlePaginationChange = useCallback((page: number, size: number) => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      page: page,
-      per_page: size,
-    }));
-  }, []);
 
   const handleAddCode = useCallback(() => {
     dispatch(resetDiscountCodesState());
     setIsModalOpen(true);
   }, []);
 
+  const {
+    data: discoundCodes,
+    isLoading,
+    handleFilterChange,
+    handlePaginationChange,
+  } = useListHook<
+    PaginatedResponse<DiscoundCodeItem>,
+    Partial<DiscoundListParams>
+  >({
+    queryKey: "discound-codes",
+    fetchFn: DiscoundCodes,
+    initialFilter: {
+      page: 1,
+      per_page: 10,
+    },
+    queryOptions: { retry: false },
+  });
+
+  const filters = useMemo(
+    () => [
+      {
+        type: "select" as CustomFilterType,
+        placeholder: "اختر الحالة",
+        label: "الحالة",
+        name: "status",
+        options: (
+          <>
+            {STATUS_OPTIONS?.map((option) => (
+              <Select.Option key={option?.value} value={option?.value}>
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{
+                      backgroundColor: getStatusTag(option?.value ?? "")?.color,
+                    }}
+                  />
+                  <span>{option?.label}</span>
+                </div>
+              </Select.Option>
+            ))}
+          </>
+        ),
+      },
+      {
+        type: "select" as CustomFilterType,
+        placeholder: "اختر التصنيف",
+        label: "التصنيف",
+        name: "type",
+        options: typeOptions,
+      },
+    ],
+    []
+  );
   return (
     <div className="py-10 ">
       <div className="flex gap-5 flex-wrap flex-row flex-center justify-start">
@@ -149,9 +184,7 @@ const DiscoundCodesList = () => {
           </Button>
         </main>
 
-        <DiscoundCodesFilter
-          onFilterChange={(filter) => handleFilterChange(filter)}
-        />
+        <CustomFilter filters={filters} onFilterChange={handleFilterChange} />
 
         <CustomTable<DiscoundCodeItem>
           columns={ColumnsList}

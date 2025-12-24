@@ -1,6 +1,6 @@
 import { useApiQuery } from "@shared/services/api";
 import { Tabs } from "antd";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { Wallet, WalletListParams } from "../../wallet.model";
 import { getWallets } from "../../walletService";
 import { getTabsItems } from "./balancesConfig";
@@ -44,20 +44,23 @@ const BalancesList = () => {
       }
     );
 
-  const onChangeTab = (key: string) => {
+  const onChangeTab = useCallback((key: string) => {
     setSelectedTab(key);
     setBalanceFilter((prevFilter) => ({
       ...prevFilter,
       page: 1,
     }));
-  };
+  }, []);
 
-  const handelOnChangeBalanceFilter = (filter: WalletListParams) => {
-    setBalanceFilter((prevFilter) => ({
-      ...prevFilter,
-      ...filter,
-    }));
-  };
+  const handelOnChangeBalanceFilter = useCallback(
+    (filter: WalletListParams) => {
+      setBalanceFilter((prevFilter) => ({
+        ...prevFilter,
+        ...filter,
+      }));
+    },
+    []
+  );
 
   const tabsItems = useMemo(
     () =>
@@ -69,6 +72,7 @@ const BalancesList = () => {
         handelOnChangeBalanceFilter
       ),
     [
+      handelOnChangeBalanceFilter,
       platformWalletsResponse,
       providerWalletsResponse,
       clientWalletsResponse,
