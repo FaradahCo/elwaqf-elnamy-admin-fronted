@@ -15,7 +15,15 @@ export const ServiceProviderRoutes: RouteObject[] = [
         Component: m.default,
       })),
   },
+  {
+    path: "details/:id",
+    lazy: () =>
+      import("./pages/providerDetailsPage/providerDetailsPage").then((m) => ({
+        Component: m.default,
+      })),
+  },
 ];
+
 
 export const serviceProviderRoutePath = {
   SERVICE_PROVIDERS: "/admin/service-providers",

@@ -39,4 +39,21 @@ export const serviceProvidersListColumns = [
       </Tag>
     ),
   },
+  {
+    title: "الإجراءات",
+    key: "actions",
+    render: (_: any, record: ServiceProviders) => (
+      <div className="flex gap-2">
+        <a href={`/admin/service-providers/details/${record.team_id}`} className="text-primary hover:underline">
+          عرض الملف
+        </a>
+        {record.status === "review" && (
+           <a href={`/admin/service-providers/reviews/${record.team_id}`} className="text-orange-500 hover:underline">
+            مراجعة
+          </a>
+        )}
+      </div>
+    ),
+  },
 ];
+
