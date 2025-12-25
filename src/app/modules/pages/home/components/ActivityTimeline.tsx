@@ -1,5 +1,5 @@
-import { Card, Timeline } from "antd";
-import { CheckCircleFilled, CloseCircleFilled, ClockCircleFilled, SyncOutlined } from "@ant-design/icons";
+import { Card } from "antd";
+import { CheckCircleFilled, CloseCircleFilled, ClockCircleFilled } from "@ant-design/icons";
 import type { ReferenceItem } from "../home.model";
 
 // Helper to get icon based on data (mock logic)

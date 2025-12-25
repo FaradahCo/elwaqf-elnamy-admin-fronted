@@ -1,11 +1,13 @@
-import { Table, Tag, Button } from "antd";
+import { Table, Segmented } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { Link } from "react-router";
 import type { ApprovalRequestItem } from "../home.model";
 import { ExportOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
 const ApprovalRequestsTable = ({ data }: { data: ApprovalRequestItem[] }) => {
-  
+  const [requestType, setRequestType] = useState<string | number>("withdraw");
+
   const columns: ColumnsType<ApprovalRequestItem> = [
     {
       title: "ID",
@@ -22,8 +24,8 @@ const ApprovalRequestsTable = ({ data }: { data: ApprovalRequestItem[] }) => {
     {
         title: "الصفة",
         dataIndex: "applicantIdx",
-        key: 'applicantIdx', // Using duplicate key for visual match to image
-        render: () => "مزود خدمة", // Hardcoded based on image appearance of second column
+        key: 'applicantIdx', 
+        render: () => "مزود خدمة", 
     },
     {
       title: "نوع الطلب",
@@ -57,15 +59,21 @@ const ApprovalRequestsTable = ({ data }: { data: ApprovalRequestItem[] }) => {
     <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100 h-full">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-bold text-gray-800 text-lg">طلبات الاعتماد</h3>
-         <Button type="text" className="text-gray-400 flex items-center gap-1 text-xs">
-            تصدير <ExportOutlined />
-         </Button>
+         <Segmented
+            options={[
+              { label: 'سحب', value: 'withdraw' },
+              { label: 'إيداع', value: 'deposit' },
+            ]}
+            value={requestType}
+            onChange={setRequestType}
+            className="custom-segmented"
+          />
       </div>
       <Table 
         columns={columns} 
         dataSource={data} 
         pagination={false} 
-        rowKey={(record, index) => index?.toString() || '0'}
+        rowKey={(_, index) => index?.toString() || '0'}
         size="middle"
         className="custom-table"
       />
