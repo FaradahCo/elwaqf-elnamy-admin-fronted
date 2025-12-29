@@ -47,7 +47,7 @@ const PaymentsList = () => {
         isLoading,
         onChangePaymentClientFilter
       ),
-    [paymentClients?.data, paymentsProvider, isLoading]
+    [paymentClients, paymentsProvider, isLoading]
   );
 
   const onChangeTab = (key: string) => {

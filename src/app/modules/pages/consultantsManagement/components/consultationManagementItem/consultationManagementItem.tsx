@@ -1,4 +1,4 @@
-import { Checkbox, Form, Tag } from "antd";
+import { Checkbox, Form, Input, Tag } from "antd";
 import { Link } from "react-router";
 import type { ConsultantItem } from "../../model/consultantsManagementModel";
 import { getStatusTag } from "@shared/services/sharedService";
@@ -39,7 +39,7 @@ const ConsultationManagementItem = ({
 
       <div className="flex justify-between items-center gap-2 w-full">
         <Link
-          to={""}
+          to={`/admin/consultants-management/${consultant.team_id}`}
           className="text-primary! hover:text-primary-dark! underline!"
         >
           عرض الحساب
@@ -49,11 +49,11 @@ const ConsultationManagementItem = ({
           initialValue={consultant.team_id}
           hidden
         >
-          <input type="hidden" />
+          <Input type="hidden" />
         </Form.Item>
 
         <Form.Item
-          name={["items", index, "status"]}
+          name={["items", index, "is_consultant"]}
           valuePropName="checked"
           initialValue={!!consultant.is_consultant}
           noStyle

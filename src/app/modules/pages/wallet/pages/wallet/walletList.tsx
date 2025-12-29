@@ -4,6 +4,7 @@ import { Modal, Tabs } from "antd";
 import { useMemo, useState } from "react";
 import type {
   BankTransferItem,
+  BankTransferListParams,
   WithdrawItem,
   WithdrawListParams,
 } from "../../wallet.model";
@@ -22,15 +23,10 @@ import {
 } from "@/app/store/slices/walletSlice";
 import WithDrawOfBalance from "../../components/withDrawOfBalance/withDrawOfBalance";
 import TransactionVerfication from "../../components/transactionVerfication/transactionVerfication";
+import { useListHook } from "@/app/hooks/listHook";
 
 const WalletList = () => {
   const dispatch = useDispatch();
-
-  const [filter, setFilter] = useState<WithdrawListParams>({
-    page: 1,
-    per_page: 10,
-    status: "pending",
-  });
 
   const [selectedTab, setSelectedTab] = useState<string>("1");
   const selectedWithdraw = useSelector(
@@ -41,18 +37,33 @@ const WalletList = () => {
     (state: RootState) => state.wallet.bankTransfer
   );
 
-  const { data: withdrawList, isLoading } = useApiQuery<
-    PaginatedResponse<WithdrawItem>
-  >(["withdraw/list"], () => getWithdrawList(filter), {
-    retry: false,
-    enabled: !!filter && selectedTab === "1",
+  const {
+    data: withdrawList,
+    isLoading,
+    handleFilterChange,
+  } = useListHook<PaginatedResponse<WithdrawItem>, WithdrawListParams>({
+    queryKey: "withdraw/list",
+    fetchFn: getWithdrawList,
+    initialFilter: {
+      page: 1,
+      per_page: 10,
+      status: "pending",
+    },
+    queryOptions: { retry: false, enabled: selectedTab === "1" },
   });
 
-  const { data: bankTransferList } = useApiQuery<
-    PaginatedResponse<BankTransferItem>
-  >(["bank-transfer/list"], () => getBankTransfers(filter), {
-    retry: false,
-    enabled: !!filter && selectedTab === "2",
+  const { data: bankTransferList } = useListHook<
+    PaginatedResponse<BankTransferItem>,
+    BankTransferListParams
+  >({
+    queryKey: "bank-transfer/list",
+    fetchFn: getBankTransfers,
+    initialFilter: {
+      page: 1,
+      per_page: 10,
+      status: "pending",
+    },
+    queryOptions: { retry: false, enabled: selectedTab === "2" },
   });
 
   const { data: selectedWithdrawData } = useApiQuery<WithdrawItem>(
@@ -72,32 +83,20 @@ const WalletList = () => {
       enabled: !!selectedBankTransfer?.id,
     }
   );
-
-  const onChangeWithdrawListFilter = (filter: WithdrawListParams) => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      ...filter,
-    }));
-  };
-
   const tabsItems = useMemo(
     () =>
       getTabsItems(
         withdrawList!,
         bankTransferList!,
         isLoading,
-        onChangeWithdrawListFilter
+        handleFilterChange
       ),
-    [withdrawList, bankTransferList]
+    [withdrawList, bankTransferList, handleFilterChange, isLoading]
   );
 
   const onChangeTab = (key: string) => {
     setSelectedTab(key);
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      page: 1,
-      per_page: 10,
-    }));
+    handleFilterChange({ page: 1, per_page: 10 });
   };
 
   return (
