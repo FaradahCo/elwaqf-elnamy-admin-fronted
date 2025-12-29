@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ConsultationManagementItem from "../../components/consultationManagementItem/consultationManagementItem";
 import {
   getConsultantsManagement,
@@ -12,13 +12,10 @@ import type {
 import { useApiMutation } from "@shared/services/api";
 import type { PaginatedResponse } from "@shared/model/shared.model";
 import { Button, Form, Pagination, Spin } from "antd";
-import { useQueryClient } from "@tanstack/react-query";
 import { useListHook } from "@/app/hooks/listHook";
 
 const ConsultantsManagementList: React.FC = () => {
   const [form] = Form.useForm();
-  const queryClient = useQueryClient();
-
   const {
     data: consultantsManagement,
     handlePaginationChange,
@@ -36,14 +33,13 @@ const ConsultantsManagementList: React.FC = () => {
   const updateConsultantStatusMutation = useApiMutation(
     (payload: UpdateConsultantStatusPayload) => {
       return updateConsultantStatus(payload);
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["consultants-management"] });
-      },
     }
   );
-
+  useEffect(() => {
+    form.setFieldsValue({
+      items: consultantsManagement?.data,
+    });
+  }, [consultantsManagement?.data, form]);
   if (isLoading) {
     return (
       <div className="flex justify-center items-center">
@@ -53,8 +49,17 @@ const ConsultantsManagementList: React.FC = () => {
   }
 
   const onFinish = (values: UpdateConsultantStatusPayload) => {
-    updateConsultantStatusMutation.mutate(values);
+    const transformedValues = {
+      items: values?.items?.map((item) => ({
+        team_id: item?.team_id,
+        status: item?.is_consultant,
+      })),
+    };
+    updateConsultantStatusMutation.mutate(
+      transformedValues as UpdateConsultantStatusPayload
+    );
   };
+
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
       <div>
@@ -63,7 +68,7 @@ const ConsultantsManagementList: React.FC = () => {
         </h1>
         <p className="w-16 h-1 bg-primary mt-2 rounded mb-10"></p>
       </div>
-      <Form layout="vertical" onFinish={onFinish} form={form}>
+      <Form name="items" layout="vertical" onFinish={onFinish} form={form}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {consultantsManagement?.data?.map((consultant, index) => (
             <ConsultationManagementItem
