@@ -30,6 +30,7 @@ export type UpdateConsultantStatusPayload = {
   items: {
     team_id: number;
     status: boolean;
+    is_consultant?: boolean;
   }[];
 };
 export type Field = {
