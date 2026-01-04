@@ -115,6 +115,7 @@ const WalletList = () => {
         open={!!selectedWithdraw}
         onCancel={() => dispatch(resetSelectedWithdraw())}
         footer={null}
+        destroyOnHidden={true}
       >
         <WithDrawOfBalance selectedWithdrawData={selectedWithdrawData!} />
       </Modal>
@@ -122,6 +123,7 @@ const WalletList = () => {
       <Modal
         open={!!selectedBankTransfer}
         onCancel={() => dispatch(resetSelectedBankTransfer())}
+        destroyOnHidden={true}
         footer={null}
       >
         <TransactionVerfication

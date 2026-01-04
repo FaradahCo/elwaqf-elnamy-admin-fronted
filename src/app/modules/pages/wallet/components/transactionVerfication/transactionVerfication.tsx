@@ -1,7 +1,8 @@
 import { Button, Modal } from "antd";
-import type {
-  BankTransferItem,
-  VerifyBankTransferPayload,
+import {
+  DedpositReasons,
+  type BankTransferItem,
+  type VerifyBankTransferPayload,
 } from "../../wallet.model";
 import { useState } from "react";
 import Confirm from "@shared/components/confirm/confirm";
@@ -31,6 +32,7 @@ const TransactionVerfication = ({
   >((payload) => verifyBankTransfer(selectedBankTransferData?.id!, payload), {
     onSuccess: () => {
       setIsModalOpen(false);
+      setIsRejectModalOpen(false);
       dispatch(resetSelectedBankTransfer());
       queryClient.invalidateQueries({ queryKey: ["bank-transfer/list"] });
     },
@@ -103,7 +105,7 @@ const TransactionVerfication = ({
         <Confirm
           title="اعتماد حوالة"
           description="سيتم اعتماد عملية سحب الأرباح وتحويل المبلغ إلى حساب المزوّد المسجل. يرجى التأكد من مطابقة المبلغ وبيانات الحساب قبل المتابعة"
-          confirmText="تأكيد السحب"
+          confirmText="تأكيد "
           cancelText="إلغاء"
           onConfirm={(bool: boolean) =>
             verifyBankTransferMutation.mutate({
@@ -122,8 +124,18 @@ const TransactionVerfication = ({
         footer={null}
       >
         <RejectModal
+          title="رفض التحويل"
+          subTitle="سيتم رفض التحويل وإشعار العميل بسبب الرفض. يرجى كتابة السبب بوضوح."
+          isPending={verifyBankTransferMutation.isPending}
           onCancel={() => setIsRejectModalOpen(false)}
+          onConfirm={(reason: string) =>
+            verifyBankTransferMutation.mutate({
+              is_approved: false,
+              admin_notes: reason,
+            })
+          }
           selectedBankTransferData={selectedBankTransferData}
+          reasons={DedpositReasons}
         />
       </Modal>
     </div>

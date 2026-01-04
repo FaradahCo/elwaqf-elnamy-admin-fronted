@@ -1,5 +1,5 @@
 import { App, Button, Modal, Upload } from "antd";
-import type { WithdrawItem } from "../../wallet.model";
+import { withdrawReasons, type WithdrawItem } from "../../wallet.model";
 import { useState } from "react";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import Confirm from "@shared/components/confirm/confirm";
@@ -36,13 +36,16 @@ const WithDrawOfBalance = ({
     setUploadedLogo(null);
   };
 
-  const handleConfirmWithdraw = () => {
+  const handleConfirmWithdraw = (answerType: "complete" | "reject") => {
     if (uploadedLogo) {
-      setIsModalOpen(true);
+      answerType === "complete"
+        ? setIsModalOpen(true)
+        : setIsRejectModalOpen(true);
     } else {
       message.warning("يرجى رفع الإيصال");
     }
   };
+
   const confirmWithdrawMutation = useApiMutation<
     { id: number | string; formData: FormData },
     any
@@ -54,11 +57,16 @@ const WithDrawOfBalance = ({
     },
   });
 
-  const handelSubmitConfirmWithdraw = (bool: boolean): void => {
+  const handelSubmitConfirmWithdraw = (
+    bool: boolean,
+    answerType: "complete" | "reject",
+    reason?: string
+  ): void => {
     if (bool && uploadedLogo) {
       const formData = new FormData();
-      formData.append("answer", "complete");
+      formData.append("answer", answerType);
       formData.append("receipt", uploadedLogo as Blob);
+      reason && formData.append("note", reason || "");
       confirmWithdrawMutation.mutate({
         id: selectedWithdrawData?.id!,
         formData,
@@ -72,7 +80,10 @@ const WithDrawOfBalance = ({
         سحب الرصيد
       </h1>
       <div className="flex items-center justify-start border border-gray-light  rounded-lg p-4 gap-5 mt-6">
-        <img src="/images/empty-user.svg" alt="wallet" />
+        <img
+          src={selectedWithdrawData?.owner?.logo ?? "/images/empty-user.svg"}
+          alt="wallet"
+        />
         <div>
           <p className="text-lg">{selectedWithdrawData?.owner?.name}</p>
           <span className="text-gray-500 mt-2 block">
@@ -87,7 +98,8 @@ const WithDrawOfBalance = ({
       <div className="mt-4">
         <p className="">قيمة السحب الاجمالية</p>
         <span className="text-gray-500 mt-3 flex items-center gap-2">
-          5,700 <img src="/images/SAR.svg" alt="wallet" />
+          {selectedWithdrawData?.amount}
+          <img src="/images/SAR.svg" alt="wallet" />
         </span>
       </div>
       <div className="mt-4">
@@ -157,15 +169,23 @@ const WithDrawOfBalance = ({
       </div>
 
       <div className="flex items-center justify-end gap-5 mt-10">
-        <Button type="default">رفض</Button>
-        <Button type="primary" onClick={handleConfirmWithdraw}>
+        <Button type="default" onClick={() => handleConfirmWithdraw("reject")}>
+          رفض
+        </Button>
+        <Button
+          type="primary"
+          onClick={() => handleConfirmWithdraw("complete")}
+        >
           تأكيد السحب
         </Button>
       </div>
 
       <Modal
         open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
+        closable={false}
+        onCancel={() => {
+          setIsModalOpen(false);
+        }}
         footer={null}
       >
         <Confirm
@@ -173,8 +193,12 @@ const WithDrawOfBalance = ({
           description="سيتم اعتماد عملية سحب الأرباح وتحويل المبلغ إلى حساب المزوّد المسجل. يرجى التأكد من مطابقة المبلغ وبيانات الحساب قبل المتابعة"
           confirmText="تأكيد السحب"
           cancelText="إلغاء"
-          onConfirm={(bool: boolean) => handelSubmitConfirmWithdraw(bool)}
-          onCancel={() => setIsModalOpen(false)}
+          onConfirm={(bool: boolean) =>
+            handelSubmitConfirmWithdraw(bool, "complete")
+          }
+          onCancel={() => {
+            setIsModalOpen(false);
+          }}
           loading={confirmWithdrawMutation.isPending}
         />
       </Modal>
@@ -186,7 +210,14 @@ const WithDrawOfBalance = ({
       >
         <RejectModal
           onCancel={() => setIsRejectModalOpen(false)}
+          onConfirm={(reason: string) =>
+            handelSubmitConfirmWithdraw(true, "reject", reason)
+          }
+          isPending={confirmWithdrawMutation.isPending}
+          title="رفض طلب سحب الرصيد"
+          subTitle="سيتم رفض طلب السحب وإشعار العميل بسبب الرفض. يرجى كتابة السبب بوضوح."
           selectedBankTransferData={selectedWithdrawData}
+          reasons={withdrawReasons}
         />
       </Modal>
     </div>
