@@ -33,6 +33,7 @@ export type BankAccount = {
 };
 
 export type Owner = {
+  logo: string;
   name: string;
   type: string;
   id: number;
@@ -155,3 +156,19 @@ export interface VerifyBankTransferPayload {
   is_approved?: boolean;
   admin_notes?: string;
 }
+
+export const withdrawReasons = [
+  "اسم الحساب البنكي لا يطابق اسم المزوّد المسجل",
+  "رقم الآيبان غير صحيح أو غير نشط",
+  "الحساب البنكي تابع لجهة غير المزوّد (فردي/مؤسسي مختلف)",
+  "سبب آخر",
+];
+
+export const DedpositReasons = [
+  "المبلغ لا يطابق الفاتورة/الطلب",
+  "الإيصال غير واضح أو ناقص البيانات",
+  "إيصال غير رسمي",
+  "تحويل مكرر لنفس الطلب",
+  "بيانات الحساب المحوّل إليه غير مطابقة للبيانات المعتمدة",
+  "سبب آخر",
+];

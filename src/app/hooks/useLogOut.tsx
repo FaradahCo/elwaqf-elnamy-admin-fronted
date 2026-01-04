@@ -5,14 +5,17 @@ import { authenticationRoutePath } from "../modules/authentication/authenticatio
 import { clearStorage } from "@shared/services/storageService";
 import type { RootState } from "../store";
 import { useEffect } from "react";
+import { App } from "antd";
 
 export const useLogOut = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { message } = App.useApp();
   const forceLogout = useSelector((state: RootState) => state.auth.forceLogout);
 
   useEffect(() => {
     if (forceLogout) {
+      message.error("لقد انتهت صلاحيه الجلسة. يرجى تسجيل الدخول مرة أخرى");
       dispatch(clearUser());
       clearStorage();
       navigate(authenticationRoutePath.LOGIN);

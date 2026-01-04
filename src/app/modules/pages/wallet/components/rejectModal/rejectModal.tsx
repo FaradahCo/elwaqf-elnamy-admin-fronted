@@ -1,52 +1,31 @@
-import { useApiMutation } from "@shared/services/api";
 import { App, Button, Checkbox, Input } from "antd";
 import { useState } from "react";
-import type {
-  BankTransferItem,
-  VerifyBankTransferPayload,
-  WithdrawItem,
-} from "../../wallet.model";
-import { verifyBankTransfer } from "../../walletService";
-import { useDispatch } from "react-redux";
-import { resetSelectedBankTransfer } from "@/app/store/slices/walletSlice";
-import { useQueryClient } from "@tanstack/react-query";
+import type { BankTransferItem, WithdrawItem } from "../../wallet.model";
 
 const { TextArea } = Input;
 
 interface RejectBankTransferProps {
   onCancel?: () => void;
+  onConfirm?: (reason: string) => void;
   selectedBankTransferData?: BankTransferItem | WithdrawItem;
+  reasons: string[];
+  title: string;
+  subTitle: string;
+  isPending: boolean;
 }
 
 const RejectModal = ({
+  title,
+  subTitle,
   onCancel,
-  selectedBankTransferData,
+  onConfirm,
+  isPending,
+
+  reasons,
 }: RejectBankTransferProps) => {
   const [selectedReason, setSelectedReason] = useState<string>("");
   const [otherReason, setOtherReason] = useState<string>("");
   const { message } = App.useApp();
-  const dispatch = useDispatch();
-  const queryClient = useQueryClient();
-
-  const reasons = [
-    "المبلغ لا يطابق الفاتورة/الطلب",
-    "الإيصال غير واضح أو ناقص البيانات",
-    "إيصال غير رسمي",
-    "تحويل مكرر لنفس الطلب",
-    "بيانات الحساب المحوّل إليه غير مطابقة للبيانات المعتمدة",
-    "سبب آخر",
-  ];
-
-  const verifyBankTransferMutation = useApiMutation<
-    VerifyBankTransferPayload,
-    any
-  >((payload) => verifyBankTransfer(selectedBankTransferData?.id!, payload), {
-    onSuccess: () => {
-      dispatch(resetSelectedBankTransfer());
-      queryClient.invalidateQueries({ queryKey: ["bank-transfer/list"] });
-      onCancel?.();
-    },
-  });
 
   const handleCheckboxChange = (reason: string) => {
     if (selectedReason === reason) {
@@ -58,30 +37,25 @@ const RejectModal = ({
     }
   };
 
-  const handleConfirm = () => {
+  const handelConfirm = () => {
     if (!selectedReason) {
       message.warning("يرجى اختيار السبب");
       return;
     }
     if (selectedReason === "سبب آخر" && !otherReason.trim()?.length) {
       message.warning("يرجى كتابة السبب");
-      reasons;
+      return;
     }
-    verifyBankTransferMutation.mutate({
-      is_approved: false,
-      admin_notes: selectedReason === "سبب آخر" ? otherReason : selectedReason,
-    });
+
+    onConfirm?.(selectedReason === "سبب آخر" ? otherReason : selectedReason);
   };
 
   return (
     <div>
       <h1 className="text-xl font-bold text-second-primary text-center">
-        رفض التحويل
+        {title}
       </h1>
-      <p className="text-gray-600 text-center text-sm mt-4">
-        سيتم رفض إثبات التحويل وإشعار العميل بسبب الرفض. هذا الإجراء لا يمكن
-        التراجع عنه.
-      </p>
+      <p className="text-gray-600 text-center text-sm mt-4">{subTitle}</p>
 
       <div className="mt-6 space-y-4">
         {reasons.map((reason, index) => (
@@ -114,16 +88,16 @@ const RejectModal = ({
         <Button
           type="default"
           onClick={onCancel}
-          disabled={verifyBankTransferMutation.isPending}
-          loading={verifyBankTransferMutation.isPending}
+          disabled={isPending}
+          loading={isPending}
         >
           إلغاء
         </Button>
         <Button
           type="primary"
-          onClick={handleConfirm}
-          loading={verifyBankTransferMutation.isPending}
-          disabled={verifyBankTransferMutation.isPending}
+          onClick={handelConfirm}
+          loading={isPending}
+          disabled={isPending}
         >
           تأكيد
         </Button>
