@@ -34,6 +34,11 @@ import CustomFilter from "@shared/components/custom-filter/custom-filter";
 const STATUS_OPTIONS = [
   { value: "active", label: "مفعل" },
   { value: "inactive", label: "غير مفعل" },
+  { value: "scheduled", label: "مجدول" },
+  { value: "expired", label: "منتهي الصلاحية" },
+  { value: "exhausted", label: "مستنفذ" },
+  { value: "canceled", label: "ملغي" },
+  { value: "testing", label: "اختبار" },
 ];
 const DiscoundCodesList = () => {
   const dispatch = useDispatch();
