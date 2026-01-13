@@ -83,20 +83,13 @@ const Login: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-center sm:text-right">
           <p className="mt-2 mb-2">
             ليس لديك حساب؟
-            <Link
-              className="text-primary!"
-              to={authenticationRoutePath.REGISTER}
-            >
-              {" "}
+            <Link className="text-primary!" to={authenticationRoutePath.LOGIN}>
               تسجيل حساب جديد
             </Link>
           </p>
 
           <p className="mt-2 mb-2">
-            <Link
-              className="text-primary!"
-              to={authenticationRoutePath.FORGOT_PASSWORD}
-            >
+            <Link className="text-primary!" to={authenticationRoutePath.LOGIN}>
               نسيت كلمة المرور؟
             </Link>
           </p>
