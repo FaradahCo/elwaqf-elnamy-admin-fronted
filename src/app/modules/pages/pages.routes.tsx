@@ -1,14 +1,14 @@
 import type { RouteObject } from "react-router";
 import MainLayout from "../../layouts/mainLayout";
-import { ServiceProviderRoutes } from "./serviceProvider/serviceProvidersRoutes";
-import { serviceManagementRoutes } from "./serviceManagement/serviceManagementRoutes";
-import DiscoundCodesRoutes from "./discoundCodes/discoundCodesRoutes";
-import walletRoutes from "./wallet/walletRoutes";
-import { consultantsManagementRoutes } from "./consultantsManagement/consultantsManagementRoutes";
-import { staticPagesRoutes } from "./staticPages/staticPagesRoutes";
-import consultationRoutes from "./consultation/consultationRoutes";
-import { followRequestsRoutes } from "./followRequests/followRequestsRoutes";
 import { alwaqfRoutes } from "./alwaqf/alwaqfRoutes";
+import { consultantsManagementRoutes } from "./consultantsManagement/consultantsManagementRoutes";
+import consultationRoutes from "./consultation/consultationRoutes";
+import DiscoundCodesRoutes from "./discoundCodes/discoundCodesRoutes";
+import { followRequestsRoutes } from "./followRequests/followRequestsRoutes";
+import { serviceManagementRoutes } from "./serviceManagement/serviceManagementRoutes";
+import { ServiceProviderRoutes } from "./serviceProvider/serviceProvidersRoutes";
+import { staticPagesRoutes } from "./staticPages/staticPagesRoutes";
+import walletRoutes from "./wallet/walletRoutes";
 
 export const pagesRoutes: RouteObject[] = [
   {
@@ -57,13 +57,6 @@ export const pagesRoutes: RouteObject[] = [
       {
         path: "static-pages",
         children: [...staticPagesRoutes],
-      },
-      {
-        path: "*",
-        lazy: () =>
-          import("@shared/components/underCreation").then((m) => ({
-            Component: m.UnderCreation,
-          })),
       },
     ],
   },

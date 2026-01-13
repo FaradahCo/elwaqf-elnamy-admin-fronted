@@ -3,7 +3,7 @@ import { authenticationRoutes } from "./app/modules/authentication/authenticatio
 import { pagesRoutes } from "./app/modules/pages/pages.routes";
 import AuthProtectedRoute from "./app/guards/authProtected";
 import ProtectedRoute from "./app/guards/ProtectedRoute";
-import { UnderCreation } from "@shared/components/underCreation";
+import NotFound from "@shared/components/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +16,7 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <UnderCreation />,
+    element: <NotFound />,
   },
 ]);
 

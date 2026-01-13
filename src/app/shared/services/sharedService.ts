@@ -18,6 +18,7 @@ export const ownerTypeConfig: Record<string, { label: string }> = {
 };
 
 export const typeOptions = [
+  { value: "all", label: "الكل" },
   { value: "service", label: "خدمة" },
   { value: "package", label: "باقة" },
 ];
