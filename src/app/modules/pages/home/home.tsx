@@ -19,8 +19,10 @@ import type {
 } from "./dashboardModel";
 import GeneralStatistics from "./components/generalStatistics/generalStatistics";
 import QualityControl from "./components/qualityControl/qualityControl";
+import { useNavigate } from "react-router";
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
   const { data: reviewRequest, isLoading: reviewRequestLoading } =
     useApiQuery<PendingItems>(["dashboardReviewRequests"], getReviewRequests, {
       retry: false,
@@ -59,6 +61,7 @@ const Home: React.FC = () => {
       <div className="flex justify-between items-center">
         <h1 className="font-semibold text-2xl">الرئيسية</h1>
         <Button
+          onClick={() => navigate(0)}
           className="py-6! text-primary! border-primary! hover:text-white! hover:bg-primary!"
           type="default"
           size="large"

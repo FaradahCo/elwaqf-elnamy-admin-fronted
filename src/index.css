@@ -1,7 +1,6 @@
 @import "./styles/tailwind.config.css";
 @import "tailwindcss";
 
-/* Apply font family with higher specificity */
 * {
   font-family: "Noto Kufi Arabic", sans-serif;
   font-optical-sizing: auto;

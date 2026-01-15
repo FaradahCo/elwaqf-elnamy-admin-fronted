@@ -2,6 +2,7 @@ import { DatePicker } from "antd";
 import { ArrowDownOutlined } from "@ant-design/icons";
 import Card from "../card/card";
 import type { DashboardFinancialSummary } from "../../dashboardModel";
+import enUS from "antd/es/calendar/locale/en_US";
 
 const DashboardCards = ({
   dashboardFinancialSummary,
@@ -20,6 +21,7 @@ const DashboardCards = ({
           suffixIcon={<ArrowDownOutlined />}
           size="large"
           className="w-48"
+          locale={enUS}
           allowClear={false}
         />
       </div>

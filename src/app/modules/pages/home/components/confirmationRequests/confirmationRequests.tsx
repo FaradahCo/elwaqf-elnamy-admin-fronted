@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import type { PendingItems } from "../../dashboardModel";
+import { useNavigate } from "react-router";
 
 const ChevronLeftIcon = () => (
   <svg
@@ -25,6 +26,7 @@ const ConfirmationRequests = ({
 }: {
   reviewRequest?: PendingItems;
 }) => {
+  const navigate = useNavigate();
   const stats = useMemo(
     () => [
       {
@@ -32,24 +34,28 @@ const ConfirmationRequests = ({
         label: "مزودون بانتظار التفعيل",
         count: reviewRequest?.pending_providers?.count,
         unit: "مزود",
+        path: "service-providers/?status=pending",
       },
       {
         id: 2,
         label: "تحديثات بروفايل بانتظار المراجعة",
         count: reviewRequest?.pending_providers?.count,
         unit: "مزود",
+        path: "service-providers/?status=review",
       },
       {
         id: 3,
         label: "خدمات بانتظار الاعتماد",
         count: reviewRequest?.pending_services?.count,
         unit: "خدمات",
+        path: "service-management/?type=service&status=pending",
       },
       {
         id: 4,
         label: "باقات بانتظار الاعتماد",
         count: reviewRequest?.pending_packages?.count,
         unit: "باقة",
+        path: "service-management/?type=package&status=pending",
       },
     ],
     [reviewRequest]
@@ -67,7 +73,8 @@ const ConfirmationRequests = ({
         {stats.map((stat, index) => (
           <div
             key={stat.id}
-            className={`rounded-lg ${GRADIENT_CLASSES[index]} p-4 hover:shadow-md transition-shadow cursor-pointer`}
+            onClick={() => navigate(stat?.path)}
+            className={`rounded-lg z-10 p-4 hover:shadow-md transition-shadow cursor-pointer ${GRADIENT_CLASSES[index]}`}
           >
             <div className="flex items-center justify-between">
               <div className="flex-1">

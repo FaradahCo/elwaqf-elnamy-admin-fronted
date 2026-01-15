@@ -8,6 +8,7 @@ import { useApiQuery } from "@shared/services/api";
 import {
   getSeriviceStatus,
   getStatusTag,
+  ServiceStatusEnum,
 } from "@shared/services/sharedService";
 import { useMemo } from "react";
 import {
@@ -20,6 +21,7 @@ import { Select } from "antd";
 import type { CustomFilterType } from "@shared/components/custom-filter/custom-filter";
 import { useListHook } from "@/app/hooks/listHook";
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
+import { useSearchParams } from "react-router";
 const TYPE_OPTIONS = [
   { label: "الخدمات", value: "service" },
   { label: "الباقات", value: "package" },
@@ -31,6 +33,9 @@ const PACKAGE_TYPES = [
   { value: "social", label: "الخدمات الاجتماعية" },
 ];
 export const ServiceManagementList = () => {
+  const [searchParams] = useSearchParams();
+  console.log("type", searchParams.get("type"));
+  console.log("status", searchParams.get("status"));
   const {
     data: serviceData,
     isLoading,
@@ -41,9 +46,10 @@ export const ServiceManagementList = () => {
     queryKey: "admin/services",
     fetchFn: getServices,
     initialFilter: {
-      type: "service",
+      type: searchParams.get("type") ?? "service",
       page: 1,
       per_page: 5,
+      status: (searchParams.get("status") as ServiceStatusEnum) ?? undefined,
     },
     queryOptions: { retry: false },
   });
@@ -96,6 +102,9 @@ export const ServiceManagementList = () => {
             ))}
           </>
         ),
+        props: {
+          defaultValue: filter?.status,
+        },
       },
       {
         type: "radio" as CustomFilterType,
@@ -110,7 +119,7 @@ export const ServiceManagementList = () => {
         },
       },
     ],
-    [serviceStatus?.data, filter?.type]
+    [serviceStatus?.data, filter?.type, filter?.status]
   );
   return (
     <div className="py-10">

@@ -1,5 +1,6 @@
 import AoiService from "@shared/services/api";
 import type {
+  ApprovelRequests,
   DashboardFinancialSummary,
   DashboardOverviewData,
   GeneralStatisticsData,
@@ -27,4 +28,7 @@ export const getQualityMonitoring = async () => {
   return AoiService.get<QualityMonitoringData>(
     "/admin/dashboard/quality-monitoring"
   );
+};
+export const getApprovelRequests = async () => {
+  return AoiService.get<ApprovelRequests>("/admin/dashboard/approval-table");
 };

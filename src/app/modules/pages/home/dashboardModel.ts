@@ -26,14 +26,20 @@ export type PendingBalance = {
   period?: string;
 };
 export type DashboardOverviewData = {
-  new_clients?: number;
-  new_requests?: number;
-  in_progress_requests?: number;
-  completed_requests?: number;
+  new_clients?: OverviewCardItem;
+  new_requests?: OverviewCardItem;
+  in_progress_requests?: OverviewCardItem;
+  completed_requests?: OverviewCardItem;
   top_services?: TopServices;
   latest_activities?: LatestActivities;
   deliverables_completion?: DeliverablesCompletion;
   period?: string;
+};
+export type OverviewCardItem = {
+  percentage_change: number;
+  previous_month: number;
+  total: number;
+  trend: "DOWN" | "UP";
 };
 export type TopServices = Array<{
   service_id?: number;
@@ -49,6 +55,7 @@ export type LatestActivities = Array<{
   subject_type?: string;
   created_at?: string;
   created_at_formatted?: string;
+  icon?: string;
 }>;
 export type DeliverablesCompletion = {
   total_deliverables?: number;
@@ -136,4 +143,27 @@ export type QualityMonitoringData = {
   delayed_count?: number;
   warning_count?: number;
   alerts?: Alert[];
+};
+export type RequestItem = {
+  id: number;
+  name: string;
+  role: string;
+  type: string;
+  amount: string;
+  payment_document: string;
+  transaction_date: string;
+  transaction_date_formatted: string;
+  sender_name: string;
+  service_name: string;
+};
+
+export type RequestCategory = {
+  count: number;
+  total_amount: number;
+  items: RequestItem[];
+};
+
+export type ApprovelRequests = {
+  withdrawals: RequestCategory;
+  bank_transfers: RequestCategory;
 };

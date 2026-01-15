@@ -57,10 +57,10 @@ const QualityControl = () => {
           </div>
         ) : (
           <div>
-            {qualityMonitoring?.alerts?.map((item, index) => (
+            {qualityMonitoring?.alerts?.slice(0, 6)?.map((item, index) => (
               <div
                 key={item.id}
-                className={`flex flex-wrap gap-4 items-center justify-between px-6 py-5 hover:bg-blue-50 transition-colors cursor-pointer ${
+                className={`flex flex-wrap gap-4 items-center justify-between px-6 py-5 hover:bg-gray-50 transition-colors cursor-pointer ${
                   index !== data.length - 1 ? "border-b border-gray-200" : ""
                 }`}
               >
