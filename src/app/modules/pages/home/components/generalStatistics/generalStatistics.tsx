@@ -75,7 +75,7 @@ const GeneralStatistics = () => {
         />
       </div>
 
-      <div className="grid grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {stats.map((stat) => (
           <div key={stat.id} className="flex flex-col p-2 rounded-2xl bg-white">
             <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 mb-3">

@@ -14,7 +14,7 @@ const TopRequestedServices = ({
       </h2>
 
       <div className="space-y-6">
-        {most_requested?.map((service, index) => (
+        {most_requested?.slice(0, 4)?.map((service, index) => (
           <div key={index} className="relative">
             <div className="flex justify-between items-center mb-2">
               <span className="text-gray-700 text-sm font-medium">
