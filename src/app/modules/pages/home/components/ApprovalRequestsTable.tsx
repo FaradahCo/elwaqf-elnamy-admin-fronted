@@ -1,0 +1,90 @@
+import { Table, Segmented } from "antd";
+import type { ColumnsType } from "antd/es/table";
+import { Link } from "react-router";
+import type { ApprovalRequestItem } from "../home.model";
+import { ExportOutlined } from "@ant-design/icons";
+import { useState } from "react";
+
+const ApprovalRequestsTable = ({ data }: { data: ApprovalRequestItem[] }) => {
+  const [requestType, setRequestType] = useState<string | number>("withdraw");
+
+  const columns: ColumnsType<ApprovalRequestItem> = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+      width: 60,
+    },
+    {
+      title: "الاسم",
+      dataIndex: "applicantName",
+      key: "applicantName",
+        render: (text) => <span className="font-medium text-blue-900">{text}</span>
+    },
+    {
+        title: "الصفة",
+        dataIndex: "applicantIdx",
+        key: 'applicantIdx', 
+        render: () => "مزود خدمة", 
+    },
+    {
+      title: "نوع الطلب",
+      dataIndex: "type",
+      key: "type",
+    },
+    {
+      title: "المبلغ",
+      dataIndex: "amount",
+      key: "amount",
+      render: (amount) => <span>{amount} ر.س</span>,
+    },
+    {
+      title: "وثيقة الدفع",
+      dataIndex: "paymentMethod",
+      key: "paymentMethod",
+    },
+    {
+      title: "تاريخ المعاملة",
+      dataIndex: "date",
+      key: "date",
+    },
+    {
+        title: "الإجراء",
+        key: "action",
+        render: () => <Link to="#" className="text-green-500 text-xs border border-green-500 px-2 py-1 rounded hover:bg-green-50">طلب تسوية</Link>
+    }
+  ];
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100 h-full">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="font-bold text-gray-800 text-lg">طلبات الاعتماد</h3>
+         <Segmented
+            options={[
+              { label: 'سحب', value: 'withdraw' },
+              { label: 'إيداع', value: 'deposit' },
+            ]}
+            value={requestType}
+            onChange={setRequestType}
+            className="custom-segmented"
+          />
+      </div>
+      <Table 
+        columns={columns} 
+        dataSource={data} 
+        pagination={false} 
+        rowKey={(_, index) => index?.toString() || '0'}
+        size="middle"
+        className="custom-table"
+      />
+      <div className="mt-4 text-center">
+         <Link to="/admin/wallet" className="text-green-600 flex items-center justify-center gap-2 hover:underline">
+             <ExportOutlined rotate={90} className="text-lg" />
+             إدارة الموارد
+         </Link>
+      </div>
+    </div>
+  );
+};
+
+export default ApprovalRequestsTable;
