@@ -20,8 +20,10 @@ import { useListHook } from "@/app/hooks/listHook";
 import type { PaginatedResponse } from "@shared/model/shared.model";
 import { Select } from "antd";
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
+import { useSearchParams } from "react-router";
 
 const ServiceProvidersList = () => {
+  const [searchParams] = useSearchParams();
   const { data: serviceProvidersStatus } = useApiQuery(
     ["serviceProvidersStatus"],
     () => getSeriviceProvidersStatus(),
@@ -33,6 +35,7 @@ const ServiceProvidersList = () => {
     isLoading,
     handleFilterChange,
     handlePaginationChange,
+    filter,
   } = useListHook<
     PaginatedResponse<ServiceProviders>,
     ServiceProvidersListFilterQuery
@@ -42,6 +45,7 @@ const ServiceProvidersList = () => {
     initialFilter: {
       page: 1,
       per_page: 10,
+      status: (searchParams.get("status") as ServiceStatusEnum) ?? undefined,
     },
     queryOptions: { retry: false },
   });
@@ -82,9 +86,12 @@ const ServiceProvidersList = () => {
             ))}
           </>
         ),
+        props: {
+          defaultValue: filter?.status,
+        },
       },
     ],
-    [serviceProvidersStatus?.data]
+    [serviceProvidersStatus?.data, filter?.status]
   );
   return (
     <div className="py-10">

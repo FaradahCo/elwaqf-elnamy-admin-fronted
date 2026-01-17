@@ -16,7 +16,7 @@ interface PaginationMeta {
 
 interface CustomTableProps<T> {
   columns: ColumnsType<T>;
-  className: string[];
+  className?: string[];
   dataSource: T[];
   showSelection?: boolean;
   showPagination?: boolean;
@@ -25,6 +25,7 @@ interface CustomTableProps<T> {
   paginationMeta?: PaginationMeta;
   onSelectionChange?: (selectedRowKeys: React.Key[], selectedRows: T[]) => void;
   onPaginationChange?: (page: number, pageSize: number) => void;
+  footer?: React.ReactNode;
 }
 
 export const CustomTable = <T extends Record<string, any>>({
@@ -38,6 +39,7 @@ export const CustomTable = <T extends Record<string, any>>({
   paginationMeta,
   onSelectionChange,
   onPaginationChange,
+  footer,
 }: CustomTableProps<T>) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
@@ -82,7 +84,7 @@ export const CustomTable = <T extends Record<string, any>>({
   };
 
   return (
-    <div className={className.join(" ")}>
+    <div className={className?.join(" ")}>
       <Flex gap="middle" vertical>
         {showSelection && (
           <Flex align="center" gap="middle">
@@ -99,6 +101,7 @@ export const CustomTable = <T extends Record<string, any>>({
           pagination={showPagination ? paginationConfig : false}
           loading={loading}
           scroll={{ x: "max-content" }}
+          footer={() => footer}
         />
       </Flex>
     </div>

@@ -8,6 +8,7 @@ import App from "./app/App";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { store, persistor } from "./app/store";
+import ErrorBoundary from "@shared/components/ErrorBoundary";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,15 +33,17 @@ const theme = {
 };
 
 createRoot(document.getElementById("root")!).render(
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <QueryClientProvider client={queryClient}>
-        <ConfigProvider theme={theme} locale={arEG} direction="rtl">
-          <AntApp>
-            <App />
-          </AntApp>
-        </ConfigProvider>
-      </QueryClientProvider>
-    </PersistGate>
-  </Provider>
+  <ErrorBoundary>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <QueryClientProvider client={queryClient}>
+          <ConfigProvider theme={theme} locale={arEG} direction="rtl">
+            <AntApp>
+              <App />
+            </AntApp>
+          </ConfigProvider>
+        </QueryClientProvider>
+      </PersistGate>
+    </Provider>
+  </ErrorBoundary>
 );
