@@ -88,7 +88,6 @@
   display: none;
 }
 
-/* React Quill RTL Support */
 .quill {
   direction: rtl;
 }
