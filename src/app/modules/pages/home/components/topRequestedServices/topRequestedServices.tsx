@@ -18,17 +18,17 @@ const TopRequestedServices = ({
           <div key={index} className="relative">
             <div className="flex justify-between items-center mb-2">
               <span className="text-gray-700 text-sm font-medium">
-                {service.title}
+                {service?.title}
               </span>
               <span className="text-gray-800 font-bold">
-                {service.percentage ?? 0}
+                {service?.percentage ?? 0}
                 <span className="text-gray-400 text-xs font-normal mr-1">
                   /100
                 </span>
               </span>
             </div>
             <Progress
-              percent={service.percentage ?? 0}
+              percent={service?.percentage ?? 0}
               strokeColor={COLORS[index % COLORS.length]}
               showInfo={false}
             />

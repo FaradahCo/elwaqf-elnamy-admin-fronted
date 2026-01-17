@@ -46,6 +46,7 @@ export type TopServices = Array<{
   title?: string;
   type?: string;
   count?: number;
+  percentage?: number;
 }>;
 export type LatestActivities = Array<{
   id?: number;
