@@ -7,7 +7,7 @@ const RecentActivitiesList = ({
   return (
     <div className="row-span-2 bg-white rounded-2xl border border-gray-200">
       <div className="px-3 py-2 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900">أحدث الأنشطة</h2>
+        <h2 className="text-xl font-semibold">أحدث الأنشطة</h2>
       </div>
 
       <div className="divide-y divide-gray-100">

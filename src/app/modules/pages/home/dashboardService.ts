@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import AoiService from "@shared/services/api";
 import type {
   ApprovelRequests,
@@ -8,9 +9,10 @@ import type {
   QualityMonitoringData,
 } from "./dashboardModel";
 
-export const getDashboardFinancialSummary = async () => {
+export const getDashboardFinancialSummary = async (date: Dayjs) => {
   return AoiService.get<DashboardFinancialSummary>(
-    "/admin/dashboard/financial-summary"
+    "/admin/dashboard/financial-summary",
+    { month: date.format("MM"), year: date.format("YYYY") },
   );
 };
 export const getDashboardOverview = async () => {
@@ -19,14 +21,15 @@ export const getDashboardOverview = async () => {
 export const getReviewRequests = async () => {
   return AoiService.get<PendingItems>("/admin/dashboard/review-requests");
 };
-export const getGeneralStatistics = async () => {
+export const getGeneralStatistics = async (date: Dayjs) => {
   return AoiService.get<GeneralStatisticsData>(
-    "/admin/dashboard/general-statistics"
+    "/admin/dashboard/general-statistics",
+    { month: date.format("MM"), year: date.format("YYYY") },
   );
 };
 export const getQualityMonitoring = async () => {
   return AoiService.get<QualityMonitoringData>(
-    "/admin/dashboard/quality-monitoring"
+    "/admin/dashboard/quality-monitoring",
   );
 };
 export const getApprovelRequests = async () => {

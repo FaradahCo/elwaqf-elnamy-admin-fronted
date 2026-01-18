@@ -7,16 +7,8 @@ import ConfirmationRequests from "./components/confirmationRequests/confirmation
 import DashboardOverview from "./components/dashboardOverview/dashboardOverview";
 import ConfirmationRequestsTable from "./components/confirmationRequestsTable/confirmationRequestsTable";
 import { useApiQuery } from "@shared/services/api";
-import {
-  getDashboardFinancialSummary,
-  getDashboardOverview,
-  getReviewRequests,
-} from "./dashboardService";
-import type {
-  DashboardFinancialSummary,
-  DashboardOverviewData,
-  PendingItems,
-} from "./dashboardModel";
+import { getDashboardOverview, getReviewRequests } from "./dashboardService";
+import type { DashboardOverviewData, PendingItems } from "./dashboardModel";
 import GeneralStatistics from "./components/generalStatistics/generalStatistics";
 import QualityControl from "./components/qualityControl/qualityControl";
 import { useNavigate } from "react-router";
@@ -27,29 +19,16 @@ const Home: React.FC = () => {
     useApiQuery<PendingItems>(["dashboardReviewRequests"], getReviewRequests, {
       retry: false,
     });
-  const {
-    data: dashboardFinancialSummary,
-    isLoading: dashboardSummaryLoading,
-  } = useApiQuery<DashboardFinancialSummary>(
-    ["dashboardFinancialSummary"],
-    getDashboardFinancialSummary,
-    {
-      retry: false,
-    }
-  );
+
   const { data: dashboardOverview, isLoading: dashboardOverviewLoading } =
     useApiQuery<DashboardOverviewData>(
       ["dashboardOverview"],
       getDashboardOverview,
       {
         retry: false,
-      }
+      },
     );
-  if (
-    dashboardSummaryLoading ||
-    reviewRequestLoading ||
-    dashboardOverviewLoading
-  ) {
+  if (reviewRequestLoading || dashboardOverviewLoading) {
     return (
       <div className="h-screen flex items-center justify-center">
         <Spin size="large" />
@@ -70,7 +49,7 @@ const Home: React.FC = () => {
         </Button>
       </div>
       <UserProfile />
-      <DashboardCards dashboardFinancialSummary={dashboardFinancialSummary} />
+      <DashboardCards />
       <DashboardOverview dashboardOverview={dashboardOverview} />
       <ConfirmationRequests reviewRequest={reviewRequest} />
       <ConfirmationRequestsTable />

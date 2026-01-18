@@ -9,9 +9,7 @@ const TopRequestedServices = ({
 }) => {
   return (
     <div className="bg-white rounded-2xl shadow-md p-4 flex-1">
-      <h2 className="text-xl font-bold text-gray-800 mb-8">
-        الخدمات الأكثر طلباً
-      </h2>
+      <h2 className="text-xl font-semibold mb-4">الخدمات الأكثر طلباً</h2>
 
       <div className="space-y-6">
         {most_requested?.slice(0, 4)?.map((service, index) => (

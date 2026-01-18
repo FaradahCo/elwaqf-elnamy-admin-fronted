@@ -21,8 +21,8 @@ export const confirmationRequestsColumns = [
   },
   {
     title: "المبلغ",
-    dataIndex: "price",
-    key: "price",
+    dataIndex: "amount",
+    key: "amount",
   },
   {
     title: "وثيقة الدفع",

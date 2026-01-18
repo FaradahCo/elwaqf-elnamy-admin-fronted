@@ -9,8 +9,8 @@ const UserProfile = () => {
         <img src={user?.image || "/images/empty-user.svg"} alt="صورة المشرف" />
       </div>
       <div>
-        <p>المشرف</p>
-        <p>{user?.name}</p>
+        <p className="text-gray-600">المشرف</p>
+        <p className="text-second-primary text-2xl">{user?.name}</p>
       </div>
     </div>
   );

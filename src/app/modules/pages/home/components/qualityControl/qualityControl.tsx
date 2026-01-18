@@ -1,7 +1,8 @@
-import { Button, Spin } from "antd";
+import { Spin } from "antd";
 import { getQualityMonitoring } from "../../dashboardService";
 import type { QualityMonitoringData } from "../../dashboardModel";
 import { useApiQuery } from "@shared/services/api";
+import { Link } from "react-router";
 
 const data = [
   {
@@ -30,7 +31,7 @@ const QualityControl = () => {
       getQualityMonitoring,
       {
         retry: false,
-      }
+      },
     );
 
   if (isLoading) {
@@ -81,12 +82,12 @@ const QualityControl = () => {
                   </div>
                   <div className="text-sm text-gray-500">{item.detail}</div>
                 </div>
-                <Button
-                  type="default"
-                  className="rounded-md! border! text-second-primary! font-medium! border-second-primary!"
+                <Link
+                  to="service-management"
+                  className="rounded-md! py-2 px-3 border! text-second-primary! font-medium! border-second-primary! hover:bg-second-primary! hover:text-white! transition-colors!"
                 >
                   عرض الخدمة
-                </Button>
+                </Link>
               </div>
             ))}
           </div>

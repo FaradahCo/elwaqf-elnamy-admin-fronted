@@ -34,31 +34,31 @@ const ConfirmationRequests = ({
         label: "مزودون بانتظار التفعيل",
         count: reviewRequest?.pending_providers?.count,
         unit: "مزود",
-        path: "service-providers/?status=pending",
+        path: "service-providers?status=inactive",
       },
       {
         id: 2,
         label: "تحديثات بروفايل بانتظار المراجعة",
         count: reviewRequest?.pending_providers?.count,
         unit: "مزود",
-        path: "service-providers/?status=review",
+        path: "service-providers?status=review",
       },
       {
         id: 3,
         label: "خدمات بانتظار الاعتماد",
         count: reviewRequest?.pending_services?.count,
         unit: "خدمات",
-        path: "service-management/?type=service&status=pending",
+        path: "service-management?type=service&status=pending",
       },
       {
         id: 4,
         label: "باقات بانتظار الاعتماد",
         count: reviewRequest?.pending_packages?.count,
         unit: "باقة",
-        path: "service-management/?type=package&status=pending",
+        path: "service-management?type=package&status=pending",
       },
     ],
-    [reviewRequest]
+    [reviewRequest],
   );
 
   return (
