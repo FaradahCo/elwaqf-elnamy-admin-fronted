@@ -24,7 +24,7 @@ export const getTabsItems = (
   withdrawList: PaginatedResponse<WithdrawItem>,
   bankTransferList: PaginatedResponse<BankTransferItem>,
   isLoading: boolean = false,
-  onChangeWithdrawListFilter: (filter: WithdrawListParams) => void
+  onChangeWithdrawListFilter: (filter: WithdrawListParams) => void,
 ): TabsProps["items"] => [
   {
     key: "1",
@@ -191,7 +191,7 @@ export const bankTransferListColumns: ColumnsType<BankTransferItem> = [
             }
             className="text-primary! underline! cursor-pointer"
           >
-            صوره الفاتورة
+            صوره الحوالة
           </p>
         </div>
       );
