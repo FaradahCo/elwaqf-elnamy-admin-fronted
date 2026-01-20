@@ -2,26 +2,40 @@ import { DatePicker } from "antd";
 import { ArrowDownOutlined } from "@ant-design/icons";
 import Card from "../card/card";
 import type { DashboardFinancialSummary } from "../../dashboardModel";
-import enUS from "antd/es/calendar/locale/en_US";
+import { useApiQuery } from "@shared/services/api";
+import { getDashboardFinancialSummary } from "../../dashboardService";
+import { useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/ar";
+dayjs.locale("ar");
+const DashboardCards = () => {
+  const [selectedDate, setSelectedDate] = useState(dayjs());
 
-const DashboardCards = ({
-  dashboardFinancialSummary,
-}: {
-  dashboardFinancialSummary?: DashboardFinancialSummary;
-}) => {
+  const onDateChange = (date: Dayjs) => {
+    if (date) {
+      setSelectedDate(date);
+    }
+  };
+  const { data: dashboardFinancialSummary } =
+    useApiQuery<DashboardFinancialSummary>(
+      ["dashboardFinancialSummary", selectedDate.format("MM-YYYY")],
+      () => getDashboardFinancialSummary(selectedDate),
+      {
+        retry: false,
+      },
+    );
   return (
-    <div className="mt-8">
+    <div className="mt-6">
       <div className="flex justify-between items-center">
         <h2 className="font-semibold text-2xl">المالية</h2>
         <DatePicker
-          picker="date"
-          // value={selectedDate}
-          // onChange={onDateChange}
-          format="MM-YYYY"
+          picker="month"
+          value={selectedDate}
+          onChange={onDateChange}
+          format="MMMM YYYY"
           suffixIcon={<ArrowDownOutlined />}
           size="large"
-          className="w-48"
-          locale={enUS}
+          className="w-32"
           allowClear={false}
         />
       </div>

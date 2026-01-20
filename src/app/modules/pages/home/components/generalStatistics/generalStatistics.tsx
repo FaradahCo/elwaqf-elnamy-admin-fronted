@@ -3,17 +3,66 @@ import { DatePicker, Spin } from "antd";
 import { getGeneralStatistics } from "../../dashboardService";
 import type { GeneralStatisticsData } from "../../dashboardModel";
 import { ArrowDownOutlined } from "@ant-design/icons";
-
+import { useMemo, useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/ar";
+dayjs.locale("ar");
 const GeneralStatistics = () => {
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+
+  const onDateChange = (date: Dayjs) => {
+    if (date) {
+      setSelectedDate(date);
+    }
+  };
   const { data: generalStatistics, isLoading } =
     useApiQuery<GeneralStatisticsData>(
-      ["dashboardGeneralStatistics"],
-      getGeneralStatistics,
+      ["dashboardGeneralStatistics", selectedDate.format("MM-YYYY")],
+      () => getGeneralStatistics(selectedDate),
       {
         retry: false,
-      }
+      },
     );
-
+  const stats = useMemo(
+    () => [
+      {
+        id: 1,
+        label: "عدد الأوقاف",
+        count: generalStatistics?.total_clients,
+        unit: "وقف",
+        icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
+      },
+      {
+        id: 2,
+        label: "عدد المزودين",
+        count: generalStatistics?.total_active_providers,
+        unit: "مزود خدمة",
+        icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
+      },
+      {
+        id: 3,
+        label: "عدد المستشارين",
+        count: generalStatistics?.total_consultations,
+        unit: "مستشار",
+        icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
+      },
+      {
+        id: 4,
+        label: "عدد الخدمات",
+        count: generalStatistics?.total_services,
+        unit: "خدمة",
+        icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
+      },
+      {
+        id: 5,
+        label: "عدد الباقات",
+        count: generalStatistics?.total_packages,
+        unit: "باقة",
+        icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
+      },
+    ],
+    [generalStatistics],
+  );
   if (isLoading) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -21,56 +70,19 @@ const GeneralStatistics = () => {
       </div>
     );
   }
-  const stats = [
-    {
-      id: 1,
-      label: "عدد الأوقاف",
-      count: generalStatistics?.total_clients,
-      unit: "وقف",
-      icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
-    },
-    {
-      id: 2,
-      label: "عدد المزودين",
-      count: generalStatistics?.total_active_providers,
-      unit: "مزود خدمة",
-      icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
-    },
-    {
-      id: 3,
-      label: "عدد المستشارين",
-      count: generalStatistics?.total_consultations,
-      unit: "مستشار",
-      icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
-    },
-    {
-      id: 4,
-      label: "عدد الخدمات",
-      count: generalStatistics?.total_services,
-      unit: "خدمة",
-      icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
-    },
-    {
-      id: 5,
-      label: "عدد الباقات",
-      count: generalStatistics?.total_packages,
-      unit: "باقة",
-      icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
-    },
-  ];
 
   return (
     <div className="mt-4">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-semibold text-gray-900">إحصائيات عامة</h2>
         <DatePicker
-          picker="date"
-          // value={selectedDate}
-          // onChange={onDateChange}
-          format="MM-YYYY"
+          picker="month"
+          value={selectedDate}
+          onChange={onDateChange}
+          format="YYYY MMMM"
           suffixIcon={<ArrowDownOutlined />}
           size="large"
-          className="w-48"
+          className="w-32"
           allowClear={false}
         />
       </div>

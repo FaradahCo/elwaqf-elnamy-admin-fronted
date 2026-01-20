@@ -34,8 +34,6 @@ const PACKAGE_TYPES = [
 ];
 export const ServiceManagementList = () => {
   const [searchParams] = useSearchParams();
-  console.log("type", searchParams.get("type"));
-  console.log("status", searchParams.get("status"));
   const {
     data: serviceData,
     isLoading,
@@ -58,7 +56,7 @@ export const ServiceManagementList = () => {
     () => getSeriviceStatus({ type: filter?.type ?? "service" }),
     {
       enabled: !!filter.type,
-    }
+    },
   );
   const filters = useMemo(
     () => [
@@ -119,7 +117,7 @@ export const ServiceManagementList = () => {
         },
       },
     ],
-    [serviceStatus?.data, filter?.type, filter?.status]
+    [serviceStatus?.data, filter?.type, filter?.status],
   );
   return (
     <div className="py-10">
@@ -149,7 +147,7 @@ export const ServiceManagementList = () => {
           icon="/images/elements.svg"
           value={
             serviceStatus?.data?.find(
-              (status) => status.status === "revision_pending"
+              (status) => status.status === "revision_pending",
             )?.count ?? 0
           }
           classesName={[
