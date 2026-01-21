@@ -36,7 +36,7 @@ const STATUS_OPTIONS = [
   { value: "inactive", label: "غير مفعل" },
   { value: "scheduled", label: "مجدول" },
   { value: "expired", label: "منتهي الصلاحية" },
-  { value: "exhausted", label: "غير محدد" },
+  { value: "exhausted", label: "مستنفذ" },
   { value: "canceled", label: "ملغي" },
   { value: "testing", label: "اختبار" },
 ];

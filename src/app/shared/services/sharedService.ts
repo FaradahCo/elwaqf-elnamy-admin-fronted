@@ -98,6 +98,7 @@ export enum ServiceStatusEnum {
   failed = "failed",
   in_progress = "in_progress",
   review = "review",
+  exhausted = "exhausted",
 }
 
 export const getStatusTag = (status: ServiceStatusEnum | string) => {
@@ -132,6 +133,7 @@ export const getStatusTag = (status: ServiceStatusEnum | string) => {
     [ServiceStatusEnum.canceled]: { color: "#ff4d4f", text: "ملغي" },
     [ServiceStatusEnum.testing]: { color: "#722ed1", text: "تجريبي" },
     [ServiceStatusEnum.expired]: { color: "#ff4d4f", text: "منتهي" },
+    [ServiceStatusEnum.exhausted]: { color: "#8c8c8c", text: "مستنفذ" },
 
     [ServiceStatusEnum.revision_pending]: {
       color: "#722ed1",
