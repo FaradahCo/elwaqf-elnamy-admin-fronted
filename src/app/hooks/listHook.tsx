@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
+import { type UseQueryOptions } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
 import { useApiQuery } from "../shared/services/api";
-import { keepPreviousData, type UseQueryOptions } from "@tanstack/react-query";
 
 export interface UseListHookOptions<TData, TFilterQuery> {
   queryKey: string;
@@ -19,7 +19,7 @@ export interface UseListHookReturn<TData, TFilterQuery> {
 }
 
 export const useListHook = <TData, TFilterQuery>(
-  options: UseListHookOptions<TData, TFilterQuery>
+  options: UseListHookOptions<TData, TFilterQuery>,
 ): UseListHookReturn<TData, TFilterQuery> => {
   const {
     queryKey,
@@ -36,9 +36,8 @@ export const useListHook = <TData, TFilterQuery>(
     () => fetchFn(filter),
     {
       enabled: enabled && !!filter,
-      placeholderData: keepPreviousData,
       ...queryOptions,
-    }
+    },
   );
 
   const handleFilterChange = useCallback((filterValues: TFilterQuery) => {
@@ -56,10 +55,10 @@ export const useListHook = <TData, TFilterQuery>(
             ...prevFilter,
             page,
             per_page,
-          } as TFilterQuery)
+          }) as TFilterQuery,
       );
     },
-    []
+    [],
   );
 
   return {

@@ -28,6 +28,8 @@ export type Client = {
 
 export type Provider = {
   id?: number;
+  user_id?: number;
+  user_name?: string;
   business_name?: string;
   logo?: string;
 };
