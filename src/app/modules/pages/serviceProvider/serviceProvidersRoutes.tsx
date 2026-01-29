@@ -15,9 +15,19 @@ export const ServiceProviderRoutes: RouteObject[] = [
         Component: m.default,
       })),
   },
+  {
+    path: ":id",
+    lazy: () =>
+      import("./pages/serviceProvidersDetails/serviceProviderDetails").then(
+        (m) => ({
+          Component: m.default,
+        }),
+      ),
+  },
 ];
 
 export const serviceProviderRoutePath = {
   SERVICE_PROVIDERS: "/admin/service-providers",
   REVIEW_PAGE: "/admin/service-providers/reviews/:id",
+  SERVICE_PROVIDERS_DETAILS: (id: number) => `/admin/service-providers/${id}`,
 };

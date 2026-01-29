@@ -22,7 +22,12 @@ interface CustomTableProps<T> {
   showPagination?: boolean;
   defaultPageSize?: number;
   loading?: boolean;
+  rowKey?: string;
   paginationMeta?: PaginationMeta;
+  onRow?: (record: T) => {
+    onClick?: () => void;
+    className?: string;
+  };
   onSelectionChange?: (selectedRowKeys: React.Key[], selectedRows: T[]) => void;
   onPaginationChange?: (page: number, pageSize: number) => void;
   footer?: React.ReactNode;
@@ -35,17 +40,19 @@ export const CustomTable = <T extends Record<string, any>>({
   showSelection = true,
   showPagination = true,
   defaultPageSize = 10,
+  rowKey = "id",
   loading = false,
   paginationMeta,
   onSelectionChange,
   onPaginationChange,
+  onRow,
   footer,
 }: CustomTableProps<T>) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const onSelectChange = (
     newSelectedRowKeys: React.Key[],
-    selectedRows: T[]
+    selectedRows: T[],
   ) => {
     setSelectedRowKeys(newSelectedRowKeys);
 
@@ -97,9 +104,10 @@ export const CustomTable = <T extends Record<string, any>>({
           rowSelection={showSelection ? rowSelection : undefined}
           columns={columns}
           dataSource={dataSource}
-          rowKey={(record) => record.id}
+          rowKey={(record) => record[rowKey]}
           pagination={showPagination ? paginationConfig : false}
           loading={loading}
+          onRow={onRow}
           scroll={{ x: "max-content" }}
           footer={() => footer}
         />

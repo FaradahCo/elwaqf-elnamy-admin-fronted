@@ -20,14 +20,17 @@ import { useListHook } from "@/app/hooks/listHook";
 import type { PaginatedResponse } from "@shared/model/shared.model";
 import { Select } from "antd";
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
+import type { Provider } from "../../../followRequests/model/followRequestsModel";
+import { serviceProviderRoutePath } from "../../serviceProvidersRoutes";
 
 const ServiceProvidersList = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { data: serviceProvidersStatus } = useApiQuery(
     ["serviceProvidersStatus"],
     () => getSeriviceProvidersStatus(),
-    { retry: false }
+    { retry: false },
   );
 
   const {
@@ -70,8 +73,8 @@ const ServiceProvidersList = () => {
         name: "status",
         options: (
           <>
-            {serviceProvidersStatus?.data?.map((option) => (
-              <Select.Option key={option?.status} value={option?.status}>
+            {serviceProvidersStatus?.data?.map((option, index) => (
+              <Select.Option key={index} value={option?.status}>
                 <div className="flex items-center gap-2">
                   <div
                     className="w-3 h-3 rounded-full"
@@ -91,8 +94,18 @@ const ServiceProvidersList = () => {
         },
       },
     ],
-    [serviceProvidersStatus?.data, filter?.status]
+    [serviceProvidersStatus?.data, filter?.status],
   );
+
+  const handleRowClick = (record: Provider) => ({
+    onClick: () => {
+      navigate(
+        serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(record?.user_id!),
+      );
+    },
+    className: "cursor-pointer hover:bg-gray-50",
+  });
+
   return (
     <div className="py-10">
       <div className="flex gap-5 flex-wrap flex-row flex-center justify-start">
@@ -109,7 +122,7 @@ const ServiceProvidersList = () => {
           icon="/images/elements_2.svg"
           value={
             serviceProvidersStatus?.data?.find(
-              (item) => item?.status === ServiceStatusEnum.active
+              (item) => item?.status === ServiceStatusEnum.active,
             )?.count ?? 0
           }
           classesName={[
@@ -122,7 +135,7 @@ const ServiceProvidersList = () => {
           icon="/images/elements_3.svg"
           value={
             serviceProvidersStatus?.data?.find(
-              (item) => item?.status === ServiceStatusEnum.in_progress
+              (item) => item?.status === ServiceStatusEnum.in_progress,
             )?.count ?? 0
           }
           classesName={[
@@ -135,7 +148,7 @@ const ServiceProvidersList = () => {
           icon="/images/elements_4.svg"
           value={
             serviceProvidersStatus?.data?.find(
-              (item) => item?.status === ServiceStatusEnum.review
+              (item) => item?.status === ServiceStatusEnum.review,
             )?.count ?? 0
           }
           classesName={[
@@ -154,6 +167,8 @@ const ServiceProvidersList = () => {
           showSelection={false}
           className={["mt-6 overflow-x-auto"]}
           loading={isLoading}
+          onRow={handleRowClick}
+          rowKey="user_id"
           paginationMeta={serviceProvidersData?.meta}
           onPaginationChange={handlePaginationChange}
         />
