@@ -15,12 +15,16 @@ import type { PaginatedResponse } from "@shared/model/shared.model";
 import type { CustomFilterType } from "@shared/components/custom-filter/custom-filter";
 import { Select } from "antd";
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
+import { useNavigate } from "react-router";
+import { alwaqfRoutePath } from "../../alwaqfRoutes";
 
 const AlwaqfList = () => {
+  const navigate = useNavigate();
+
   const { data: alwaqfStatus } = useApiQuery(
     ["alwaqfStatus"],
     () => getAlWaqfStatus(),
-    { retry: false }
+    { retry: false },
   );
 
   const {
@@ -71,7 +75,7 @@ const AlwaqfList = () => {
         ),
       },
     ],
-    [alwaqfStatus?.data]
+    [alwaqfStatus?.data],
   );
 
   return (
@@ -90,7 +94,7 @@ const AlwaqfList = () => {
           icon="/images/elements_2.svg"
           value={
             alwaqfStatus?.data?.find(
-              (item) => item?.status === ServiceStatusEnum.active
+              (item) => item?.status === ServiceStatusEnum.active,
             )?.count ?? 0
           }
           classesName={[
@@ -103,7 +107,7 @@ const AlwaqfList = () => {
           icon="/images/elements_3.svg"
           value={
             alwaqfStatus?.data?.find(
-              (item) => item?.status === ServiceStatusEnum.inactive
+              (item) => item?.status === ServiceStatusEnum.inactive,
             )?.count ?? 0
           }
           classesName={[
@@ -116,7 +120,7 @@ const AlwaqfList = () => {
           icon="/images/elements_4.svg"
           value={
             alwaqfStatus?.data?.find(
-              (item) => item?.status === ServiceStatusEnum.review
+              (item) => item?.status === ServiceStatusEnum.review,
             )?.count ?? 0
           }
           classesName={[
@@ -136,6 +140,11 @@ const AlwaqfList = () => {
           loading={isLoading}
           paginationMeta={alwaqfData?.meta}
           onPaginationChange={handlePaginationChange}
+          onRow={(record) => ({
+            onClick: () =>
+              navigate(alwaqfRoutePath.ALWAQF_DETAILS(record?.id!)),
+            style: { cursor: "pointer" },
+          })}
         />
       </div>
     </div>

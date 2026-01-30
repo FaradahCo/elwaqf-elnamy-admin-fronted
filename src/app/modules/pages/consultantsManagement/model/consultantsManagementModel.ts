@@ -11,7 +11,7 @@ export type ConsultantItem = {
       id: number;
       name: string;
       slug: string;
-    }
+    },
   ];
   created_at: string;
   status: string;
@@ -81,6 +81,8 @@ export type ProviderProfile = {
   fields?: Field[];
   bio?: string;
   media?: ProviderMedia;
+  email?: string;
+  phone?: string;
 };
 
 export type ProviderUser = {
