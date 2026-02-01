@@ -1,15 +1,38 @@
-import { useParams } from "react-router";
-import type { Wallet } from "../../../../alwaqfModel";
-import { getAlWaqfWallet } from "../../../../alwaqfService";
+import { useOutletContext } from "react-router";
+import type {
+  AlwaqfServiceQuery,
+  Client,
+  Wallet,
+} from "../../../../alwaqfModel";
+import { getAlWaqfPayments, getAlWaqfWallet } from "../../../../alwaqfService";
 import { useApiQuery } from "@shared/services/api";
+import type { PaginatedResponse } from "@shared/model/shared.model";
+import type { PaymentClientItem } from "@/app/modules/pages/wallet/wallet.model";
+import { useListHook } from "@/app/hooks/listHook";
+import CustomTable from "@shared/components/customTable/customtable";
+import { walletConfigCollumns } from "./walletConfig";
 
 const Wallet = () => {
-  const { id } = useParams();
+  const clientData = useOutletContext<Client>();
   const { data: wallet } = useApiQuery(
     ["alwaqfWallet"],
-    () => getAlWaqfWallet(+id!),
+    () => getAlWaqfWallet(clientData?.id),
     { retry: false },
   );
+
+  const {
+    data: payments,
+    isLoading,
+    handlePaginationChange,
+  } = useListHook<PaginatedResponse<PaymentClientItem>, AlwaqfServiceQuery>({
+    queryKey: "alwaqfPayments",
+    fetchFn: (filter) => getAlWaqfPayments(clientData?.id, filter),
+    initialFilter: {
+      page: 1,
+      per_page: 5,
+    },
+    queryOptions: { retry: false },
+  });
   return (
     <div className="px-4 bg-white rounded-md">
       <div className="flex justify-between">
@@ -32,6 +55,19 @@ const Wallet = () => {
           </p>
         </div>
       </div>
+      <h1 className="text-2xl text-second-primary font-semibold">
+        المعاملات المالية
+      </h1>
+      <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
+      <CustomTable
+        columns={walletConfigCollumns}
+        dataSource={payments?.data ?? []}
+        showSelection={false}
+        className={["mt-6 overflow-x-auto"]}
+        loading={isLoading}
+        paginationMeta={payments?.meta}
+        onPaginationChange={handlePaginationChange}
+      />
     </div>
   );
 };

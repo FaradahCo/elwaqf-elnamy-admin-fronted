@@ -1,5 +1,5 @@
-import { handleDownloadAttachment } from "@shared/services/sharedService";
 import type { Payment } from "../../../../alwaqfModel";
+import { Link } from "react-router";
 
 export const invoicesConfigColumns = [
   {
@@ -44,12 +44,9 @@ export const invoicesConfigColumns = [
     title: "الفاتورة",
     render: (odoo_url: string) => (
       <div className="flex items-center gap-2">
-        <img
-          onClick={() => handleDownloadAttachment(odoo_url)}
-          src="/images/download.svg"
-          alt="تنزيل الفاتورة"
-          className="cursor-pointer"
-        />
+        <Link to={odoo_url} target="_blank" rel="noopener noreferrer">
+          <img src="/images/download.svg" alt="تنزيل الفاتورة" />
+        </Link>
       </div>
     ),
   },

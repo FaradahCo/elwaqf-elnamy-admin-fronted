@@ -1,28 +1,33 @@
 import { Select } from "antd";
-import { getStatusTag } from "@shared/services/sharedService";
-import type { Client } from "../../../../alwaqfModel";
-
-const DUMY_OPTIONS = [
-  {
-    status: "completed",
-    label: "مكتملة",
-  },
-  {
-    status: "active",
-    label: "نشط",
-  },
-  {
-    status: "inactive",
-    label: "غير نشط",
-  },
-];
-const AlwaqfHeader = ({ clientData }: { clientData?: Client }) => {
+import {
+  getStatusTag,
+  ServiceStatusEnum,
+} from "@shared/services/sharedService";
+import type { AlwaqfStatus, Client } from "../../../../alwaqfModel";
+import { useApiMutation } from "@shared/services/api";
+import { updateAlwaqfStatus } from "../../../../alwaqfService";
+const AlwaqfHeader = ({
+  clientData,
+  alwaqfStatus,
+}: {
+  clientData?: Client;
+  alwaqfStatus?: AlwaqfStatus[];
+}) => {
+  const updateStatusMutation = useApiMutation((status) => {
+    status;
+    return updateAlwaqfStatus(clientData?.id!, {
+      status: status as ServiceStatusEnum,
+    });
+  });
+  const handleStatusChange = (newStatus: ServiceStatusEnum) => {
+    updateStatusMutation.mutate(newStatus);
+  };
   return (
     <div className="bg-white flex flex-wrap items-center justify-between rounded-md my-4 p-4">
       <div className="flex items-center gap-4 ">
         <img
           className="w-24 h-24"
-          src={clientData?.profile?.logo}
+          src={clientData?.image ?? "/images/empty-user.svg"}
           alt="صورة العميل"
         />
         <div>
@@ -34,19 +39,19 @@ const AlwaqfHeader = ({ clientData }: { clientData?: Client }) => {
       </div>
       <div>
         <Select
-          value={clientData?.status}
-          // onChange={handleStatusChange}
+          defaultValue={clientData?.status as ServiceStatusEnum}
+          onChange={handleStatusChange}
           // loading={updateStatusMutation.isPending}
           // disabled={updateStatusMutation.isPending}
           className="min-w-40"
         >
-          {DUMY_OPTIONS?.map((option) => (
+          {alwaqfStatus?.map((option) => (
             <Select.Option key={option.status} value={option.status}>
               <div className="flex items-center gap-2">
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{
-                    backgroundColor: getStatusTag(option?.status)?.color,
+                    backgroundColor: getStatusTag(option?.status!)?.color,
                   }}
                 />
                 <span>{option.label}</span>

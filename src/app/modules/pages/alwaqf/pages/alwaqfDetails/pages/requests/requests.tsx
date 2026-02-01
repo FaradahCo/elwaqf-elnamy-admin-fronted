@@ -1,14 +1,11 @@
 import type { PaginatedResponse } from "@shared/model/shared.model";
-import { useApiQuery } from "@shared/services/api";
-import { useParams } from "react-router";
+import { useOutletContext } from "react-router";
 import type {
   AlwaqfServiceQuery,
+  Client,
   ServiceRequest,
 } from "../../../../alwaqfModel";
-import {
-  getAlWaqfServiceRequests,
-  getAlWaqfStatus,
-} from "../../../../alwaqfService";
+import { getAlWaqfServiceRequests } from "../../../../alwaqfService";
 import CustomFilter, {
   type CustomFilterType,
 } from "@shared/components/custom-filter/custom-filter";
@@ -18,14 +15,13 @@ import { useMemo } from "react";
 import { useListHook } from "@/app/hooks/listHook";
 import { getStatusTag } from "@shared/services/sharedService";
 import { requestsConfigColumns } from "./requestsConfig";
-const FIELDS = [
-  { value: "healthcare", label: "الرعاية الصحية" },
-  { value: "education", label: "التعليم" },
-  { value: "technology", label: "التكنولوجيا" },
-  { value: "social", label: "الخدمات الاجتماعية" },
-];
+import { useServiceFields } from "@/app/hooks/useServiceFields";
+import { useRequestsStatus } from "@/app/hooks/useRequestsStatus";
+
 const Requests = () => {
-  const { id } = useParams();
+  const clientData = useOutletContext<Client>();
+  const { requestsStatus } = useRequestsStatus();
+  const { fields } = useServiceFields();
 
   const {
     data: serviceRequests,
@@ -34,17 +30,21 @@ const Requests = () => {
     handlePaginationChange,
   } = useListHook<PaginatedResponse<ServiceRequest>, AlwaqfServiceQuery>({
     queryKey: "alwaqfServiceRequests",
-    fetchFn: (filter) => getAlWaqfServiceRequests(+id!, filter),
+    fetchFn: (filter) => getAlWaqfServiceRequests(clientData?.id, filter),
     initialFilter: {
       page: 1,
       per_page: 5,
     },
     queryOptions: { retry: false },
   });
-  const { data: alwaqfStatus } = useApiQuery(
-    ["alwaqfDetailsStatus"],
-    () => getAlWaqfStatus(),
-    { retry: false },
+
+  const transformedFields = useMemo(
+    () =>
+      fields?.map((field) => ({
+        label: field?.name,
+        value: field?.id,
+      })),
+    [fields],
   );
 
   const filters = useMemo(
@@ -60,7 +60,7 @@ const Requests = () => {
         placeholder: "اختر مجال الخدمات",
         label: "مجال الخدمات",
         name: "service.field_id",
-        options: FIELDS,
+        options: transformedFields,
       },
       {
         type: "select" as CustomFilterType,
@@ -69,7 +69,7 @@ const Requests = () => {
         name: "status",
         options: (
           <>
-            {alwaqfStatus?.data?.map((option) => (
+            {requestsStatus?.data?.map((option) => (
               <Select.Option key={option?.status} value={option?.status}>
                 <div className="flex items-center gap-2">
                   <div
@@ -87,7 +87,7 @@ const Requests = () => {
         ),
       },
     ],
-    [alwaqfStatus?.data],
+    [requestsStatus?.data],
   );
 
   return (
