@@ -114,3 +114,9 @@
 .alwaqf-tabs .ant-tabs-tab-btn {
   color: var(--color-second-primary);
 }
+
+.main-radio .ant-radio-button-wrapper-checked {
+  background-color: var(--color-second-primary);
+  border-color: var(--color-second-primary);
+  color: white;
+}
