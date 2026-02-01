@@ -3,7 +3,11 @@ import { useApiQuery } from "@shared/services/api";
 import { Spin, Tabs } from "antd";
 import { Outlet, useNavigate, useParams } from "react-router";
 import type { AlwaqfDashboard, Client } from "../../alwaqfModel";
-import { getAlWaqfDashboard, getAlWaqfDetails } from "../../alwaqfService";
+import {
+  getAlWaqfDashboard,
+  getAlWaqfDetails,
+  getAlWaqfStatus,
+} from "../../alwaqfService";
 import AlwaqfHeader from "./components/alwaqfHeader/alwaqfHeader";
 
 const TABS_ITEMS = [
@@ -46,11 +50,17 @@ const AlwaqfDetailsLayout = () => {
   );
 
   const { data: clientData, isLoading: isLoadingClient } = useApiQuery<Client>(
-    ["clientData"],
+    ["clientData", +id!],
     () => getAlWaqfDetails(+id!),
     {
       enabled: !!id,
     },
+  );
+
+  const { data: alwaqfStatus } = useApiQuery(
+    ["alwaqfDetailsStatus"],
+    () => getAlWaqfStatus(),
+    { retry: false },
   );
   if (isLoading || isLoadingClient)
     return (
@@ -97,8 +107,7 @@ const AlwaqfDetailsLayout = () => {
           ]}
         />
       </div>
-
-      <AlwaqfHeader clientData={clientData} />
+      <AlwaqfHeader clientData={clientData} alwaqfStatus={alwaqfStatus?.data} />
       <Tabs
         className="alwaqf-tabs bg-white rounded-md mt-4! px-4!"
         size="large"

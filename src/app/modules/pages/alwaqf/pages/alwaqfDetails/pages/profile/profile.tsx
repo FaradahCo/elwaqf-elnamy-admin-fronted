@@ -1,11 +1,9 @@
 import { useOutletContext } from "react-router";
-import { useMemo } from "react";
 
 import { Form, Input, Collapse } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 
 import type { Client } from "../../../../alwaqfModel";
-// { clientData }: { clientData: Client }
 const Profile = () => {
   const [form] = Form.useForm<Client>();
   const clientData = useOutletContext<Client>();
@@ -14,17 +12,12 @@ const Profile = () => {
     console.log("Form values:", values);
   };
 
-  const initialValues = useMemo(
-    () => ({ ...clientData, ...clientData?.profile }),
-    [clientData],
-  );
-
   return (
     <Form
       form={form}
       layout="vertical"
       onFinish={onFinish}
-      initialValues={initialValues}
+      initialValues={clientData}
       disabled
     >
       <Collapse
@@ -94,7 +87,7 @@ const Profile = () => {
         >
           <div className="p-4 space-y-4">
             <div className="grid grid-cols-1 gap-4">
-              <Form.Item name="waqf_name" label="اسم المنظمة">
+              <Form.Item name={["profile", "waqf_name"]} label="اسم المنظمة">
                 <Input
                   size="large"
                   className="text-right"
@@ -104,7 +97,7 @@ const Profile = () => {
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              <Form.Item name="vat_number" label="الرقم الضريبي">
+              <Form.Item name={["profile", "vat_number"]} label="الرقم الضريبي">
                 <Input
                   size="large"
                   className="text-right"
@@ -122,28 +115,34 @@ const Profile = () => {
                 />
               </Form.Item>
 
-              <Form.Item name="district" label="الحي">
+              <Form.Item name={["profile", "district"]} label="الحي">
                 <Input size="large" className="text-right" placeholder="الحي" />
               </Form.Item>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Form.Item name="street" label="الشارع">
+              <Form.Item name={["profile", "street"]} label="الشارع">
                 <Input
                   size="large"
                   className="text-right"
-                  placeholder="أختر من خلال"
+                  placeholder="الشارع"
                 />
               </Form.Item>
 
-              <Form.Item name="postalCode" label="الرمز">
+              <Form.Item
+                name={["profile", "postal_code"]}
+                label="الرمز البريدي"
+              >
                 <Input
                   size="large"
                   className="text-right"
-                  placeholder="الرمز"
+                  placeholder="الرمز البريدي"
                 />
               </Form.Item>
-              <Form.Item name="building_number" label="رقم المبنى">
+              <Form.Item
+                name={["profile", "building_number"]}
+                label="رقم المبنى"
+              >
                 <Input
                   size="large"
                   className="text-right"

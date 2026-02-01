@@ -2,17 +2,16 @@ import { useListHook } from "@/app/hooks/listHook";
 import type { CustomFilterType } from "@shared/components/custom-filter/custom-filter";
 import type { PaginatedResponse } from "@shared/model/shared.model";
 import { useMemo } from "react";
-import { useParams } from "react-router";
+import { useOutletContext } from "react-router";
 import { getAlWaqfInvoices } from "../../../../alwaqfService";
-import type { AlwaqfServiceQuery } from "../../../../alwaqfModel";
+import type { AlwaqfServiceQuery, Client } from "../../../../alwaqfModel";
 import type { Invoice } from "@/app/modules/pages/wallet/wallet.model";
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
 import CustomTable from "@shared/components/customTable/customtable";
 import { invoicesConfigColumns } from "./invoicesConfig";
 
 const Invoices = () => {
-  const { id } = useParams();
-
+  const clientData = useOutletContext<Client>();
   const {
     data: invoices,
     isLoading,
@@ -20,7 +19,7 @@ const Invoices = () => {
     handlePaginationChange,
   } = useListHook<PaginatedResponse<Invoice>, AlwaqfServiceQuery>({
     queryKey: "alwaqfConsultations",
-    fetchFn: (filter) => getAlWaqfInvoices(+id!, filter),
+    fetchFn: (filter) => getAlWaqfInvoices(clientData?.id, filter),
     initialFilter: {
       page: 1,
       per_page: 5,

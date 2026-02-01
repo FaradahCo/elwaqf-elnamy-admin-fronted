@@ -2,6 +2,7 @@ import { triggerForceLogout } from "@/app/store/slices/authSlice";
 import { store } from "@/app/store";
 import AoiService from "./api";
 import {
+  type Field,
   type PaginatedResponse,
   type ServiceStatus,
 } from "@shared/model/shared.model";
@@ -189,6 +190,9 @@ export const getSeriviceStatus = async (params?: { type: string }) => {
     `/admin/services-status`,
     transformFilterParams(params),
   );
+};
+export const getServiceFields = async () => {
+  return await AoiService.get<Field[]>(`/admin/fields`);
 };
 
 export const handleDownloadAttachment = async (

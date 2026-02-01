@@ -1,4 +1,4 @@
-import type { PaginatedParams } from "@shared/model/shared.model";
+import type { Field, PaginatedParams } from "@shared/model/shared.model";
 import type { ServiceStatusEnum } from "@shared/services/sharedService";
 
 export interface AlwaqfFilterQuery extends PaginatedParams {
@@ -178,13 +178,6 @@ export type TeamMedia = {
   cr_certificate: MediaItem | null;
   vat_registration_certificate: MediaItem | null;
 };
-
-export type Field = {
-  id: number;
-  name: string;
-  slug: string;
-};
-
 export type TeamProvider = {
   team_id: number;
   name: string;

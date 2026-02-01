@@ -1,4 +1,4 @@
-import type { PaginatedParams } from "@shared/model/shared.model";
+import type { Field, PaginatedParams } from "@shared/model/shared.model";
 import type { ServiceStatusEnum } from "@shared/services/sharedService";
 
 export type ConsultantItem = {
@@ -32,11 +32,6 @@ export type UpdateConsultantStatusPayload = {
     status: boolean;
     is_consultant?: boolean;
   }[];
-};
-export type Field = {
-  id?: number;
-  name?: string;
-  slug?: string;
 };
 
 export type Media = {
