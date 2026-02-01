@@ -87,7 +87,7 @@ const ServiceProvidersListFilter = memo(
         </Form>
       </Card>
     );
-  }
+  },
 );
 
 export default ServiceProvidersListFilter;

@@ -43,7 +43,7 @@ axiosInstance.interceptors.request.use(
   },
   (error: AxiosError) => {
     return Promise.reject(error.response);
-  }
+  },
 );
 
 // Response interceptor
@@ -61,6 +61,7 @@ axiosInstance.interceptors.response.use(
         triggerForceLogoutForInterceptor();
         break;
       case 403:
+        message.error(error.response?.data?.message || error.message);
         break;
       case 404:
         break;
@@ -78,7 +79,7 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

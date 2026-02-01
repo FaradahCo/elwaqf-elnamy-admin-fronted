@@ -36,6 +36,7 @@ const TABS_ITEMS = [
     label: "المراجعات",
   },
 ];
+
 const AlwaqfDetailsLayout = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ const AlwaqfDetailsLayout = () => {
       enabled: !!id,
     },
   );
+
   const { data: clientData, isLoading: isLoadingClient } = useApiQuery<Client>(
     ["clientData", +id!],
     () => getAlWaqfDetails(+id!),

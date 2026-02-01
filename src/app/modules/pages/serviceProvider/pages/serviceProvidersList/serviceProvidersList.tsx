@@ -100,7 +100,7 @@ const ServiceProvidersList = () => {
   const handleRowClick = (record: Provider) => ({
     onClick: () => {
       navigate(
-        serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(record?.user_id!),
+        serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(record?.team_id!),
       );
     },
     className: "cursor-pointer hover:bg-gray-50",

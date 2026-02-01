@@ -7,6 +7,7 @@ import type { Client } from "../../../../alwaqfModel";
 const Profile = () => {
   const [form] = Form.useForm<Client>();
   const clientData = useOutletContext<Client>();
+
   const onFinish = (values: Client) => {
     console.log("Form values:", values);
   };
