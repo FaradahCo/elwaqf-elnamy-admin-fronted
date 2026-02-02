@@ -1,159 +1,123 @@
 import { useOutletContext } from "react-router";
 
-import { Form, Input, Collapse } from "antd";
+import { Collapse } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 
 import type { Client } from "../../../../alwaqfModel";
+import LabelContent from "@shared/components/labelContent/labelContent";
+import { useMemo } from "react";
+
 const Profile = () => {
-  const [form] = Form.useForm<Client>();
   const clientData = useOutletContext<Client>();
 
-  const onFinish = (values: Client) => {
-    console.log("Form values:", values);
-  };
-
-  return (
-    <Form
-      form={form}
-      layout="vertical"
-      onFinish={onFinish}
-      initialValues={clientData}
-      disabled
-    >
-      <Collapse
-        defaultActiveKey={["1", "2"]}
-        expandIconPosition="end"
-        bordered={false}
-        expandIcon={({ isActive }) => (
-          <DownOutlined rotate={isActive ? 180 : 0} className="text-gray-600" />
-        )}
-        className="flex flex-col gap-2 rounded-md"
-      >
-        <Collapse.Panel
-          header={
-            <span className="text-lg font-semibold text-gray-800">
-              المعلومات الأساسية
-            </span>
-          }
-          key="1"
-          className="mb-2 bg-white rounded-md!"
-        >
+  const items = useMemo(
+    () => [
+      {
+        key: "1",
+        label: (
+          <span className="text-lg font-semibold text-gray-800">
+            المعلومات الأساسية
+          </span>
+        ),
+        children: (
           <div className="p-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Form.Item
-                name="name"
-                label="اسم المستخدم"
-                rules={[
-                  { required: true, message: "الرجاء إدخال اسم المستخدم" },
-                ]}
-              >
-                <Input
-                  size="large"
-                  className="text-right"
-                  placeholder="اسم المستخدم"
-                />
-              </Form.Item>
-
-              <Form.Item
-                name="email"
-                label="البريد الإلكتروني"
-                rules={[
-                  { required: true, message: "الرجاء إدخال البريد الإلكتروني" },
-                  { type: "email", message: "الرجاء إدخال بريد إلكتروني صحيح" },
-                ]}
-              >
-                <Input size="large" placeholder="example@email.com" />
-              </Form.Item>
-
-              <Form.Item name="phone" label="رقم الجوال">
-                <Input
-                  size="large"
-                  className="text-right"
-                  placeholder="05XXXXXXXX"
-                />
-              </Form.Item>
+              <LabelContent label="اسم المستخدم">
+                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
+                  {clientData?.name}
+                </p>
+              </LabelContent>
+              <LabelContent label="البريد الإلكتروني">
+                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
+                  {clientData?.email}
+                </p>
+              </LabelContent>
+              <LabelContent label="رقم الجوال">
+                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
+                  {clientData?.phone}
+                </p>
+              </LabelContent>
             </div>
           </div>
-        </Collapse.Panel>
-
-        <Collapse.Panel
-          header={
-            <span className="text-lg font-semibold text-gray-800">
-              العنوان الوطني
-            </span>
-          }
-          key="2"
-          className="bg-white rounded-md!"
-        >
+        ),
+        className: "mb-2 bg-white rounded-md!",
+      },
+      {
+        key: "2",
+        label: (
+          <span className="text-lg font-semibold text-gray-800">
+            العنوان الوطني
+          </span>
+        ),
+        children: (
           <div className="p-4 space-y-4">
             <div className="grid grid-cols-1 gap-4">
-              <Form.Item name={["profile", "waqf_name"]} label="اسم المنظمة">
-                <Input
-                  size="large"
-                  className="text-right"
-                  placeholder="اسم المنظمة"
-                />
-              </Form.Item>
+              <LabelContent label="اسم المنظمة">
+                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
+                  {clientData?.profile?.waqf_name}
+                </p>
+              </LabelContent>
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              <Form.Item name={["profile", "vat_number"]} label="الرقم الضريبي">
-                <Input
-                  size="large"
-                  className="text-right"
-                  placeholder="الرقم الضريبي"
-                />
-              </Form.Item>
+              <LabelContent label="الرقم الضريبي">
+                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
+                  {clientData?.profile?.vat_number}
+                </p>
+              </LabelContent>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Form.Item name="region" label="المدينة">
-                <Input
-                  size="large"
-                  className="text-right"
-                  placeholder="المدينة"
-                />
-              </Form.Item>
-
-              <Form.Item name={["profile", "district"]} label="الحي">
-                <Input size="large" className="text-right" placeholder="الحي" />
-              </Form.Item>
+              <LabelContent label="المدينة">
+                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
+                  {clientData?.region}
+                </p>
+              </LabelContent>
+              <LabelContent label="الحي">
+                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
+                  {clientData?.profile?.district}
+                </p>
+              </LabelContent>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Form.Item name={["profile", "street"]} label="الشارع">
-                <Input
-                  size="large"
-                  className="text-right"
-                  placeholder="الشارع"
-                />
-              </Form.Item>
+              <LabelContent label="الشارع">
+                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
+                  {clientData?.profile?.street}
+                </p>
+              </LabelContent>
 
-              <Form.Item
-                name={["profile", "postal_code"]}
-                label="الرمز البريدي"
-              >
-                <Input
-                  size="large"
-                  className="text-right"
-                  placeholder="الرمز البريدي"
-                />
-              </Form.Item>
-              <Form.Item
-                name={["profile", "building_number"]}
-                label="رقم المبنى"
-              >
-                <Input
-                  size="large"
-                  className="text-right"
-                  placeholder="رقم المبنى"
-                />
-              </Form.Item>
+              <LabelContent label="الرمز البريدي">
+                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
+                  {clientData?.profile?.postal_code}
+                </p>
+              </LabelContent>
+              <LabelContent label="رقم المبنى">
+                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
+                  {clientData?.profile?.building_number}
+                </p>
+              </LabelContent>
             </div>
           </div>
-        </Collapse.Panel>
-      </Collapse>
-    </Form>
+        ),
+        className: "bg-white rounded-md!",
+      },
+    ],
+    [clientData],
+  );
+
+  return (
+    <Collapse
+      defaultActiveKey={["1", "2"]}
+      expandIconPosition="end"
+      bordered={false}
+      expandIcon={({ isActive }) => (
+        <DownOutlined rotate={isActive ? 180 : 0} className="text-gray-600" />
+      )}
+      items={items}
+      className="flex flex-col gap-2 rounded-md"
+    />
   );
 };
+
 export default Profile;
