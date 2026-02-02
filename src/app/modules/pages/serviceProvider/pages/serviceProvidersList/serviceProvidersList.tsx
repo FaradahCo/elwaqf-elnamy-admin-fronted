@@ -21,7 +21,6 @@ import type { PaginatedResponse } from "@shared/model/shared.model";
 import { Select } from "antd";
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
 import { useNavigate, useSearchParams } from "react-router";
-import type { Provider } from "../../../followRequests/model/followRequestsModel";
 import { serviceProviderRoutePath } from "../../serviceProvidersRoutes";
 
 const ServiceProvidersList = () => {
@@ -97,7 +96,7 @@ const ServiceProvidersList = () => {
     [serviceProvidersStatus?.data, filter?.status],
   );
 
-  const handleRowClick = (record: Provider) => ({
+  const handleRowClick = (record: ServiceProviders) => ({
     onClick: () => {
       navigate(
         serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(record?.team_id!),

@@ -28,11 +28,15 @@ export type Client = {
 };
 
 export type Provider = {
+  status?: ServiceStatusEnum;
+  name?: string;
   team_id?: number;
   user_id?: number;
   user_name?: string;
   business_name?: string;
   logo?: string;
+  email?: string;
+  phone?: string;
   profile?: ProviderProfile[];
 };
 export type Quotation = {

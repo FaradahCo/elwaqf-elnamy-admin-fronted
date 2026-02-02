@@ -76,6 +76,8 @@ export type ProviderProfile = {
   fields?: Field[];
   bio?: string;
   media?: ProviderMedia;
+  email?: string;
+  phone?: string;
 };
 
 export type ProviderUser = {
