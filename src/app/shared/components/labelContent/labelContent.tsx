@@ -9,7 +9,6 @@ const LabelContent = memo(({ label, children }: LabelContentProps) => {
   return (
     <div className="flex flex-col gap-2">
       <label>{label}</label>
-
       {children}
     </div>
   );
