@@ -17,15 +17,26 @@ const MainInformation = memo(({ providerData }: { providerData: Provider }) => {
 
       {isOpen && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4!">
-          <LabelContent
-            label="اسم المستخدم"
-            content={providerData?.profile?.[0]?.business_name}
-          />
-          <LabelContent
-            label="البريد الإلكتروني"
-            content={providerData?.email}
-          />
-          <LabelContent label="رقم الجوال" content={providerData?.phone} />
+          <LabelContent label="اسم المستخدم">
+            <p className="p-2 rounded-lg border border-gray-200">
+              {providerData?.profile?.[0]?.business_name}
+            </p>
+          </LabelContent>
+          <LabelContent label="اسم المستخدم">
+            <p className="p-2 rounded-lg border border-gray-200">
+              {providerData?.profile?.[0]?.business_name}
+            </p>
+          </LabelContent>
+          <LabelContent label="البريد الإلكتروني">
+            <p className="p-2 rounded-lg border border-gray-200">
+              {providerData?.email}
+            </p>
+          </LabelContent>
+          <LabelContent label="رقم الجوال">
+            <p className="p-2 rounded-lg border border-gray-200">
+              {providerData?.phone}
+            </p>
+          </LabelContent>
         </div>
       )}
     </div>

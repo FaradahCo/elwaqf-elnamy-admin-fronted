@@ -34,16 +34,12 @@ const Attachements = memo(
         {isOpen && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4!">
             {ATTACHMENT_FIELDS.map((item) => (
-              <LabelContent
-                key={item.key}
-                label={item.label}
-                content={
-                  <AttachmentItem
-                    media={attachements[item.key] ?? null}
-                    label={item.label}
-                  />
-                }
-              />
+              <LabelContent key={item.key} label={item.label}>
+                <AttachmentItem
+                  media={attachements[item.key] ?? null}
+                  label={item.label}
+                />
+              </LabelContent>
             ))}
           </div>
         )}

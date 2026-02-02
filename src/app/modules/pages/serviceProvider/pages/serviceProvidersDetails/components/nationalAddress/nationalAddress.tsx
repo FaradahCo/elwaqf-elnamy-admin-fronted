@@ -17,30 +17,36 @@ const NationalAddress = memo(({ providerData }: { providerData: Provider }) => {
 
       {isOpen && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4!">
-          <LabelContent
-            label="الدولة"
-            content={providerData?.profile?.[0]?.country || "-"}
-          />
-          <LabelContent
-            label="المدينة"
-            content={providerData?.profile?.[0]?.city || "-"}
-          />
-          <LabelContent
-            label="الحي"
-            content={providerData?.profile?.[0]?.district || "-"}
-          />
-          <LabelContent
-            label="الشارع"
-            content={providerData?.profile?.[0]?.street || "-"}
-          />
-          <LabelContent
-            label="الرمز البريدي"
-            content={providerData?.profile?.[0]?.postal_code || "-"}
-          />
-          <LabelContent
-            label="رقم المبنى"
-            content={providerData?.profile?.[0]?.building_number || "-"}
-          />
+          <LabelContent label="الدولة">
+            <p className="p-2 rounded-lg border border-gray-200">
+              {providerData?.profile?.[0]?.country || "-"}
+            </p>
+          </LabelContent>
+          <LabelContent label="المدينة">
+            <p className="p-2 rounded-lg border border-gray-200">
+              {providerData?.profile?.[0]?.city || "-"}
+            </p>
+          </LabelContent>
+          <LabelContent label="الحي">
+            <p className="p-2 rounded-lg border border-gray-200">
+              {providerData?.profile?.[0]?.district || "-"}
+            </p>
+          </LabelContent>
+          <LabelContent label="الشارع">
+            <p className="p-2 rounded-lg border border-gray-200">
+              {providerData?.profile?.[0]?.street || "-"}
+            </p>
+          </LabelContent>
+          <LabelContent label="الرمز البريدي">
+            <p className="p-2 rounded-lg border border-gray-200">
+              {providerData?.profile?.[0]?.postal_code || "-"}
+            </p>
+          </LabelContent>
+          <LabelContent label="رقم المبنى">
+            <p className="p-2 rounded-lg border border-gray-200">
+              {providerData?.profile?.[0]?.building_number || "-"}
+            </p>
+          </LabelContent>
         </div>
       )}
     </div>

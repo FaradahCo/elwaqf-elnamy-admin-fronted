@@ -2,19 +2,14 @@ import { memo, type ReactNode } from "react";
 
 type LabelContentProps = {
   label: string;
-  content: string | ReactNode;
+  children: ReactNode;
 };
 
-const LabelContent = memo(({ label, content }: LabelContentProps) => {
+const LabelContent = memo(({ label, children }: LabelContentProps) => {
   return (
     <div className="flex flex-col gap-2">
       <label>{label}</label>
-
-      {typeof content === "string" ? (
-        <p className="p-2 rounded-lg border border-gray-200">{content}</p>
-      ) : (
-        content
-      )}
+      {children}
     </div>
   );
 });

@@ -26,74 +26,77 @@ const PrimaryEntityData = memo(
               src={providerData?.profile?.[0]?.logo || "/images/user.png"}
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4!">
-              <LabelContent
-                label="اسم الشركة أو الكيان بالعربية"
-                content={providerData?.profile?.[0]?.business_name}
-              />
-              <LabelContent
-                label="نوع الجهة الأساسية"
-                content={
-                  <Radio.Group
-                    size="large"
-                    className="main-radio"
-                    value={providerData?.profile?.[0]?.business_type}
-                  >
-                    <Radio.Button value="institution">مؤسسة</Radio.Button>
-                    <Radio.Button value="company">شركة</Radio.Button>
-                    <Radio.Button value="individual">فرد</Radio.Button>
-                  </Radio.Group>
-                }
-              />
+              <LabelContent label="اسم الشركة أو الكيان بالعربية">
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {providerData?.profile?.[0]?.business_name}
+                </p>
+              </LabelContent>
+              <LabelContent label="نوع الجهة الأساسية">
+                <Radio.Group
+                  size="large"
+                  className="main-radio"
+                  value={providerData?.profile?.[0]?.business_type}
+                >
+                  <Radio.Button value="institution">مؤسسة</Radio.Button>
+                  <Radio.Button value="company">شركة</Radio.Button>
+                  <Radio.Button value="individual">فرد</Radio.Button>
+                </Radio.Group>
+              </LabelContent>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4!">
-              <LabelContent
-                label="المجالات"
-                content={
-                  <FieldsList
-                    fields={
-                      providerData?.profile?.[0]?.fields?.map(
-                        (field) => field.name!,
-                      ) || []
-                    }
-                  />
-                }
-              />
+              <LabelContent label="المجالات">
+                <FieldsList
+                  fields={
+                    providerData?.profile?.[0]?.fields?.map(
+                      (field) => field.name!,
+                    ) || []
+                  }
+                />
+              </LabelContent>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4!">
-              <LabelContent
-                label="رقم السجل التجاري"
-                content={providerData?.profile?.[0]?.cr_number}
-              />
+              <LabelContent label="رقم السجل التجاري">
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {providerData?.profile?.[0]?.cr_number}
+                </p>
+              </LabelContent>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4!">
-              <LabelContent
-                label="تاريخ اصدار السجل التجاري"
-                content={providerData?.profile?.[0]?.cr_issue_date || "-"}
-              />
-              <LabelContent
-                label="تاريخ انتهاء السجل التجاري"
-                content={providerData?.profile?.[0]?.cr_expiry_date || "-"}
-              />
+              <LabelContent label="تاريخ اصدار السجل التجاري">
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {providerData?.profile?.[0]?.cr_issue_date || "-"}
+                </p>
+              </LabelContent>
+              <LabelContent label="تاريخ انتهاء السجل التجاري">
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {providerData?.profile?.[0]?.cr_expiry_date || "-"}
+                </p>
+              </LabelContent>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4!">
-              <LabelContent
-                label="الرقم الضريبي (VAT Number)"
-                content={providerData?.profile?.[0]?.vat_number}
-              />
+              <LabelContent label="الرقم الضريبي (VAT Number)">
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {providerData?.profile?.[0]?.vat_number}
+                </p>
+              </LabelContent>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4!">
-              <LabelContent
-                label="تاريخ اصدار الرقم الضريبي"
-                content={providerData?.profile?.[0]?.vat_issue_date}
-              />
-              <LabelContent
-                label="تاريخ انتهاء الرقم الضريبي"
-                content={providerData?.profile?.[0]?.vat_expiry_date}
-              />
+              <LabelContent label="تاريخ اصدار الرقم الضريبي">
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {providerData?.profile?.[0]?.vat_issue_date || "-"}
+                </p>
+              </LabelContent>
+              <LabelContent label="تاريخ انتهاء الرقم الضريبي">
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {providerData?.profile?.[0]?.vat_expiry_date || "-"}
+                </p>
+              </LabelContent>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4!">
-              <LabelContent label="الرقم الموحد" content="700" />
+              <LabelContent label="الرقم الموحد">
+                <p className="p-2 rounded-lg border border-gray-200">700</p>
+              </LabelContent>
             </div>
           </>
         )}

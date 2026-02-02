@@ -159,7 +159,6 @@ const ServiceProvidersList = () => {
         <h1 className="text-lg font-semibold">قائمة مزوديّ الخدمات</h1>
         <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
         <CustomFilter filters={filters} onFilterChange={handleFilterChange} />
-
         <CustomTable
           columns={serviceProvidersListColumns}
           dataSource={serviceProvidersData?.data ?? []}
