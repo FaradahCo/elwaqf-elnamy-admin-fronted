@@ -42,7 +42,7 @@ const Consultation = () => {
       })),
     [fields],
   );
-  console.log("transformedFields", transformedFields);
+
   const filters = useMemo(
     () => [
       {
