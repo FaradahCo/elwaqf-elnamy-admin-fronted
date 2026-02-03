@@ -78,6 +78,7 @@ export type ProviderProfile = {
   media?: ProviderMedia;
   email?: string;
   phone?: string;
+  team_id?: number;
 };
 
 export type ProviderUser = {

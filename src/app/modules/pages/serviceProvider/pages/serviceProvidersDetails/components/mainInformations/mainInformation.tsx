@@ -5,7 +5,6 @@ import LabelContent from "@shared/components/labelContent/labelContent";
 import { memo } from "react";
 const MainInformation = memo(({ providerData }: { providerData: Provider }) => {
   const { isOpen, setIsOpen } = useOpenedHook();
-  console.log(providerData);
   return (
     <div className="bg-white shadow rounded-lg p-6 mt-2">
       <h1 className="text-lg font-bold flex justify-between items-center gap-2">

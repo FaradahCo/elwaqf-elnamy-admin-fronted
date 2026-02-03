@@ -109,7 +109,7 @@ const AlwaqfDetailsLayout = () => {
       </div>
       <AlwaqfHeader clientData={clientData} alwaqfStatus={alwaqfStatus?.data} />
       <Tabs
-        className="alwaqf-tabs bg-white rounded-md mt-4! px-4!"
+        className="custom-tabs bg-white rounded-md mt-4! px-4!"
         size="large"
         activeKey={window.location.pathname.split("/").pop()}
         items={TABS_ITEMS}

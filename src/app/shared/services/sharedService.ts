@@ -185,7 +185,7 @@ export const triggerForceLogoutForInterceptor = () => {
   store.dispatch(triggerForceLogout());
 };
 
-export const getSeriviceStatus = async (params?: { type: string }) => {
+export const getSerivceStatus = async (params?: { type: string }) => {
   return await AoiService.get<PaginatedResponse<ServiceStatus>>(
     `/admin/services-status`,
     transformFilterParams(params),

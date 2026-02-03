@@ -9,7 +9,7 @@ import {
 
 const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
   return (
-    <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow">
+    <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow mt-4">
       <div className="flex items-start gap-4">
         <Image
           width={100}

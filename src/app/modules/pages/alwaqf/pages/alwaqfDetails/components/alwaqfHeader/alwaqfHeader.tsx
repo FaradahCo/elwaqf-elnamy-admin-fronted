@@ -1,4 +1,4 @@
-import { Select } from "antd";
+import { Image, Select } from "antd";
 import {
   getStatusTag,
   ServiceStatusEnum,
@@ -23,12 +23,12 @@ const AlwaqfHeader = ({
     updateStatusMutation.mutate(newStatus);
   };
   return (
-    <div className="bg-white flex flex-wrap items-center justify-between rounded-md my-4 p-4">
+    <div className="bg-white flex flex-wrap gap-4 items-center justify-between rounded-md my-4 p-4">
       <div className="flex items-center gap-4 ">
-        <img
-          className="w-24 h-24"
-          src={clientData?.image ?? "/images/empty-user.svg"}
+        <Image
+          width={100}
           alt="صورة العميل"
+          src={clientData?.image ?? "/images/empty-user.svg"}
         />
         <div>
           <h2 className="text-second-primary text-2xl mb-2">
