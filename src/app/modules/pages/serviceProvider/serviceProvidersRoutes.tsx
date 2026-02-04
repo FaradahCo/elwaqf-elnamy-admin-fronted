@@ -101,6 +101,9 @@ export const ServiceProviderRoutes: RouteObject[] = [
       },
     ],
   },
+  {
+    path: "reviews/:id",
+  },
 ];
 
 export const serviceProviderRoutePath = {
@@ -122,4 +125,5 @@ export const serviceProviderRoutePath = {
     `/admin/service-providers/${id}/invoices`,
   SERVICE_PROVIDERS_DETAILS_REVIEWS: (id: number) =>
     `/admin/service-providers/${id}/reviews`,
+  SERVICE_PROVIDER_REVIEWS: (id: number) => `/admin/reviews/${id}`,
 };

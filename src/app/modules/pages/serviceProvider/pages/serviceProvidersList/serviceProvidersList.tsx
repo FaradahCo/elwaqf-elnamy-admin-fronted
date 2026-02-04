@@ -21,6 +21,7 @@ import { Select } from "antd";
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
 import { useNavigate, useSearchParams } from "react-router";
 import { serviceProviderRoutePath } from "../../serviceProvidersRoutes";
+import { useServiceFields } from "@/app/hooks/useServiceFields";
 
 const ServiceProvidersList = () => {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ const ServiceProvidersList = () => {
     () => getSeriviceProvidersStatus(),
     { retry: false },
   );
+
+  const { fields } = useServiceFields();
 
   const {
     data: serviceProvidersData,
@@ -62,7 +65,11 @@ const ServiceProvidersList = () => {
         type: "select" as CustomFilterType,
         placeholder: "اختر مجال",
         label: "مجال الخدمات",
-        name: "field",
+        name: "field_id",
+        options: fields?.map((field) => ({
+          label: field?.name,
+          value: field?.id,
+        })),
       },
       {
         type: "select" as CustomFilterType,
@@ -98,7 +105,11 @@ const ServiceProvidersList = () => {
   const handleRowClick = (record: ServiceProviders) => ({
     onClick: () => {
       navigate(
-        serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(record?.team_id!),
+        record?.status === ServiceStatusEnum.review
+          ? serviceProviderRoutePath.SERVICE_PROVIDER_REVIEWS(record?.team_id!)
+          : serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(
+              record?.team_id!,
+            ),
       );
     },
     className: "cursor-pointer hover:bg-gray-50",
