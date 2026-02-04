@@ -23,18 +23,18 @@ const Profile = () => {
           <div className="p-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <LabelContent label="اسم المستخدم">
-                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
-                  {clientData?.name}
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {clientData?.name ?? "-"}
                 </p>
               </LabelContent>
               <LabelContent label="البريد الإلكتروني">
-                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
-                  {clientData?.email}
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {clientData?.email ?? "-"}
                 </p>
               </LabelContent>
               <LabelContent label="رقم الجوال">
-                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
-                  {clientData?.phone}
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {clientData?.phone ?? "-"}
                 </p>
               </LabelContent>
             </div>
@@ -53,48 +53,48 @@ const Profile = () => {
           <div className="p-4 space-y-4">
             <div className="grid grid-cols-1 gap-4">
               <LabelContent label="اسم المنظمة">
-                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
-                  {clientData?.profile?.waqf_name}
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {clientData?.profile?.waqf_name ?? "-"}
                 </p>
               </LabelContent>
             </div>
 
             <div className="grid grid-cols-1 gap-4">
               <LabelContent label="الرقم الضريبي">
-                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
-                  {clientData?.profile?.vat_number}
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {clientData?.profile?.vat_number ?? "-"}
                 </p>
               </LabelContent>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <LabelContent label="المدينة">
-                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
-                  {clientData?.region}
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {clientData?.region ?? "-"}
                 </p>
               </LabelContent>
               <LabelContent label="الحي">
-                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
-                  {clientData?.profile?.district}
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {clientData?.profile?.district ?? "-"}
                 </p>
               </LabelContent>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <LabelContent label="الشارع">
-                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
-                  {clientData?.profile?.street}
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {clientData?.profile?.street ?? "-"}
                 </p>
               </LabelContent>
 
               <LabelContent label="الرمز البريدي">
-                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
-                  {clientData?.profile?.postal_code}
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {clientData?.profile?.postal_code ?? "-"}
                 </p>
               </LabelContent>
               <LabelContent label="رقم المبنى">
-                <p className="p-2 rounded-lg border min-h-10 border-gray-200">
-                  {clientData?.profile?.building_number}
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {clientData?.profile?.building_number ?? "-"}
                 </p>
               </LabelContent>
             </div>

@@ -35,7 +35,7 @@ const Wallet = () => {
   });
   return (
     <div className="px-4 bg-white rounded-md">
-      <div className="flex justify-between">
+      <div className="flex items-center gap-4 flex-wrap justify-between">
         <div className="flex flex-col gap-5 text-2xl">
           <h2>إجمالي المدفوعات</h2>
           <p className="text-second-primary text-4xl">

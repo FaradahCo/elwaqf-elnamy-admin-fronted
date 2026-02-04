@@ -1,12 +1,7 @@
 import CardStatistic from "@shared/components/cardStatistic/cardStatistic";
 import CustomTable from "@shared/components/customTable/customtable";
-import type {
-  PaginatedResponse,
-  ServiceStatus,
-} from "@shared/model/shared.model";
-import { useApiQuery } from "@shared/services/api";
+import type { PaginatedResponse } from "@shared/model/shared.model";
 import {
-  getSeriviceStatus,
   getStatusTag,
   ServiceStatusEnum,
 } from "@shared/services/sharedService";
@@ -22,6 +17,7 @@ import type { CustomFilterType } from "@shared/components/custom-filter/custom-f
 import { useListHook } from "@/app/hooks/listHook";
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
 import { useSearchParams } from "react-router";
+import { useServiceStatus } from "@/app/hooks/useServiceStatus";
 const TYPE_OPTIONS = [
   { label: "الخدمات", value: "service" },
   { label: "الباقات", value: "package" },
@@ -51,13 +47,7 @@ export const ServiceManagementList = () => {
     },
     queryOptions: { retry: false },
   });
-  const { data: serviceStatus } = useApiQuery<PaginatedResponse<ServiceStatus>>(
-    ["serviceStatus", filter.type],
-    () => getSeriviceStatus({ type: filter?.type ?? "service" }),
-    {
-      enabled: !!filter.type,
-    },
-  );
+  const { serviceStatus } = useServiceStatus(filter?.type!);
   const filters = useMemo(
     () => [
       {

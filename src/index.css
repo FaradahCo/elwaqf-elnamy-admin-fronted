@@ -111,7 +111,7 @@
 .quill .ql-container {
   direction: rtl;
 }
-.alwaqf-tabs .ant-tabs-tab-btn {
+.custom-tabs .ant-tabs-tab-btn {
   color: var(--color-second-primary);
 }
 
