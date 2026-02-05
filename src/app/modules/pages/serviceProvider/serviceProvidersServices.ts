@@ -4,6 +4,7 @@ import type {
   ServiceItem,
   ServiceProviders,
   ServiceProvidersListFilterQuery,
+  serviceProvidersStatus,
   serviceProvidersStatusResponse,
   Wallet,
 } from "./serviceProviders.model";
@@ -70,5 +71,15 @@ export const getProviderWithdrawals = (
   return AoiService.get<PaginatedResponse<WithdrawItem>>(
     `/admin/providers/${id}/withdrawals`,
     transformFilterParams(params),
+  );
+};
+
+export const updateServiceProviderStatus = async (
+  id: number,
+  data: Partial<serviceProvidersStatus>,
+) => {
+  return AoiService.patch<Partial<serviceProvidersStatus>, unknown>(
+    `admin/providers/${id}/update`,
+    data,
   );
 };
