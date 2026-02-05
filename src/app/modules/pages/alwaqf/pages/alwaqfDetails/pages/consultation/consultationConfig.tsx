@@ -26,10 +26,11 @@ export const consultationConfigColumns = [
     render: (team: TeamProvider) => team?.name,
   },
   {
-    key: "service",
-    dataIndex: "service",
+    key: "team",
+    dataIndex: "team",
     title: "مجال الطلب",
-    render: (service: Service) => service?.field?.name,
+    render: (team: TeamProvider) =>
+      team?.fields?.map((field) => field.name).join(", "),
   },
   {
     key: "created_at",

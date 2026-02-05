@@ -34,13 +34,6 @@ const Invoices = () => {
         placeholder: "ابحث عن اسم الفاتورة",
         label: "الفاتورة",
       },
-      {
-        type: "select" as CustomFilterType,
-        placeholder: "اختر المجال",
-        label: "التصنيف",
-        name: "payment_id",
-        // options:,
-      },
     ],
     [],
   );

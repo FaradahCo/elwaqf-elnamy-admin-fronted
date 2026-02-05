@@ -1,5 +1,5 @@
+import { handleDownloadAttachment } from "@shared/services/sharedService";
 import type { Payment } from "../../../../alwaqfModel";
-import { Link } from "react-router";
 
 export const invoicesConfigColumns = [
   {
@@ -18,16 +18,6 @@ export const invoicesConfigColumns = [
     title: "تاريخ الفاتورة",
   },
   {
-    key: "service",
-    dataIndex: "service",
-    title: "مزود الخدمة",
-  },
-  {
-    key: "service",
-    dataIndex: "service",
-    title: "الخدمة",
-  },
-  {
     key: "payment",
     dataIndex: "payment",
     title: "طريقة الدفع",
@@ -44,9 +34,15 @@ export const invoicesConfigColumns = [
     title: "الفاتورة",
     render: (odoo_url: string) => (
       <div className="flex items-center gap-2">
-        <Link to={odoo_url} target="_blank" rel="noopener noreferrer">
-          <img src="/images/download.svg" alt="تنزيل الفاتورة" />
-        </Link>
+        {odoo_url ? (
+          <img
+            src="/images/download.svg"
+            alt="تنزيل الفاتورة"
+            onClick={() => handleDownloadAttachment(odoo_url)}
+          />
+        ) : (
+          "-"
+        )}
       </div>
     ),
   },
