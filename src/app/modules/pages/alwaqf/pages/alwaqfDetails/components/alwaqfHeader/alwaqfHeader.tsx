@@ -13,12 +13,11 @@ const AlwaqfHeader = ({
   clientData?: Client;
   alwaqfStatus?: AlwaqfStatus[];
 }) => {
-  const updateStatusMutation = useApiMutation((status) => {
-    status;
-    return updateAlwaqfStatus(clientData?.id!, {
+  const updateStatusMutation = useApiMutation((status) =>
+    updateAlwaqfStatus(clientData?.id!, {
       status: status as ServiceStatusEnum,
-    });
-  });
+    }),
+  );
   const handleStatusChange = (newStatus: ServiceStatusEnum) => {
     updateStatusMutation.mutate(newStatus);
   };

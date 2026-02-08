@@ -191,6 +191,11 @@ export const getSerivceStatus = async (params?: { type: string }) => {
     transformFilterParams(params),
   );
 };
+export const getConsultationStatus = async () => {
+  return await AoiService.get<ServiceStatus[]>(
+    `/admin/consultations/status-counts`,
+  );
+};
 export const getServiceFields = async () => {
   return await AoiService.get<Field[]>(`/admin/fields`);
 };
