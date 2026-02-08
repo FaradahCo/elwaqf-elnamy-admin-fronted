@@ -7,15 +7,34 @@ import {
   getStatusTag,
 } from "@shared/services/sharedService";
 import Confirm from "@shared/components/confirm/confirm";
+import { updateServiceProviderStatus } from "../../../../serviceProvidersServices";
+import { useApiMutation } from "@shared/services/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
   const [confirmModalOpen, setConfirmModalOpen] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const updateStatusMutation = useApiMutation(
+    (status) =>
+      updateServiceProviderStatus(providerData?.profile?.at(0)?.team_id!, {
+        status: status as ServiceStatusEnum,
+      }),
+    {
+      onSuccess: (res) => {
+        queryClient.setQueryData(
+          ["provider-data", providerData?.profile?.at(0)?.team_id],
+          res,
+        );
+        setConfirmModalOpen(null);
+      },
+    },
+  );
 
   const changeProviderStatus = () => {
     if (confirmModalOpen === "inactive") {
-      console.log("رفض");
+      updateStatusMutation.mutate("inactive");
     } else {
-      console.log("قبول");
+      updateStatusMutation.mutate("active");
     }
   };
   return (
@@ -41,12 +60,16 @@ const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
               className="py-4!"
               type="primary"
               onClick={() => setConfirmModalOpen("active")}
+              disabled={updateStatusMutation.isPending}
+              loading={updateStatusMutation.isPending}
             >
               قبول
             </Button>
             <Button
               className="bg-error! text-white! py-4!"
               onClick={() => setConfirmModalOpen("inactive")}
+              disabled={updateStatusMutation.isPending}
+              loading={updateStatusMutation.isPending}
             >
               رفض
             </Button>
@@ -83,6 +106,7 @@ const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
           cancelText="إلغاء"
           onConfirm={changeProviderStatus}
           onCancel={() => setConfirmModalOpen(null)}
+          loading={updateStatusMutation.isPending}
         />
       </Modal>
     </div>

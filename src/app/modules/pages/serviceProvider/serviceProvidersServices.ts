@@ -11,7 +11,11 @@ import type {
 import { transformFilterParams } from "@shared/services/sharedService";
 import AoiService from "@shared/services/api";
 import type { Provider } from "../followRequests/model/followRequestsModel";
-import type { Consultation, ServiceRequest } from "../alwaqf/alwaqfModel";
+import type {
+  Consultation,
+  Invoice,
+  ServiceRequest,
+} from "../alwaqf/alwaqfModel";
 import type { WithdrawItem } from "../wallet/wallet.model";
 
 export const getServiceProviders = async (
@@ -70,6 +74,15 @@ export const getProviderWithdrawals = (
 ) => {
   return AoiService.get<PaginatedResponse<WithdrawItem>>(
     `/admin/providers/${id}/withdrawals`,
+    transformFilterParams(params),
+  );
+};
+export const getProviderInvoices = (
+  id: number,
+  params: ServiceProvidersListFilterQuery,
+) => {
+  return AoiService.get<PaginatedResponse<Invoice>>(
+    `/admin/providers/${id}/invoices`,
     transformFilterParams(params),
   );
 };
