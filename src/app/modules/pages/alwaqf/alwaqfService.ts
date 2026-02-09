@@ -4,7 +4,6 @@ import type {
   AlwaqfDashboard,
   AlwaqfFilterQuery,
   AlwaqfServiceQuery,
-  AlwaqfStatus,
   AlwaqfStatusResponse,
   Client,
   Consultation,
@@ -13,7 +12,10 @@ import type {
   Wallet,
 } from "./alwaqfModel";
 import AoiService from "@shared/services/api";
-import type { PaginatedResponse } from "@shared/model/shared.model";
+import type {
+  PaginatedResponse,
+  ServiceStatus,
+} from "@shared/model/shared.model";
 import type { PaymentClientItem } from "../wallet/wallet.model";
 
 export const getAlwaqfList = async (params: AlwaqfFilterQuery) => {
@@ -74,9 +76,9 @@ export const getAlWaqfPayments = async (
   );
 export const updateAlwaqfStatus = async (
   id: number,
-  data: Partial<AlwaqfStatus>,
+  data: Partial<ServiceStatus>,
 ) => {
-  return AoiService.patch<Partial<AlwaqfStatus>, unknown>(
+  return AoiService.patch<Partial<ServiceStatus>, unknown>(
     `admin/clients/${id}/update`,
     data,
   );

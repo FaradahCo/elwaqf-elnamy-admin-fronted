@@ -1,9 +1,6 @@
 import CustomTable from "@shared/components/customTable/customtable";
 import { useApiQuery } from "@shared/services/api";
-import {
-  getStatusTag,
-  ServiceStatusEnum,
-} from "@shared/services/sharedService";
+import { ServiceStatusEnum } from "@shared/services/sharedService";
 import { useMemo } from "react";
 import type {
   ServiceProviders,
@@ -17,11 +14,12 @@ import { serviceProvidersListColumns } from "./serviceProvidersListConfig";
 import type { CustomFilterType } from "@shared/components/custom-filter/custom-filter";
 import { useListHook } from "@/app/hooks/listHook";
 import type { PaginatedResponse } from "@shared/model/shared.model";
-import { Select } from "antd";
+
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
 import { useNavigate, useSearchParams } from "react-router";
 import { serviceProviderRoutePath } from "../../serviceProvidersRoutes";
 import { useServiceFields } from "@/app/hooks/useServiceFields";
+import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
 
 const ServiceProvidersList = () => {
   const navigate = useNavigate();
@@ -76,30 +74,13 @@ const ServiceProvidersList = () => {
         placeholder: "اختر الحالة",
         label: "الحالة",
         name: "status",
-        options: (
-          <>
-            {serviceProvidersStatus?.data?.map((option, index) => (
-              <Select.Option key={index} value={option?.status}>
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{
-                      backgroundColor: getStatusTag(option?.status ?? "")
-                        ?.color,
-                    }}
-                  />
-                  <span>{option?.label}</span>
-                </div>
-              </Select.Option>
-            ))}
-          </>
-        ),
+        options: renderOptionsWithStatusTag(serviceProvidersStatus?.data),
         props: {
           defaultValue: filter?.status,
         },
       },
     ],
-    [serviceProvidersStatus?.data, filter?.status],
+    [serviceProvidersStatus?.data, filter?.status, fields],
   );
 
   const handleRowClick = (record: ServiceProviders) => ({

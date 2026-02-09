@@ -1,11 +1,9 @@
+import { useMemo } from "react";
 import { useListHook } from "@/app/hooks/listHook";
 import { useServiceFields } from "@/app/hooks/useServiceFields";
 import type { CustomFilterType } from "@shared/components/custom-filter/custom-filter";
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
 import CustomTable from "@shared/components/customTable/customtable";
-import { getStatusTag } from "@shared/services/sharedService";
-import { Select } from "antd";
-import { useMemo } from "react";
 import type {
   ServiceItem,
   ServiceProvidersListFilterQuery,
@@ -17,6 +15,7 @@ import type { Provider } from "@/app/modules/pages/followRequests/model/followRe
 import { providerServicesConfigColumns } from "./providerServicesConfig";
 import { useServiceStatus } from "@/app/hooks/useServiceStatus";
 import { getProviderServices } from "../../../../serviceProvidersServices";
+import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
 
 const ProviderServices = () => {
   const providerData = useOutletContext<Provider>();
@@ -70,24 +69,7 @@ const ProviderServices = () => {
         placeholder: "اختر الحالة",
         label: "الحالة",
         name: "status",
-        options: (
-          <>
-            {serviceStatus?.data?.map((option) => (
-              <Select.Option key={option?.status} value={option?.status}>
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{
-                      backgroundColor: getStatusTag(option?.status ?? "")
-                        ?.color,
-                    }}
-                  />
-                  <span>{option?.label}</span>
-                </div>
-              </Select.Option>
-            ))}
-          </>
-        ),
+        options: renderOptionsWithStatusTag(serviceStatus?.data),
       },
     ],
     [serviceStatus?.data, transformedFields],
