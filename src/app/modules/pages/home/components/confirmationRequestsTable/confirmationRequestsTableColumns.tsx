@@ -11,18 +11,26 @@ export const confirmationRequestsColumns = [
   },
   {
     title: "الصفة",
-    dataIndex: "actor_type",
-    key: "actor_type",
+    dataIndex: "role",
+    key: "role",
   },
   {
     title: "نوع الطلب",
-    dataIndex: "request_type",
-    key: "request_type",
+    dataIndex: "type",
+    key: "type",
   },
   {
     title: "المبلغ",
     dataIndex: "amount",
     key: "amount",
+    render: (amount: number) => (
+      <div className="flex gap-1 items-center">
+        <span>{amount}</span>
+        <span>
+          <img src="/images/SAR.svg" alt="ريال سعودي" />
+        </span>
+      </div>
+    ),
   },
   {
     title: "وثيقة الدفع",
@@ -31,8 +39,8 @@ export const confirmationRequestsColumns = [
   },
   {
     title: "تاريخ المعاملة",
-    dataIndex: "date",
-    key: "date",
+    dataIndex: "transaction_date_formatted",
+    key: "transaction_date_formatted",
   },
   {
     title: "الإجراء",

@@ -1,4 +1,8 @@
-import type { Field, PaginatedParams } from "@shared/model/shared.model";
+import type {
+  Field,
+  PaginatedParams,
+  ServiceStatus,
+} from "@shared/model/shared.model";
 import type { ServiceStatusEnum } from "@shared/services/sharedService";
 
 export interface AlwaqfFilterQuery extends PaginatedParams {
@@ -15,13 +19,8 @@ export type Alwaqf = {
   status_label?: string;
 };
 
-export type AlwaqfStatus = {
-  count?: number;
-  label?: string;
-  status?: string;
-};
 export type AlwaqfStatusResponse = {
-  data?: AlwaqfStatus[];
+  data?: ServiceStatus[];
   total?: number;
 };
 
@@ -269,6 +268,7 @@ export type PaymentItem = {
   platform_commission_amount: number;
   provider_earning: number;
   created_at: string;
+  service: Service;
 };
 
 export type Payment = {

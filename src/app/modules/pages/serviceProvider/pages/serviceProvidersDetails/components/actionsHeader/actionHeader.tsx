@@ -76,8 +76,8 @@ const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
           </>
         )}
         {providerData?.status !== ServiceStatusEnum.review && (
-          <Tag color={getStatusTag(providerData?.status!).color}>
-            {providerData?.status?.toUpperCase()}
+          <Tag className="py-1! px-4!" color={getStatusTag(providerData?.status!).color}>
+            <span className="text-sm">{providerData?.status_label}</span>
           </Tag>
         )}
       </div>

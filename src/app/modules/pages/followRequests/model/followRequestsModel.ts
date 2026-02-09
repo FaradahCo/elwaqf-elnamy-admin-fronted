@@ -1,6 +1,9 @@
 import type { ServiceStatusEnum } from "@shared/services/sharedService";
 import type { ServiceData } from "../../serviceManagement/model/serviceProviderList";
-import type { PaginatedParams } from "@shared/model/shared.model";
+import type {
+  PaginatedParams,
+  ServiceStatus,
+} from "@shared/model/shared.model";
 import type { ProviderProfile } from "../../consultantsManagement/model/consultantsManagementModel";
 
 export interface FollowRequestFilterQuery extends PaginatedParams {
@@ -29,6 +32,7 @@ export type Client = {
 
 export type Provider = {
   status?: ServiceStatusEnum;
+  status_label?: string;
   name?: string;
   team_id?: number;
   user_id?: number;
@@ -53,7 +57,7 @@ export type FollowRequestStatus = {
   count?: number;
 };
 export type FollowRequestStatusResponse = {
-  data?: FollowRequestStatus[];
+  data?: ServiceStatus[];
   total?: number;
 };
 
