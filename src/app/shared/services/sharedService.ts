@@ -192,7 +192,7 @@ export const getSerivceStatus = async (params?: { type: string }) => {
   );
 };
 export const getConsultationStatus = async () => {
-  return await AoiService.get<ServiceStatus[]>(
+  return await AoiService.get<PaginatedResponse<ServiceStatus>>(
     `/admin/consultations/status-counts`,
   );
 };

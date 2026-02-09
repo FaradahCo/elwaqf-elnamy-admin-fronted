@@ -17,6 +17,7 @@ import { getStatusTag } from "@shared/services/sharedService";
 import { requestsConfigColumns } from "./requestsConfig";
 import { useServiceFields } from "@/app/hooks/useServiceFields";
 import { useRequestsStatus } from "@/app/hooks/useRequestsStatus";
+import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
 
 const Requests = () => {
   const clientData = useOutletContext<Client>();
@@ -67,27 +68,10 @@ const Requests = () => {
         placeholder: "اختر الحالة",
         label: "الحالة",
         name: "status",
-        options: (
-          <>
-            {requestsStatus?.data?.map((option) => (
-              <Select.Option key={option?.status} value={option?.status}>
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{
-                      backgroundColor: getStatusTag(option?.status ?? "")
-                        ?.color,
-                    }}
-                  />
-                  <span>{option?.label}</span>
-                </div>
-              </Select.Option>
-            ))}
-          </>
-        ),
+        options: renderOptionsWithStatusTag(requestsStatus?.data),
       },
     ],
-    [requestsStatus?.data],
+    [transformedFields, requestsStatus?.data],
   );
 
   return (

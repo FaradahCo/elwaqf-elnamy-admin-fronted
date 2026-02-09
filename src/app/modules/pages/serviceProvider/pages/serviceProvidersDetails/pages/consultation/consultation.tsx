@@ -12,10 +12,12 @@ import { useOutletContext } from "react-router";
 import type { Consultation } from "@/app/modules/pages/alwaqf/alwaqfModel";
 import { consultationConfigColumns } from "./consultationConfig";
 import { useConsultationStatus } from "@/app/hooks/useConsultationStatus";
+import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
 
 const Consultation = () => {
   const providerData = useOutletContext<Provider>();
   const { consultationStatus } = useConsultationStatus();
+
   const {
     data: consultations,
     isLoading,
@@ -48,13 +50,10 @@ const Consultation = () => {
         placeholder: "اختر الحالة",
         label: "الحالة",
         name: "status",
-        options: consultationStatus?.map((status) => ({
-          value: status.status,
-          label: status.label,
-        })),
+        options: renderOptionsWithStatusTag(consultationStatus?.data),
       },
     ],
-    [consultationStatus],
+    [consultationStatus?.data],
   );
   return (
     <div className="pt-8 px-4 bg-white">

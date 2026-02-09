@@ -2,10 +2,7 @@ import CardStatistic from "@shared/components/cardStatistic/cardStatistic";
 import { useApiQuery } from "@shared/services/api";
 
 import { useMemo } from "react";
-import {
-  getStatusTag,
-  ServiceStatusEnum,
-} from "@shared/services/sharedService";
+import { ServiceStatusEnum } from "@shared/services/sharedService";
 import CustomTable from "@shared/components/customTable/customtable";
 import { getAlwaqfList, getAlWaqfStatus } from "../../alwaqfService";
 import type { Alwaqf, AlwaqfFilterQuery } from "../../alwaqfModel";
@@ -13,10 +10,11 @@ import { alwaqfColumns } from "./alwaqfListConfig";
 import { useListHook } from "@/app/hooks/listHook";
 import type { PaginatedResponse } from "@shared/model/shared.model";
 import type { CustomFilterType } from "@shared/components/custom-filter/custom-filter";
-import { Select } from "antd";
+
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
 import { useNavigate } from "react-router";
 import { alwaqfRoutePath } from "../../alwaqfRoutes";
+import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
 
 const AlwaqfList = () => {
   const navigate = useNavigate();
@@ -55,24 +53,7 @@ const AlwaqfList = () => {
         placeholder: "اختر الحالة",
         label: "الحالة",
         name: "status",
-        options: (
-          <>
-            {alwaqfStatus?.data?.map((option) => (
-              <Select.Option key={option?.status} value={option?.status}>
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{
-                      backgroundColor: getStatusTag(option?.status ?? "")
-                        ?.color,
-                    }}
-                  />
-                  <span>{option?.label}</span>
-                </div>
-              </Select.Option>
-            ))}
-          </>
-        ),
+        options: renderOptionsWithStatusTag(alwaqfStatus?.data),
       },
     ],
     [alwaqfStatus?.data],

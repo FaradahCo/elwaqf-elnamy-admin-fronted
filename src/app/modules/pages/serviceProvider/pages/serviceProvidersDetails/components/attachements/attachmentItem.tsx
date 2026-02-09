@@ -1,7 +1,6 @@
+import { useDownloadAttachment } from "@/app/hooks/useDownloadAttachment";
 import type { Media } from "@/app/modules/pages/consultantsManagement/model/consultantsManagementModel";
-import { handleDownloadAttachment } from "@shared/services/sharedService";
 import { Spin } from "antd";
-import { useState } from "react";
 
 const AttachmentItem = ({
   media,
@@ -10,7 +9,7 @@ const AttachmentItem = ({
   media: Media | null;
   label: string;
 }) => {
-  const [loading, setLoading] = useState(false);
+  const { handleDownloadAttachment, isLoading } = useDownloadAttachment();
 
   if (!media?.url) {
     return (
@@ -23,24 +22,16 @@ const AttachmentItem = ({
   const displayName = media.name || label;
   const isPdf = media.mime_type?.includes("pdf");
 
-  const onDownload = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      await handleDownloadAttachment(media.url!);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <p
-      onClick={onDownload}
+      onClick={() => handleDownloadAttachment(media.url!)}
       className={`flex items-center gap-2 border border-gray-200 rounded-md p-2 bg-gray-50 transition-colors no-underline text-inherit min-h-[40px] ${
-        loading ? "cursor-wait opacity-70" : "cursor-pointer hover:bg-gray-100"
+        isLoading
+          ? "cursor-wait opacity-70"
+          : "cursor-pointer hover:bg-gray-100"
       }`}
     >
-      {loading ? (
+      {isLoading ? (
         <Spin size="small" />
       ) : (
         <img

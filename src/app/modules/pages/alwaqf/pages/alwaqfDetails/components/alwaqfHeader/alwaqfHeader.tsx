@@ -3,15 +3,17 @@ import {
   getStatusTag,
   ServiceStatusEnum,
 } from "@shared/services/sharedService";
-import type { AlwaqfStatus, Client } from "../../../../alwaqfModel";
+import type { Client } from "../../../../alwaqfModel";
 import { useApiMutation } from "@shared/services/api";
 import { updateAlwaqfStatus } from "../../../../alwaqfService";
+import type { ServiceStatus } from "@shared/model/shared.model";
+import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
 const AlwaqfHeader = ({
   clientData,
   alwaqfStatus,
 }: {
   clientData?: Client;
-  alwaqfStatus?: AlwaqfStatus[];
+  alwaqfStatus?: ServiceStatus[];
 }) => {
   const updateStatusMutation = useApiMutation((status) =>
     updateAlwaqfStatus(clientData?.id!, {
@@ -40,23 +42,11 @@ const AlwaqfHeader = ({
         <Select
           defaultValue={clientData?.status as ServiceStatusEnum}
           onChange={handleStatusChange}
-          // loading={updateStatusMutation.isPending}
-          // disabled={updateStatusMutation.isPending}
+          loading={updateStatusMutation.isPending}
+          disabled={updateStatusMutation.isPending}
           className="min-w-40"
         >
-          {alwaqfStatus?.map((option) => (
-            <Select.Option key={option.status} value={option.status}>
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-3 h-3 rounded-full"
-                  style={{
-                    backgroundColor: getStatusTag(option?.status!)?.color,
-                  }}
-                />
-                <span>{option.label}</span>
-              </div>
-            </Select.Option>
-          ))}
+          {renderOptionsWithStatusTag(alwaqfStatus)}
         </Select>
       </div>
     </div>
