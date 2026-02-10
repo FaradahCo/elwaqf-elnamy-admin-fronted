@@ -1,4 +1,7 @@
-import type { PaginatedParams } from "@shared/model/shared.model";
+import type {
+  PaginatedParams,
+  ServiceStatus,
+} from "@shared/model/shared.model";
 import type { ServiceStatusEnum } from "@shared/services/sharedService";
 
 export interface ServiceProvidersListFilterQuery extends PaginatedParams {
@@ -41,7 +44,7 @@ export type serviceProvidersStatus = {
   count?: number;
 };
 export type serviceProvidersStatusResponse = {
-  data?: serviceProvidersStatus[];
+  data?: ServiceStatus[];
   total?: number;
 };
 

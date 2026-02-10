@@ -1,4 +1,13 @@
+import { useListHook } from "@/app/hooks/listHook";
+import { useRequestsStatus } from "@/app/hooks/useRequestsStatus";
+import { useServiceFields } from "@/app/hooks/useServiceFields";
+import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
+import CustomFilter, {
+  type CustomFilterType,
+} from "@shared/components/custom-filter/custom-filter";
+import CustomTable from "@shared/components/customTable/customtable";
 import type { PaginatedResponse } from "@shared/model/shared.model";
+import { useMemo } from "react";
 import { useOutletContext } from "react-router";
 import type {
   AlwaqfServiceQuery,
@@ -6,18 +15,7 @@ import type {
   ServiceRequest,
 } from "../../../../alwaqfModel";
 import { getAlWaqfServiceRequests } from "../../../../alwaqfService";
-import CustomFilter, {
-  type CustomFilterType,
-} from "@shared/components/custom-filter/custom-filter";
-import CustomTable from "@shared/components/customTable/customtable";
-import { Select } from "antd";
-import { useMemo } from "react";
-import { useListHook } from "@/app/hooks/listHook";
-import { getStatusTag } from "@shared/services/sharedService";
 import { requestsConfigColumns } from "./requestsConfig";
-import { useServiceFields } from "@/app/hooks/useServiceFields";
-import { useRequestsStatus } from "@/app/hooks/useRequestsStatus";
-import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
 
 const Requests = () => {
   const clientData = useOutletContext<Client>();

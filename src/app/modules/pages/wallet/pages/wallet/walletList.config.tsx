@@ -19,7 +19,6 @@ import type {
 } from "../../wallet.model";
 import DepositeList from "./depositeList";
 import WithdrawList from "./withdrawList";
-import { useConsultationStatus } from "@/app/hooks/useConsultationStatus";
 
 export const getTabsItems = (
   withdrawList: PaginatedResponse<WithdrawItem>,
