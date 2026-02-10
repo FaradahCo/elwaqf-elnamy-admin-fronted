@@ -119,17 +119,17 @@ const MainLayout: React.FC = () => {
           label: "أكواد الخصم",
           path: pagesRoutePath.DISCOUNT_CODES_LIST,
         },
-        {
-          key: "3-5",
-          icon: (
-            <img
-              src="/images/operations-table.svg"
-              alt="operations-table icon"
-            />
-          ),
-          label: "جدول العمليات",
-          path: "/manage/transactions",
-        },
+        // {
+        //   key: "3-5",
+        //   icon: (
+        //     <img
+        //       src="/images/operations-table.svg"
+        //       alt="operations-table icon"
+        //     />
+        //   ),
+        //   label: "جدول العمليات",
+        //   path: "/manage/transactions",
+        // },
       ],
     },
     {
@@ -156,12 +156,12 @@ const MainLayout: React.FC = () => {
           ),
           label: "إدارة المستشارين",
         },
-        {
-          key: "4-3",
-          path: "library/waqf",
-          icon: <img src="/images/ic-library.svg" alt="library icon" />,
-          label: "مكتبة الوقف",
-        },
+        // {
+        //   key: "4-3",
+        //   path: "library/waqf",
+        //   icon: <img src="/images/ic-library.svg" alt="library icon" />,
+        //   label: "مكتبة الوقف",
+        // },
       ],
     },
     {
