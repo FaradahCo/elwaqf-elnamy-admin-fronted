@@ -1,13 +1,10 @@
-import { Image, Select } from "antd";
-import {
-  getStatusTag,
-  ServiceStatusEnum,
-} from "@shared/services/sharedService";
-import type { Client } from "../../../../alwaqfModel";
-import { useApiMutation } from "@shared/services/api";
-import { updateAlwaqfStatus } from "../../../../alwaqfService";
-import type { ServiceStatus } from "@shared/model/shared.model";
 import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
+import type { ServiceStatus } from "@shared/model/shared.model";
+import { useApiMutation } from "@shared/services/api";
+import { ServiceStatusEnum } from "@shared/services/sharedService";
+import { Image, Select } from "antd";
+import type { Client } from "../../../../alwaqfModel";
+import { updateAlwaqfStatus } from "../../../../alwaqfService";
 const AlwaqfHeader = ({
   clientData,
   alwaqfStatus,
