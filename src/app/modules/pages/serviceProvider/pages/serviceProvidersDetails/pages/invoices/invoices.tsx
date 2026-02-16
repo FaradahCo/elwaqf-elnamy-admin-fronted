@@ -25,7 +25,7 @@ const Invoices = () => {
       getProviderInvoices(providerData?.profile?.at(0)?.team_id!, filter),
     initialFilter: {
       page: 1,
-      per_page: 5,
+      per_page: 10,
     },
     queryOptions: { retry: false },
   });

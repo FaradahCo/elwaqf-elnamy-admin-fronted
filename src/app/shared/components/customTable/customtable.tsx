@@ -76,7 +76,7 @@ export const CustomTable = <T extends Record<string, any>>({
     showQuickJumper: false,
     showTotal: (total, range) =>
       `${range?.[0] || 0}-${range?.[1] || 0} من ${total} عنصر`,
-    pageSizeOptions: ["5", "10", "15", "20"],
+    pageSizeOptions: ["10", "50", "100", "200"],
     onChange: (page, size) => {
       if (onPaginationChange) {
         onPaginationChange(page, size);
