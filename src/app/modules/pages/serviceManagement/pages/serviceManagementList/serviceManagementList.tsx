@@ -40,7 +40,7 @@ export const ServiceManagementList = () => {
     initialFilter: {
       type: searchParams.get("type") ?? "service",
       page: 1,
-      per_page: 5,
+      per_page: 10,
       status: (searchParams.get("status") as ServiceStatusEnum) ?? undefined,
     },
     queryOptions: { retry: false },
