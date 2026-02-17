@@ -101,6 +101,7 @@ export const CustomTable = <T extends Record<string, any>>({
           </Flex>
         )}
         <Table<T>
+          className="custom-table"
           rowSelection={showSelection ? rowSelection : undefined}
           columns={columns}
           dataSource={dataSource}

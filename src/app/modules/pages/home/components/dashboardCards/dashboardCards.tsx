@@ -25,7 +25,7 @@ const DashboardCards = () => {
       },
     );
   return (
-    <div className="mt-6">
+    <div className="mt-4">
       <div className="flex justify-between items-center">
         <h2 className="font-semibold text-2xl">المالية</h2>
         <DatePicker
@@ -44,7 +44,7 @@ const DashboardCards = () => {
           type="finance"
           label="إجمالي أرباح المنصة"
           value={`${dashboardFinancialSummary?.platform_revenue?.total ?? 0}`}
-          className="bg-white shadow-md"
+          className="bg-white shadow-sm rounded-sm"
         >
           <div className="flex gap-1 items-center">
             <p
@@ -63,7 +63,7 @@ const DashboardCards = () => {
           type="finance"
           label="إجمالي أرباح المزودين"
           value={`${dashboardFinancialSummary?.providers_earnings?.total ?? 0}`}
-          className="bg-white shadow-md"
+          className="bg-white shadow-sm rounded-sm"
         >
           <div className="flex gap-1 items-center">
             <p
@@ -83,7 +83,7 @@ const DashboardCards = () => {
           type="finance"
           label="الرصيد المحجوز"
           value={`${dashboardFinancialSummary?.pending_balance?.total ?? 0}`}
-          className="bg-white shadow-md"
+          className="bg-white shadow-sm rounded-sm"
         >
           <div className="flex gap-1 items-center">
             <p

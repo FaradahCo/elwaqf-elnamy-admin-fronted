@@ -29,7 +29,7 @@ const ConfirmationRequestsTable = () => {
     ],
   );
   return (
-    <div className="mt-8 bg-white overflow-auto p-2 rounded-lg ">
+    <div className="mt-4 bg-white overflow-auto p-2 rounded-sm ">
       <div className="flex justify-between items-center">
         <h2 className="font-semibold text-2xl mb-4">طلبات الاعتماد</h2>
         <Select
@@ -43,13 +43,13 @@ const ConfirmationRequestsTable = () => {
         />
       </div>
       <CustomTable
-        className={["divide-y", "divide-gray-100"]}
+        // className={["divide-y", "divide-gray-100"]}
         showSelection={false}
         dataSource={combinedRequests}
         columns={confirmationRequestsColumns}
         showPagination={false}
         footer={
-          <div className="flex justify-end">
+          <div className="flex justify-end bg-transparent!">
             <Link to="wallet" className="flex items-center gap-2">
               <img
                 className="cursor-pointer"

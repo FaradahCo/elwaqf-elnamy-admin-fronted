@@ -119,17 +119,6 @@ const MainLayout: React.FC = () => {
           label: "أكواد الخصم",
           path: pagesRoutePath.DISCOUNT_CODES_LIST,
         },
-        // {
-        //   key: "3-5",
-        //   icon: (
-        //     <img
-        //       src="/images/operations-table.svg"
-        //       alt="operations-table icon"
-        //     />
-        //   ),
-        //   label: "جدول العمليات",
-        //   path: "/manage/transactions",
-        // },
       ],
     },
     {
@@ -156,12 +145,6 @@ const MainLayout: React.FC = () => {
           ),
           label: "إدارة المستشارين",
         },
-        // {
-        //   key: "4-3",
-        //   path: "library/waqf",
-        //   icon: <img src="/images/ic-library.svg" alt="library icon" />,
-        //   label: "مكتبة الوقف",
-        // },
       ],
     },
     {
@@ -248,11 +231,7 @@ const MainLayout: React.FC = () => {
         width={280}
         collapsedWidth={80}
       >
-        <img
-          src="/images/white-logo.svg"
-          alt="logo"
-          className="p-5 w-80 text-center!"
-        />
+        <img src="/images/شعار سواقف.svg" alt="logo" className="mx-auto mt-5" />
         <Menu
           className="py-5!"
           theme="dark"

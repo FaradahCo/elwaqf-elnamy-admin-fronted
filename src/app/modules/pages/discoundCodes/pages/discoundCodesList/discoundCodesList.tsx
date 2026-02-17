@@ -47,11 +47,11 @@ const DiscoundCodesList = () => {
 
   // Redux state - memoized to prevent unnecessary re-renders
   const discountCodesState = useSelector(
-    (state: RootState) => state.discountCodes
+    (state: RootState) => state.discountCodes,
   );
   const { editingItem, isEditMode, deleteItem } = useMemo(
     () => discountCodesState,
-    [discountCodesState]
+    [discountCodesState],
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -75,7 +75,7 @@ const DiscoundCodesList = () => {
         setIsModalOpen(false);
         queryClient.invalidateQueries({ queryKey: ["discound-codes"] });
       },
-    }
+    },
   );
 
   const deleteDiscoundCodeMutation = useApiMutation<void, void>(
@@ -85,16 +85,16 @@ const DiscoundCodesList = () => {
         dispatch(clearDeleteItem());
         queryClient.invalidateQueries({ queryKey: ["discound-codes"] });
       },
-    }
+    },
   );
 
   const handleFormSubmit = useCallback(
     (values: DiscoundCodeItem) => {
       codeDiscoundMutation.mutate(
-        editingItem ? { ...values, id: editingItem.id } : values
+        editingItem ? { ...values, id: editingItem.id } : values,
       );
     },
-    [codeDiscoundMutation, editingItem]
+    [codeDiscoundMutation, editingItem],
   );
 
   const handleAddCode = useCallback(() => {
@@ -153,7 +153,7 @@ const DiscoundCodesList = () => {
         options: typeOptions,
       },
     ],
-    []
+    [],
   );
   return (
     <div className="py-10 ">
@@ -179,9 +179,7 @@ const DiscoundCodesList = () => {
       <Card className="mt-10!">
         <main className="flex justify-between items-start">
           <div>
-            <h1 className="text-xl font-bold text-second-primary">
-              اكواد الخصم
-            </h1>
+            <h1 className="text-xl font-bold text-primary">اكواد الخصم</h1>
             <p className="w-16 h-1 bg-primary mt-2 rounded mb-10"></p>
           </div>
           <Button type="primary" onClick={handleAddCode}>

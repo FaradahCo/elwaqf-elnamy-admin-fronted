@@ -45,9 +45,9 @@ const PaymentsList = () => {
         paymentClients!,
         paymentsProvider!,
         isLoading,
-        onChangePaymentClientFilter
+        onChangePaymentClientFilter,
       ),
-    [paymentClients, paymentsProvider, isLoading]
+    [paymentClients, paymentsProvider, isLoading],
   );
 
   const onChangeTab = (key: string) => {
@@ -60,9 +60,10 @@ const PaymentsList = () => {
 
   return (
     <div className="mt-10 bg-white shadow rounded-lg p-4 walet-card">
-      <h1 className="text-xl font-bold text-second-primary">
+      <h1 className="text-xl font-bold text-primary">
         جدول وبيانات المعاملات المالية
       </h1>
+      <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
       <Tabs
         defaultActiveKey="1"
         items={tabsItems}

@@ -63,7 +63,7 @@ const ConfirmationRequests = ({
 
   return (
     <div>
-      <div className="my-6">
+      <div className="my-4">
         <h2 className="text-lg font-semibold text-gray-900">
           طلبات المراجعة والاعتماد
         </h2>
@@ -74,7 +74,7 @@ const ConfirmationRequests = ({
           <div
             key={stat.id}
             onClick={() => navigate(stat?.path)}
-            className={`rounded-lg z-10 p-4 hover:shadow-md transition-shadow cursor-pointer ${GRADIENT_CLASSES[index]}`}
+            className={`rounded-sm z-10 p-4 hover:shadow-sm transition-shadow cursor-pointer ${GRADIENT_CLASSES[index]}`}
           >
             <div className="flex items-center justify-between">
               <div className="flex-1">

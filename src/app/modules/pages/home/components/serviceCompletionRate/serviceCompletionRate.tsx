@@ -22,7 +22,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 );
 
 const ServiceCompletionRate = ({
@@ -58,7 +58,7 @@ const ServiceCompletionRate = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-4 pb-2">
+    <div className="bg-white rounded-sm shadow-sm p-4 pb-2">
       <h2 className="text-xl font-medium text-gray-800 mb-12">
         نسبة اكتمال المخرجات في المنصة
       </h2>

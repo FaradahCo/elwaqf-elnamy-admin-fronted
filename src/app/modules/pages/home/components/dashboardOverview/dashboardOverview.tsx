@@ -18,7 +18,7 @@ const DashboardOverview = ({
           label="العملاء الجدد"
           value={`${dashboardOverview?.new_clients?.total ?? 0}`}
           text="عميل جديد"
-          className="bg-white p-2"
+          className="bg-white p-2 shadow-sm rounded-sm"
         >
           <div className="flex gap-1 items-center">
             <div
@@ -64,7 +64,7 @@ const DashboardOverview = ({
           label="الطلبات الجديدة"
           value={`${dashboardOverview?.new_requests?.total ?? 0}`}
           text="طلب جديد"
-          className="bg-white p-2"
+          className="bg-white p-2 shadow-sm rounded-sm"
         >
           <div className="flex gap-1 items-center">
             <div
@@ -110,7 +110,7 @@ const DashboardOverview = ({
           label="الطلبات الجارية"
           value={`${dashboardOverview?.in_progress_requests?.total ?? 0}`}
           text="طلب جاري"
-          className="bg-white p-2"
+          className="bg-white p-2 shadow-sm rounded-sm"
         >
           <div className="flex gap-1 items-center">
             <div
@@ -156,7 +156,7 @@ const DashboardOverview = ({
           label="الطلبات مكتملة"
           value={`${dashboardOverview?.completed_requests?.total ?? 0}`}
           text="طلب مكتمل"
-          className="bg-white p-2"
+          className="bg-white p-2 shadow-sm rounded-sm"
         >
           <div className="flex gap-1 items-center">
             <div
@@ -198,7 +198,7 @@ const DashboardOverview = ({
           </div>
         </Card>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 grid-rows-2 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 grid-rows-2 gap-3 mt-6">
         <div className="flex flex-col gap-3 row-span-2">
           <TopRequestedServices
             most_requested={dashboardOverview?.top_services}

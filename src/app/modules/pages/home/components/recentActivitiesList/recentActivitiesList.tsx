@@ -5,7 +5,7 @@ const RecentActivitiesList = ({
   latest_activities?: LatestActivities;
 }) => {
   return (
-    <div className="row-span-2 bg-white rounded-2xl border border-gray-200">
+    <div className="row-span-2 bg-white rounded-sm shadow-sm">
       <div className="px-3 py-2 border-b border-gray-200">
         <h2 className="text-xl font-semibold">أحدث الأنشطة</h2>
       </div>

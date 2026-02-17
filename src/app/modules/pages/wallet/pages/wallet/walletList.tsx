@@ -30,11 +30,11 @@ const WalletList = () => {
 
   const [selectedTab, setSelectedTab] = useState<string>("1");
   const selectedWithdraw = useSelector(
-    (state: RootState) => state.wallet.selectedWithdraw
+    (state: RootState) => state.wallet.selectedWithdraw,
   );
 
   const selectedBankTransfer = useSelector(
-    (state: RootState) => state.wallet.bankTransfer
+    (state: RootState) => state.wallet.bankTransfer,
   );
 
   const {
@@ -72,7 +72,7 @@ const WalletList = () => {
     {
       retry: false,
       enabled: !!selectedWithdraw?.id,
-    }
+    },
   );
 
   const { data: selectedBankTransferData } = useApiQuery<BankTransferItem>(
@@ -81,7 +81,7 @@ const WalletList = () => {
     {
       retry: false,
       enabled: !!selectedBankTransfer?.id,
-    }
+    },
   );
   const tabsItems = useMemo(
     () =>
@@ -89,9 +89,9 @@ const WalletList = () => {
         withdrawList!,
         bankTransferList!,
         isLoading,
-        handleFilterChange
+        handleFilterChange,
       ),
-    [withdrawList, bankTransferList, handleFilterChange, isLoading]
+    [withdrawList, bankTransferList, handleFilterChange, isLoading],
   );
 
   const onChangeTab = (key: string) => {
@@ -102,9 +102,8 @@ const WalletList = () => {
   return (
     <>
       <div className="mt-10 bg-white shadow rounded-lg p-4 walet-card">
-        <h1 className="text-xl font-bold text-second-primary">
-          تأكيد المعاملات
-        </h1>
+        <h1 className="text-xl font-bold text-primary">تأكيد المعاملات</h1>
+        <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
         <Tabs
           defaultActiveKey="1"
           items={tabsItems}

@@ -20,7 +20,7 @@ const Card: React.FC<CardProps> = ({
   if (type === "finance")
     return (
       <div
-        className={`grid grid-cols-[1fr_3rem] p-4 py-2 rounded-2xl items-center ${className}`}
+        className={`grid grid-cols-[1fr_3rem] p-4 py-2 rounded-lg items-center ${className}`}
       >
         <div className="flex flex-col gap-2">
           <h3 className="text-base font-medium text-gray-600">{label}</h3>
