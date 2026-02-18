@@ -15,7 +15,7 @@ export const getTabsItems = (
   paymentClients: PaginatedResponse<PaymentClientItem>,
   paymentsProvider: PaginatedResponse<WithdrawItem>,
   isLoading: boolean = false,
-  onChangePaymentClientFilter: (filter: PaymentClientListParams) => void
+  onChangePaymentClientFilter: (filter: PaymentClientListParams) => void,
 ): TabsProps["items"] => [
   {
     key: "1",
@@ -90,9 +90,9 @@ export const paymentClientsColumns: ColumnsType<PaymentClientItem> = [
     key: "status",
     width: 100,
     ellipsis: true,
-    render: (status: string) => {
-      const config = getStatusTag(status);
-      return <Tag color={config.color}>{config.text}</Tag>;
+    render: (status: string, record: PaymentClientItem) => {
+      const { color } = getStatusTag(status);
+      return <Tag color={color}>{record?.status_label}</Tag>;
     },
   },
 ];

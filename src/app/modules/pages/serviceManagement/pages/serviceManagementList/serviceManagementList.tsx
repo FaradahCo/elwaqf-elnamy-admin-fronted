@@ -1,14 +1,7 @@
 import CardStatistic from "@shared/components/cardStatistic/cardStatistic";
 import CustomTable from "@shared/components/customTable/customtable";
-import type {
-  PaginatedResponse,
-  ServiceStatus,
-} from "@shared/model/shared.model";
-import { useApiQuery } from "@shared/services/api";
-import {
-  getSeriviceStatus,
-  getStatusTag,
-} from "@shared/services/sharedService";
+import type { PaginatedResponse } from "@shared/model/shared.model";
+import { ServiceStatusEnum } from "@shared/services/sharedService";
 import { useMemo } from "react";
 import {
   type ServiceData,
@@ -16,10 +9,13 @@ import {
 } from "../../model/serviceProviderList";
 import { getServices } from "../../serviceManagementService";
 import { getColumnsList } from "./serviceManagementListConfig";
-import { Select } from "antd";
+
 import type { CustomFilterType } from "@shared/components/custom-filter/custom-filter";
 import { useListHook } from "@/app/hooks/listHook";
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
+import { useSearchParams } from "react-router";
+import { useServiceStatus } from "@/app/hooks/useServiceStatus";
+import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
 const TYPE_OPTIONS = [
   { label: "الخدمات", value: "service" },
   { label: "الباقات", value: "package" },
@@ -31,6 +27,7 @@ const PACKAGE_TYPES = [
   { value: "social", label: "الخدمات الاجتماعية" },
 ];
 export const ServiceManagementList = () => {
+  const [searchParams] = useSearchParams();
   const {
     data: serviceData,
     isLoading,
@@ -41,19 +38,14 @@ export const ServiceManagementList = () => {
     queryKey: "admin/services",
     fetchFn: getServices,
     initialFilter: {
-      type: "service",
+      type: searchParams.get("type") ?? "service",
       page: 1,
-      per_page: 5,
+      per_page: 10,
+      status: (searchParams.get("status") as ServiceStatusEnum) ?? undefined,
     },
     queryOptions: { retry: false },
   });
-  const { data: serviceStatus } = useApiQuery<PaginatedResponse<ServiceStatus>>(
-    ["serviceStatus", filter.type],
-    () => getSeriviceStatus({ type: filter?.type ?? "service" }),
-    {
-      enabled: !!filter.type,
-    }
-  );
+  const { serviceStatus } = useServiceStatus(filter?.type!);
   const filters = useMemo(
     () => [
       {
@@ -78,24 +70,10 @@ export const ServiceManagementList = () => {
         placeholder: "اختر الحالة",
         label: "الحالة",
         name: "status",
-        options: (
-          <>
-            {serviceStatus?.data?.map((option) => (
-              <Select.Option key={option?.status} value={option?.status}>
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{
-                      backgroundColor: getStatusTag(option?.status ?? "")
-                        ?.color,
-                    }}
-                  />
-                  <span>{option?.label}</span>
-                </div>
-              </Select.Option>
-            ))}
-          </>
-        ),
+        options: renderOptionsWithStatusTag(serviceStatus?.data),
+        props: {
+          defaultValue: filter?.status,
+        },
       },
       {
         type: "radio" as CustomFilterType,
@@ -110,7 +88,7 @@ export const ServiceManagementList = () => {
         },
       },
     ],
-    [serviceStatus?.data, filter?.type]
+    [serviceStatus?.data, filter?.type, filter?.status],
   );
   return (
     <div className="py-10">
@@ -140,7 +118,7 @@ export const ServiceManagementList = () => {
           icon="/images/elements.svg"
           value={
             serviceStatus?.data?.find(
-              (status) => status.status === "revision_pending"
+              (status) => status.status === "revision_pending",
             )?.count ?? 0
           }
           classesName={[

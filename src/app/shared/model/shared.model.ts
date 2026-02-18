@@ -46,3 +46,8 @@ export const SERVICE_TYPE = {
   training: "تدريب",
   package: "باقة",
 };
+export type Field = {
+  id: number;
+  name: string;
+  slug: string;
+};

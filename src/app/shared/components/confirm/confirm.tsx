@@ -6,6 +6,7 @@ type ConfirmProps = {
   confirmText: string;
   cancelText: string;
   loading?: boolean;
+  confirmIcon?: string;
   onConfirm: (bool: boolean) => void;
   onCancel: () => void;
 };
@@ -16,12 +17,16 @@ const Confirm = ({
   confirmText,
   cancelText,
   loading,
+  confirmIcon,
   onConfirm,
   onCancel,
 }: ConfirmProps) => {
   return (
     <>
       <div className="text-center">
+        {confirmIcon && (
+          <img src={confirmIcon} alt="confirm" className="w-10 h-10 mx-auto" />
+        )}
         <h1 className="mt-4 font-bold text-xl">{title}</h1>
         <p className="mt-3 text-[13px] text-gray-500">{description}</p>
       </div>

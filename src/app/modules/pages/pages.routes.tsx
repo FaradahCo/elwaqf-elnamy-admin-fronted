@@ -35,6 +35,15 @@ export const pagesRoutes: RouteObject[] = [
         children: [...ServiceProviderRoutes],
       },
       {
+        path: "reviews/:id",
+        lazy: () =>
+          import("./serviceProvider/pages/serviceProviderReview/serviceProviderReview").then(
+            (m) => ({
+              Component: m.default,
+            }),
+          ),
+      },
+      {
         path: "alwaqf-list",
         children: [...alwaqfRoutes],
       },

@@ -121,4 +121,3 @@ const CustomFilter = ({ filters, onFilterChange }: CustomFilterProps) => {
 };
 
 export default memo(CustomFilter);
-// export default CustomFilter;

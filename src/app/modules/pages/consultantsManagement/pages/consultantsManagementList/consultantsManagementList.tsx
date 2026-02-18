@@ -33,7 +33,7 @@ const ConsultantsManagementList: React.FC = () => {
   const updateConsultantStatusMutation = useApiMutation(
     (payload: UpdateConsultantStatusPayload) => {
       return updateConsultantStatus(payload);
-    }
+    },
   );
   useEffect(() => {
     form.setFieldsValue({
@@ -56,16 +56,14 @@ const ConsultantsManagementList: React.FC = () => {
       })),
     };
     updateConsultantStatusMutation.mutate(
-      transformedValues as UpdateConsultantStatusPayload
+      transformedValues as UpdateConsultantStatusPayload,
     );
   };
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
       <div>
-        <h1 className="text-xl font-bold text-second-primary">
-          إدارة المستشارين
-        </h1>
+        <h1 className="text-xl font-bold text-primary">إدارة المستشارين</h1>
         <p className="w-16 h-1 bg-primary mt-2 rounded mb-10"></p>
       </div>
       <Form name="items" layout="vertical" onFinish={onFinish} form={form}>

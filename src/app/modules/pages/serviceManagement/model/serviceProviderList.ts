@@ -1,7 +1,4 @@
-import type {
-  PaginatedParams,
-  ServiceStatus,
-} from "@shared/model/shared.model";
+import type { PaginatedParams } from "@shared/model/shared.model";
 import type {
   DurationName,
   ServiceStatusEnum,
@@ -56,7 +53,7 @@ export type Duration = {
 export interface ServiceManagementQuery extends PaginatedParams {
   type?: string;
   provider_id?: number;
-  status?: ServiceStatus;
+  status?: ServiceStatusEnum;
 }
 
 export type ServiceRevision = {

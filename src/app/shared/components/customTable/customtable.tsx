@@ -16,15 +16,21 @@ interface PaginationMeta {
 
 interface CustomTableProps<T> {
   columns: ColumnsType<T>;
-  className: string[];
+  className?: string[];
   dataSource: T[];
   showSelection?: boolean;
   showPagination?: boolean;
   defaultPageSize?: number;
   loading?: boolean;
+  rowKey?: string;
   paginationMeta?: PaginationMeta;
+  onRow?: (record: T) => {
+    onClick?: () => void;
+    className?: string;
+  };
   onSelectionChange?: (selectedRowKeys: React.Key[], selectedRows: T[]) => void;
   onPaginationChange?: (page: number, pageSize: number) => void;
+  footer?: React.ReactNode;
 }
 
 export const CustomTable = <T extends Record<string, any>>({
@@ -34,16 +40,19 @@ export const CustomTable = <T extends Record<string, any>>({
   showSelection = true,
   showPagination = true,
   defaultPageSize = 10,
+  rowKey = "id",
   loading = false,
   paginationMeta,
   onSelectionChange,
   onPaginationChange,
+  onRow,
+  footer,
 }: CustomTableProps<T>) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const onSelectChange = (
     newSelectedRowKeys: React.Key[],
-    selectedRows: T[]
+    selectedRows: T[],
   ) => {
     setSelectedRowKeys(newSelectedRowKeys);
 
@@ -67,7 +76,7 @@ export const CustomTable = <T extends Record<string, any>>({
     showQuickJumper: false,
     showTotal: (total, range) =>
       `${range?.[0] || 0}-${range?.[1] || 0} من ${total} عنصر`,
-    pageSizeOptions: ["5", "10", "15", "20"],
+    pageSizeOptions: ["10", "50", "100", "200"],
     onChange: (page, size) => {
       if (onPaginationChange) {
         onPaginationChange(page, size);
@@ -82,7 +91,7 @@ export const CustomTable = <T extends Record<string, any>>({
   };
 
   return (
-    <div className={className.join(" ")}>
+    <div className={className?.join(" ")}>
       <Flex gap="middle" vertical>
         {showSelection && (
           <Flex align="center" gap="middle">
@@ -92,13 +101,16 @@ export const CustomTable = <T extends Record<string, any>>({
           </Flex>
         )}
         <Table<T>
+          className="custom-table"
           rowSelection={showSelection ? rowSelection : undefined}
           columns={columns}
           dataSource={dataSource}
-          rowKey={(record) => record.id}
+          rowKey={(record) => record[rowKey]}
           pagination={showPagination ? paginationConfig : false}
           loading={loading}
+          onRow={onRow}
           scroll={{ x: "max-content" }}
+          footer={() => footer}
         />
       </Flex>
     </div>

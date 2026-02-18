@@ -12,7 +12,8 @@ import { useDispatch } from "react-redux";
 import { resetSelectedBankTransfer } from "@/app/store/slices/walletSlice";
 import { useQueryClient } from "@tanstack/react-query";
 import RejectModal from "../rejectModal/rejectModal";
-import { handleDownloadAttachment } from "@shared/services/sharedService";
+
+import { useDownloadAttachment } from "@/app/hooks/useDownloadAttachment";
 
 interface TransactionVerficationProps {
   selectedBankTransferData?: BankTransferItem;
@@ -26,6 +27,7 @@ const TransactionVerfication = ({
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
+  const { handleDownloadAttachment, isLoading } = useDownloadAttachment();
   const verifyBankTransferMutation = useApiMutation<
     VerifyBankTransferPayload,
     any
@@ -72,16 +74,19 @@ const TransactionVerfication = ({
       <div className="mt-4">
         <div className="flex items-center gap-2">
           {selectedBankTransferData?.transfer_receipt?.url ? (
-            <p
+            <Button
+              disabled={isLoading}
+              loading={isLoading}
+              variant="link"
               onClick={() =>
                 handleDownloadAttachment(
-                  selectedBankTransferData?.transfer_receipt?.url as string
+                  selectedBankTransferData?.transfer_receipt?.url as string,
                 )
               }
-              className="text-primary! underline! cursor-pointer"
+              className="text-primary! underline! cursor-pointer border-none!"
             >
               صورة الايصال
-            </p>
+            </Button>
           ) : (
             <p>--</p>
           )}

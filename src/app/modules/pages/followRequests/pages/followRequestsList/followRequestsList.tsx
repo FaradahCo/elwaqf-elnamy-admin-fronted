@@ -1,33 +1,24 @@
 import CardStatistic from "@shared/components/cardStatistic/cardStatistic";
-import { useApiQuery } from "@shared/services/api";
-import {
-  getFollowRequestseStatus,
-  getServiceRequests,
-} from "../../followRequestsService";
+import { getServiceRequests } from "../../followRequestsService";
 
 import { useMemo } from "react";
 import type {
   FollowRequest,
   FollowRequestFilterQuery,
 } from "../../model/followRequestsModel";
-import {
-  getStatusTag,
-  ServiceStatusEnum,
-} from "@shared/services/sharedService";
+import { ServiceStatusEnum } from "@shared/services/sharedService";
 import CustomTable from "@shared/components/customTable/customtable";
 import { followRequestsColumns } from "./followRequestsListConfig";
-import { Select } from "antd";
+
 import type { CustomFilterType } from "@shared/components/custom-filter/custom-filter";
 import { type PaginatedResponse } from "@shared/model/shared.model";
 import { useListHook } from "@/app/hooks/listHook";
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
+import { useRequestsStatus } from "@/app/hooks/useRequestsStatus";
+import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
 
 const FollowRequestsList = () => {
-  const { data: followRequestseStatus } = useApiQuery(
-    ["followRequestseStatus"],
-    () => getFollowRequestseStatus(),
-    { retry: false }
-  );
+  const { requestsStatus } = useRequestsStatus();
 
   const {
     data: serviceData,
@@ -57,27 +48,10 @@ const FollowRequestsList = () => {
         placeholder: "اختر الحالة",
         label: "الحالة",
         name: "status",
-        options: (
-          <>
-            {followRequestseStatus?.data?.map((option) => (
-              <Select.Option key={option?.status} value={option?.status}>
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{
-                      backgroundColor: getStatusTag(option?.status ?? "")
-                        ?.color,
-                    }}
-                  />
-                  <span>{option?.label}</span>
-                </div>
-              </Select.Option>
-            ))}
-          </>
-        ),
+        options: renderOptionsWithStatusTag(requestsStatus?.data),
       },
     ],
-    [followRequestseStatus?.data]
+    [requestsStatus?.data],
   );
   return (
     <div className="py-10">
@@ -85,7 +59,7 @@ const FollowRequestsList = () => {
         <CardStatistic
           title="إجمالي الطلبات"
           icon="/images/elements_1.svg"
-          value={followRequestseStatus?.total ?? 0}
+          value={requestsStatus?.total ?? 0}
           classesName={[
             "border border-second-primary p-4 rounded-xl w-64 min-w-64",
           ]}
@@ -94,8 +68,8 @@ const FollowRequestsList = () => {
           title="الطلبات المكتملة"
           icon="/images/elements_2.svg"
           value={
-            followRequestseStatus?.data?.find(
-              (item) => item?.status === ServiceStatusEnum.completed
+            requestsStatus?.data?.find(
+              (item) => item?.status === ServiceStatusEnum.completed,
             )?.count ?? 0
           }
           classesName={[
@@ -107,8 +81,8 @@ const FollowRequestsList = () => {
           title="جاري العمل"
           icon="/images/elements_3.svg"
           value={
-            followRequestseStatus?.data?.find(
-              (item) => item?.status === ServiceStatusEnum.in_progress
+            requestsStatus?.data?.find(
+              (item) => item?.status === ServiceStatusEnum.in_progress,
             )?.count ?? 0
           }
           classesName={[
@@ -120,8 +94,8 @@ const FollowRequestsList = () => {
           title="بانتظار عرض السعر"
           icon="/images/elements_4.svg"
           value={
-            followRequestseStatus?.data?.find(
-              (item) => item?.status === ServiceStatusEnum.pending
+            requestsStatus?.data?.find(
+              (item) => item?.status === ServiceStatusEnum.pending,
             )?.count ?? 0
           }
           classesName={[

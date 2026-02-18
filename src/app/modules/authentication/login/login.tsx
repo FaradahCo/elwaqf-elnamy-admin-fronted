@@ -25,7 +25,7 @@ const Login: React.FC = () => {
         dispatch(resetForceLogout());
         navigate(pagesRoutePath.HOME);
       },
-    }
+    },
   );
 
   const onFinish = (values: LoginPayload) => {

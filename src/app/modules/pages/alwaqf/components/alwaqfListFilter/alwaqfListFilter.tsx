@@ -2,12 +2,13 @@ import { getStatusTag } from "@shared/services/sharedService";
 import { Card, Col, Form, Input, Row, Select } from "antd";
 import { memo, useMemo, useRef } from "react";
 
-import type { AlwaqfFilterQuery, AlwaqfStatus } from "../../alwaqfModel";
+import type { AlwaqfFilterQuery } from "../../alwaqfModel";
+import type { ServiceStatus } from "@shared/model/shared.model";
 
 interface AlwaqfFilterProps {
   onFilterChange?: (filter: AlwaqfFilterQuery) => void;
   onServiceTypeChange?: (type: string) => void;
-  aLwaqfStatus?: AlwaqfStatus[];
+  aLwaqfStatus?: ServiceStatus[];
 }
 
 const AlwaqfListFilter = memo(
@@ -64,7 +65,7 @@ const AlwaqfListFilter = memo(
         </Form>
       </Card>
     );
-  }
+  },
 );
 
 export default AlwaqfListFilter;

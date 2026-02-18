@@ -1,7 +1,6 @@
 import { CustomTable } from "@shared/components/customTable/customtable";
 import { useApiMutation, useApiQuery } from "@shared/services/api";
 import {
-  getSeriviceStatus,
   getStatusTag,
   ServiceStatusEnum,
 } from "@shared/services/sharedService";
@@ -31,6 +30,7 @@ import type { RejectServiceRef } from "../../components/rejectService/rejectServ
 import RejectService from "../../components/rejectService/rejectService";
 import { ConvertToNumber } from "@/app/utilites/transformData";
 import { useQueryClient } from "@tanstack/react-query";
+import { useServiceStatus } from "@/app/hooks/useServiceStatus";
 
 const { TextArea } = Input;
 
@@ -55,7 +55,7 @@ const ServiceReview = () => {
     () => getService(id!),
     {
       enabled: !!id,
-    }
+    },
   );
 
   const { data: revisionsByServiceData } = useApiQuery(
@@ -64,7 +64,7 @@ const ServiceReview = () => {
     {
       enabled: !!serviceData?.id,
       retry: false,
-    }
+    },
   );
 
   const approveServiceRevisionMutation = useApiMutation(
@@ -73,7 +73,7 @@ const ServiceReview = () => {
       onSuccess: () => {
         navigate("/admin/service-management");
       },
-    }
+    },
   );
 
   const rejectServiceRevisionMutation = useApiMutation(
@@ -88,7 +88,7 @@ const ServiceReview = () => {
         rejectServiceRef.current?.resetForm();
         navigate("/admin/service-management");
       },
-    }
+    },
   );
 
   const serviceLogCollapseItems = [
@@ -119,16 +119,11 @@ const ServiceReview = () => {
           status: res.status,
         });
       },
-    }
+    },
   );
 
-  const { data: serviceStatusOptions } = useApiQuery(
-    ["service-status-options"],
-    () => getSeriviceStatus({ type: serviceData?.type! }),
-    {
-      retry: false,
-      enabled: !!serviceData,
-    }
+  const { serviceStatus: serviceStatusOptions } = useServiceStatus(
+    serviceData?.type!,
   );
   const handleStatusChange = (newStatus: ServiceStatusEnum) => {
     updateStatusMutation.mutate(newStatus);
@@ -184,7 +179,7 @@ const ServiceReview = () => {
                           item.status === ServiceStatusEnum.removed ||
                           item.status === ServiceStatusEnum.pending ||
                           item.status === ServiceStatusEnum.revision_pending ||
-                          item.status === ServiceStatusEnum.draft
+                          item.status === ServiceStatusEnum.draft,
                       )
                       ?.map((option) => (
                         <Select.Option
@@ -334,7 +329,7 @@ const ServiceReview = () => {
                   value={ConvertToNumber(
                     serviceData?.pending_revision
                       ? serviceData?.pending_revision?.data?.min_price?.toString()!
-                      : serviceData?.min_price?.toString() || "-"
+                      : serviceData?.min_price?.toString() || "-",
                   )}
                   type="number"
                   readOnly

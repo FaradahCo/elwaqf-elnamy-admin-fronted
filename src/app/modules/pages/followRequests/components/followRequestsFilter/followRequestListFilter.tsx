@@ -1,15 +1,13 @@
 import { getStatusTag } from "@shared/services/sharedService";
 import { Card, Col, Form, Input, Row, Select } from "antd";
 import { memo, useMemo, useRef } from "react";
-import type {
-  FollowRequestFilterQuery,
-  FollowRequestStatus,
-} from "../../model/followRequestsModel";
+import type { FollowRequestFilterQuery } from "../../model/followRequestsModel";
+import type { ServiceStatus } from "@shared/model/shared.model";
 
 interface FollowRequestsFilterProps {
   onFilterChange?: (filter: FollowRequestFilterQuery) => void;
   onServiceTypeChange?: (type: string) => void;
-  followRequestseStatus?: FollowRequestStatus[];
+  followRequestseStatus?: ServiceStatus[];
 }
 
 const FollowRequestListFilter = memo(
@@ -70,7 +68,7 @@ const FollowRequestListFilter = memo(
         </Form>
       </Card>
     );
-  }
+  },
 );
 
 export default FollowRequestListFilter;
