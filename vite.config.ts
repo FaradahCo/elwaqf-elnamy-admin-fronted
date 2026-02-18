@@ -8,6 +8,16 @@ export default defineConfig({
   css: {
     postcss: "./postcss.config.js",
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+    // Add cache busting
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000,
+  },
   resolve: {
     alias: {
       "@shared": "/src/app/shared",
