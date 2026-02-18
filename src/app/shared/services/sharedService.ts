@@ -2,6 +2,7 @@ import { triggerForceLogout } from "@/app/store/slices/authSlice";
 import { store } from "@/app/store";
 import AoiService from "./api";
 import {
+  type Field,
   type PaginatedResponse,
   type ServiceStatus,
 } from "@shared/model/shared.model";
@@ -32,7 +33,7 @@ export const durationNameConfig = {
 export type DurationName = keyof typeof durationNameConfig;
 
 export const handleFormErrors = <T = any>(
-  errorResponse: any
+  errorResponse: any,
 ): Array<{
   name: keyof T;
   errors: string[];
@@ -49,7 +50,7 @@ export const handleFormErrors = <T = any>(
     ([fieldName, errorValue]) => ({
       name: fieldName as keyof T,
       errors: Array.isArray(errorValue) ? errorValue : [errorValue],
-    })
+    }),
   );
 
   return fieldErrors;
@@ -57,7 +58,7 @@ export const handleFormErrors = <T = any>(
 
 export const setFormFieldErrors = <T = any>(
   form: any,
-  errorResponse: any
+  errorResponse: any,
 ): void => {
   const fieldErrors = handleFormErrors<T>(errorResponse);
 
@@ -67,7 +68,7 @@ export const setFormFieldErrors = <T = any>(
 };
 
 export const convertEnumToArrayList = (
-  enumObj: any
+  enumObj: any,
 ): { label: string; value: any }[] => {
   return Object.entries(enumObj).map(([key, value]) => ({
     label: key,
@@ -98,6 +99,8 @@ export enum ServiceStatusEnum {
   failed = "failed",
   in_progress = "in_progress",
   review = "review",
+  exhausted = "exhausted",
+  cancelled = "cancelled",
 }
 
 export const getStatusTag = (status: ServiceStatusEnum | string) => {
@@ -130,8 +133,10 @@ export const getStatusTag = (status: ServiceStatusEnum | string) => {
     [ServiceStatusEnum.removed]: { color: "#8c8c8c", text: "محذوف" },
     [ServiceStatusEnum.scheduled]: { color: "#fa8c16", text: "مجدول" },
     [ServiceStatusEnum.canceled]: { color: "#ff4d4f", text: "ملغي" },
+    [ServiceStatusEnum.cancelled]: { color: "#ff4d4f", text: "ملغي" },
     [ServiceStatusEnum.testing]: { color: "#722ed1", text: "تجريبي" },
     [ServiceStatusEnum.expired]: { color: "#ff4d4f", text: "منتهي" },
+    [ServiceStatusEnum.exhausted]: { color: "#8c8c8c", text: "مستنفذ" },
 
     [ServiceStatusEnum.revision_pending]: {
       color: "#722ed1",
@@ -180,15 +185,23 @@ export const triggerForceLogoutForInterceptor = () => {
   store.dispatch(triggerForceLogout());
 };
 
-export const getSeriviceStatus = async (params?: { type: string }) => {
+export const getSerivceStatus = async (params?: { type: string }) => {
   return await AoiService.get<PaginatedResponse<ServiceStatus>>(
     `/admin/services-status`,
-    transformFilterParams(params)
+    transformFilterParams(params),
   );
+};
+export const getConsultationStatus = async () => {
+  return await AoiService.get<PaginatedResponse<ServiceStatus>>(
+    `/admin/consultations/status-counts`,
+  );
+};
+export const getServiceFields = async () => {
+  return await AoiService.get<Field[]>(`/admin/fields`);
 };
 
 export const handleDownloadAttachment = async (
-  endpoint: string
+  endpoint: string,
 ): Promise<void> => {
   try {
     const blob = await AoiService.getBlob(endpoint);

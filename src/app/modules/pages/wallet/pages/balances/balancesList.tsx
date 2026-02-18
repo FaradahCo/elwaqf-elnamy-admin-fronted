@@ -21,7 +21,7 @@ const BalancesList = () => {
       {
         retry: false,
         enabled: !!balanceFilter && selectedTab === "1",
-      }
+      },
     );
 
   const { data: providerWalletsResponse, isLoading: isLoadingProvider } =
@@ -31,7 +31,7 @@ const BalancesList = () => {
       {
         retry: false,
         enabled: !!balanceFilter && selectedTab === "2",
-      }
+      },
     );
 
   const { data: clientWalletsResponse, isLoading: isLoadingClient } =
@@ -41,7 +41,7 @@ const BalancesList = () => {
       {
         retry: false,
         enabled: !!balanceFilter && selectedTab === "3",
-      }
+      },
     );
 
   const onChangeTab = useCallback((key: string) => {
@@ -59,7 +59,7 @@ const BalancesList = () => {
         ...filter,
       }));
     },
-    []
+    [],
   );
 
   const tabsItems = useMemo(
@@ -69,7 +69,7 @@ const BalancesList = () => {
         providerWalletsResponse!,
         clientWalletsResponse!,
         isLoadingPlatform || isLoadingProvider || isLoadingClient,
-        handelOnChangeBalanceFilter
+        handelOnChangeBalanceFilter,
       ),
     [
       handelOnChangeBalanceFilter,
@@ -79,12 +79,13 @@ const BalancesList = () => {
       isLoadingPlatform,
       isLoadingProvider,
       isLoadingClient,
-    ]
+    ],
   );
 
   return (
     <div className="mt-10 bg-white shadow rounded-lg p-4 walet-card">
-      <h1 className="text-xl font-bold text-second-primary">الأرصدة</h1>
+      <h1 className="text-xl font-bold text-primary">الأرصدة</h1>
+      <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
       <Tabs
         defaultActiveKey="1"
         items={tabsItems}

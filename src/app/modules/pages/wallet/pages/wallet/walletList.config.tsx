@@ -24,7 +24,7 @@ export const getTabsItems = (
   withdrawList: PaginatedResponse<WithdrawItem>,
   bankTransferList: PaginatedResponse<BankTransferItem>,
   isLoading: boolean = false,
-  onChangeWithdrawListFilter: (filter: WithdrawListParams) => void
+  onChangeWithdrawListFilter: (filter: WithdrawListParams) => void,
 ): TabsProps["items"] => [
   {
     key: "1",
@@ -99,16 +99,18 @@ export const withDrawListColumns: ColumnsType<WithdrawItem> = [
     title: "وثيقة الدفع",
     width: 100,
     ellipsis: true,
-    render: (item: WithdrawItem) => (
-      <div className="flex items-center gap-2">
-        <p
-          onClick={() => handleDownloadAttachment(item?.invoice?.url!)}
-          className="text-primary! underline! cursor-pointer"
-        >
-          صوره الفاتورة
-        </p>
-      </div>
-    ),
+    render: (item: WithdrawItem) => {
+      return (
+        <div className="flex items-center gap-2">
+          <p
+            onClick={() => handleDownloadAttachment(item?.invoice?.url!)}
+            className="text-primary! underline! cursor-pointer"
+          >
+            صوره الفاتورة
+          </p>
+        </div>
+      );
+    },
   },
   {
     title: "تاريخ المعاملة",
@@ -191,7 +193,7 @@ export const bankTransferListColumns: ColumnsType<BankTransferItem> = [
             }
             className="text-primary! underline! cursor-pointer"
           >
-            صوره الفاتورة
+            صوره الحوالة
           </p>
         </div>
       );

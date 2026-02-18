@@ -1,4 +1,4 @@
-import type { PaginatedParams } from "@shared/model/shared.model";
+import type { Field, PaginatedParams } from "@shared/model/shared.model";
 import type { ServiceStatusEnum } from "@shared/services/sharedService";
 
 export type ConsultantItem = {
@@ -11,7 +11,7 @@ export type ConsultantItem = {
       id: number;
       name: string;
       slug: string;
-    }
+    },
   ];
   created_at: string;
   status: string;
@@ -32,11 +32,6 @@ export type UpdateConsultantStatusPayload = {
     status: boolean;
     is_consultant?: boolean;
   }[];
-};
-export type Field = {
-  id?: number;
-  name?: string;
-  slug?: string;
 };
 
 export type Media = {
@@ -81,6 +76,9 @@ export type ProviderProfile = {
   fields?: Field[];
   bio?: string;
   media?: ProviderMedia;
+  email?: string;
+  phone?: string;
+  team_id?: number;
 };
 
 export type ProviderUser = {

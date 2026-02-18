@@ -13,7 +13,7 @@ const ServiceProvider = () => {
 
   const [filter, setFilter] = useState({
     page: 1,
-    per_page: 3,
+    per_page: 10,
   });
   const { data: serviceProvider } = useApiQuery(
     ["service-provider-profile", Number(id)],
@@ -21,7 +21,7 @@ const ServiceProvider = () => {
     {
       enabled: !!id,
       retry: false,
-    }
+    },
   );
   const { data: serviceProviderServices } = useApiQuery(
     ["service-provider-services", Number(id), filter],
@@ -29,7 +29,7 @@ const ServiceProvider = () => {
     {
       enabled: !!id,
       retry: false,
-    }
+    },
   );
   return (
     <>
@@ -114,7 +114,7 @@ const ServiceProvider = () => {
             }));
           }}
           defaultCurrent={filter.page || 1}
-          pageSizeOptions={[3, 5, 10, 15, 20]}
+          pageSizeOptions={["10", "50", "100", "200"]}
           current={filter.page || 1}
           pageSize={filter.per_page || 3}
           total={serviceProviderServices?.meta?.total || 0}

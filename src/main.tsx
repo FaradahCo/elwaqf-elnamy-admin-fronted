@@ -8,7 +8,7 @@ import App from "./app/App";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { store, persistor } from "./app/store";
-import ErrorBoundary from "antd/es/alert/ErrorBoundary";
+import ErrorBoundary from "@shared/components/ErrorBoundary";
 
 const queryClient = new QueryClient({
   defaultOptions: {
