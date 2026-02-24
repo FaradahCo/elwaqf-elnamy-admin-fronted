@@ -30,7 +30,7 @@ const AlwaqfHeader = ({
         />
         <div>
           <h2 className="text-second-primary text-2xl mb-2">
-            {clientData?.name}
+            {clientData?.profile?.waqf_name}
           </h2>
           <p className="text-base text-gray-500">{clientData?.created_at}</p>
         </div>
