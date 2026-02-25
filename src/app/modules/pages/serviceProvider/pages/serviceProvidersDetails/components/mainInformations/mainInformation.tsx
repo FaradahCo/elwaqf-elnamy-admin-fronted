@@ -18,12 +18,7 @@ const MainInformation = memo(({ providerData }: { providerData: Provider }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4!">
           <LabelContent label="اسم المستخدم">
             <p className="p-2 rounded-lg border border-gray-200">
-              {providerData?.profile?.[0]?.business_name}
-            </p>
-          </LabelContent>
-          <LabelContent label="اسم المستخدم">
-            <p className="p-2 rounded-lg border border-gray-200">
-              {providerData?.profile?.[0]?.business_name}
+              {providerData?.name}
             </p>
           </LabelContent>
           <LabelContent label="البريد الإلكتروني">
