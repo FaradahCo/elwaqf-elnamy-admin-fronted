@@ -33,10 +33,6 @@ const AlwaqfList = () => {
   } = useListHook<PaginatedResponse<Alwaqf>, AlwaqfFilterQuery>({
     queryKey: "getAlwaqfList",
     fetchFn: getAlwaqfList,
-    initialFilter: {
-      page: 1,
-      per_page: 10,
-    },
     queryOptions: { retry: false },
   });
 

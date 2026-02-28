@@ -5,7 +5,7 @@ import { useApiQuery } from "../shared/services/api";
 export interface UseListHookOptions<TData, TFilterQuery> {
   queryKey: string;
   fetchFn: (filter: TFilterQuery) => Promise<TData>;
-  initialFilter: TFilterQuery;
+  initialFilter?: TFilterQuery;
   enabled?: boolean;
   queryOptions?: Omit<UseQueryOptions<TData, Error>, "queryKey" | "queryFn">;
 }
@@ -29,7 +29,12 @@ export const useListHook = <TData, TFilterQuery>(
     queryOptions = {},
   } = options;
 
-  const [filter, setFilter] = useState<TFilterQuery>(initialFilter);
+  const [filter, setFilter] = useState<TFilterQuery>({
+    page: 1,
+    per_page: 10,
+    sort: "minus-created_at",
+    ...initialFilter!,
+  });
 
   const { data, isLoading } = useApiQuery<TData, Error>(
     [queryKey, filter],

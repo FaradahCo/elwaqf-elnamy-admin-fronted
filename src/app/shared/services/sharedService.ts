@@ -160,7 +160,7 @@ export const transformFilterParams = <T>(filter: T): Record<string, any> => {
   Object.entries(filter).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
       // Send page and per_page directly without filter[] wrapper
-      if (key === "page" || key === "per_page") {
+      if (key === "page" || key === "per_page" || key === "sort") {
         transformedParams[key] = value;
       } else {
         transformedParams[`filter[${key}]`] = value;

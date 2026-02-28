@@ -1,6 +1,6 @@
 const environment = {
   production: false,
-  apiUrl: "https://api-dev.waqfnami.com/api/v1/",
+  apiUrl: "https://api-dev.swaqif.com/api/v1/",
   featureFlag: false,
 };
 

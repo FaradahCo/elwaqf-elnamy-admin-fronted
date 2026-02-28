@@ -24,10 +24,6 @@ const ConsultantsManagementList: React.FC = () => {
   } = useListHook<PaginatedResponse<ConsultantItem>, ConsultantsListParams>({
     queryKey: "consultants-management",
     fetchFn: getConsultantsManagement,
-    initialFilter: {
-      page: 1,
-      per_page: 10,
-    },
     queryOptions: { retry: false },
   });
   const updateConsultantStatusMutation = useApiMutation(
