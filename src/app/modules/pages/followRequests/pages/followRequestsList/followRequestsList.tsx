@@ -28,10 +28,6 @@ const FollowRequestsList = () => {
   } = useListHook<PaginatedResponse<FollowRequest>, FollowRequestFilterQuery>({
     queryKey: "getServiceRequests",
     fetchFn: getServiceRequests,
-    initialFilter: {
-      page: 1,
-      per_page: 10,
-    },
     queryOptions: { retry: false },
   });
 

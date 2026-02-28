@@ -59,8 +59,6 @@ const WalletList = () => {
     queryKey: "bank-transfer/list",
     fetchFn: getBankTransfers,
     initialFilter: {
-      page: 1,
-      per_page: 10,
       status: "pending",
     },
     queryOptions: { retry: false, enabled: selectedTab === "2" },

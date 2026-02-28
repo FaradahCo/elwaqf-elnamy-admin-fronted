@@ -113,10 +113,6 @@ const DiscoundCodesList = () => {
   >({
     queryKey: "discound-codes",
     fetchFn: DiscoundCodes,
-    initialFilter: {
-      page: 1,
-      per_page: 10,
-    },
     queryOptions: { retry: false },
   });
 

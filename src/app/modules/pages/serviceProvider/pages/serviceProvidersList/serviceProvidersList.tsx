@@ -45,8 +45,6 @@ const ServiceProvidersList = () => {
     queryKey: "getServiceProviders",
     fetchFn: getServiceProviders,
     initialFilter: {
-      page: 1,
-      per_page: 10,
       status: (searchParams.get("status") as ServiceStatusEnum) ?? undefined,
     },
     queryOptions: { retry: false },
