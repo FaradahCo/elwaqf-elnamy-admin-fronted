@@ -28,5 +28,5 @@ export const transformFormObjectToFormData = (formDataObj: any) => {
 };
 
 export const ConvertToNumber = (value: string) => {
-  return Number(value.replace(/,/g, ""));
+  return Number(value?.replace(/,/g, ""));
 };
