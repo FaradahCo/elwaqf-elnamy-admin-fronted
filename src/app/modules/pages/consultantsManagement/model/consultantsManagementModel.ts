@@ -57,7 +57,7 @@ export type ProviderProfile = {
   created_at?: string;
   provider_id?: number;
   business_name?: string;
-  business_type?: "company" | "individual";
+  business_type?: "company" | "individual" | "association";
   cr_number?: string;
   cr_issue_date?: string;
   cr_expiry_date?: string;

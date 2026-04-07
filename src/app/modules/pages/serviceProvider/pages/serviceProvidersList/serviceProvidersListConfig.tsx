@@ -9,8 +9,11 @@ export const serviceProvidersListColumns = [
   },
   {
     title: "مزود الخدمة",
-    dataIndex: "user_name",
-    key: "user_name",
+    dataIndex: "business_name",
+    key: "business_name",
+    render: (business_name: string, record: ServiceProviders) => (
+      <span>{business_name || record?.user_name}</span>
+    ),
   },
 
   {
