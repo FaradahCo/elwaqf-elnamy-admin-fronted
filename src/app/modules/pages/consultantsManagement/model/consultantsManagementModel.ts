@@ -96,6 +96,34 @@ export type ProviderUser = {
   default_team_id?: number;
   current_team_id?: number;
 };
+
+export type ServiceProviderProfile = {
+  team_id?: number;
+  user_id?: number;
+  user_name?: string;
+  business_name?: string;
+  business_type?: string;
+  bio?: string;
+  is_consultant?: number;
+  country?: string;
+  city?: string;
+  district?: string;
+  street?: string;
+  building_number?: string;
+  postal_code?: string;
+  fields?: Field[];
+  consultations_count?: number;
+  quotations_count?: number;
+  active_services_count?: number;
+  active_services: ServiceItem[];
+  active_packages: Package[];
+  status: string;
+  status_label: string;
+  logo: string;
+  created_at: string;
+};
+
+export type Package = {};
 export type ServiceOutput = {
   id?: number;
   title?: string;

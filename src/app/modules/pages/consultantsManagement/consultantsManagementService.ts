@@ -3,6 +3,7 @@ import type {
   ConsultantItem,
   ConsultantsListParams,
   ProviderUser,
+  ServiceProviderProfile,
   ServicesListResponse,
   UpdateConsultantStatusPayload,
 } from "./model/consultantsManagementModel";
@@ -13,29 +14,30 @@ import type {
 import { transformFilterParams } from "@shared/services/sharedService";
 
 export const getConsultantsManagement = async (
-  params?: ConsultantsListParams
+  params?: ConsultantsListParams,
 ) => {
   return AoiService.get<PaginatedResponse<ConsultantItem>>(
     "/admin/providers",
-    transformFilterParams(params)
+    transformFilterParams(params),
   );
 };
 export const getServiceProviderProfile = async (teamId?: string) =>
-  AoiService.get<ProviderUser>(`/admin/providers/${teamId}`);
+  AoiService.get<ServiceProviderProfile>(`/front/providers/${teamId}`);
+
 export const getServiceProviderServices = async (
   teamId?: string,
-  params?: PaginatedParams
+  params?: PaginatedParams,
 ) =>
   AoiService.get<ServicesListResponse>(
     `/admin/providers/${teamId}/services`,
-    transformFilterParams(params)
+    transformFilterParams(params),
   );
 
 export const updateConsultantStatus = async (
-  payload: UpdateConsultantStatusPayload
+  payload: UpdateConsultantStatusPayload,
 ) => {
   return AoiService.patch<UpdateConsultantStatusPayload, ConsultantItem>(
     `admin/providers/consultant`,
-    payload
+    payload,
   );
 };
