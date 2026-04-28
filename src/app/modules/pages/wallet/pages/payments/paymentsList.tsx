@@ -1,4 +1,7 @@
-import type { PaginatedResponse } from "@shared/model/shared.model";
+import type {
+  PaginatedResponse,
+  ServiceStatus,
+} from "@shared/model/shared.model";
 import { useApiQuery } from "@shared/services/api";
 import { Tabs } from "antd";
 import { useMemo, useState } from "react";
@@ -7,8 +10,16 @@ import type {
   PaymentClientListParams,
   WithdrawItem,
 } from "../../wallet.model";
-import { getPaymentClients, getPaymentsProvider } from "../../walletService";
+import {
+  getPaymentClients,
+  getPaymentsProvider,
+  getWithdrawalsStatus,
+} from "../../walletService";
 import { getTabsItems } from "./paymentConfig";
+import CustomFilter, {
+  type CustomFilterType,
+} from "@shared/components/custom-filter/custom-filter";
+import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
 
 const PaymentsList = () => {
   const [filter, setFilter] = useState<PaymentClientListParams>({
@@ -17,6 +28,14 @@ const PaymentsList = () => {
   });
 
   const [selectedTab, setSelectedTab] = useState<string>("1");
+
+  const { data: withdrawalsStatus } = useApiQuery(
+    ["withdrawals-status/filter"],
+    getWithdrawalsStatus,
+    {
+      retry: false,
+    },
+  );
 
   const { data: paymentClients } = useApiQuery<
     PaginatedResponse<PaymentClientItem>
@@ -58,12 +77,38 @@ const PaymentsList = () => {
     }));
   };
 
+  const statusOptions = useMemo(
+    () =>
+      withdrawalsStatus?.map((item) => ({
+        label: item?.label,
+        status: item?.key,
+      })) as ServiceStatus[],
+    [withdrawalsStatus],
+  );
+
+  const filters = useMemo(
+    () => [
+      {
+        type: "select" as CustomFilterType,
+        placeholder: "اختر الحالة",
+        label: "الحالة",
+        name: "status",
+        options: renderOptionsWithStatusTag(statusOptions),
+      },
+    ],
+    [filter?.status, statusOptions],
+  );
+
   return (
     <div className="mt-10 bg-white shadow rounded-lg p-4 walet-card">
       <h1 className="text-xl font-bold text-primary">
         جدول وبيانات المعاملات المالية
       </h1>
       <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
+      <CustomFilter
+        filters={filters}
+        onFilterChange={onChangePaymentClientFilter}
+      />
       <Tabs
         defaultActiveKey="1"
         items={tabsItems}

@@ -9,6 +9,7 @@ import type {
   Wallet,
   WalletDashboard,
   WalletListParams,
+  WithdrawalsStatus,
   WithdrawItem,
   WithdrawListParams,
 } from "./wallet.model";
@@ -21,24 +22,24 @@ export const getWalletDashboard = async () => {
 export const getWithdrawList = async (params?: WithdrawListParams) => {
   return AoiService.get<PaginatedResponse<WithdrawItem>>(
     `admin/withdrawals`,
-    transformFilterParams(params)
+    transformFilterParams(params),
   );
 };
 
 export const getBankTransfers = async (params?: BankTransferListParams) => {
   return AoiService.get<PaginatedResponse<BankTransferItem>>(
     `admin/bank-transfers`,
-    transformFilterParams(params)
+    transformFilterParams(params),
   );
 };
 
 export const verifyBankTransfer = async (
   id: number | string,
-  payload: VerifyBankTransferPayload
+  payload: VerifyBankTransferPayload,
 ) => {
   return AoiService.post<VerifyBankTransferPayload, any>(
     `admin/bank-transfers/${id}/verify`,
-    payload
+    payload,
   );
 };
 
@@ -49,31 +50,34 @@ export const showBankTransferById = async (id: number | string) => {
 export const getPaymentClients = async (params?: PaymentClientListParams) => {
   return AoiService.get<PaginatedResponse<PaymentClientItem>>(
     `admin/payments`,
-    transformFilterParams(params)
+    transformFilterParams(params),
   );
 };
 
 export const getPaymentsProvider = async (params?: WithdrawListParams) => {
   return AoiService.get<PaginatedResponse<WithdrawItem>>(
     `admin/withdrawals`,
-    transformFilterParams(params)
+    transformFilterParams(params),
   );
 };
 
 export const getWallets = async (params?: WalletListParams) => {
   return AoiService.get<PaginatedResponse<Wallet>>(
     `admin/wallet`,
-    transformFilterParams(params)
+    transformFilterParams(params),
   );
 };
 
 export const showWithdrawById = async (id: number | string) => {
   return AoiService.get<WithdrawItem>(`admin/withdrawals/${id}`);
 };
+export const getWithdrawalsStatus = async () => {
+  return AoiService.get<WithdrawalsStatus[]>(`admin/withdrawals/statuses`);
+};
 
 export const confirmWithdraw = async (
   id: number | string,
-  formData: FormData
+  formData: FormData,
 ) => {
   return AoiService.postMultipart(`admin/withdrawals/${id}/status`, formData);
 };
