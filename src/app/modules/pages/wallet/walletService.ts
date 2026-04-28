@@ -72,7 +72,10 @@ export const showWithdrawById = async (id: number | string) => {
   return AoiService.get<WithdrawItem>(`admin/withdrawals/${id}`);
 };
 export const getWithdrawalsStatus = async () => {
-  return AoiService.get<WithdrawalsStatus>(`admin/withdrawals/statuses`);
+  return AoiService.get<WithdrawalsStatus[]>(`admin/withdrawals/statuses`);
+};
+export const getPaymentsStatus = async () => {
+  return AoiService.get<WithdrawalsStatus[]>(`admin/payments/statuses`);
 };
 
 export const confirmWithdraw = async (

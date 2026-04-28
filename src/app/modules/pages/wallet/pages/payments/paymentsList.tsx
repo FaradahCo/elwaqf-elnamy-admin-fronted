@@ -13,6 +13,7 @@ import type {
 import {
   getPaymentClients,
   getPaymentsProvider,
+  getPaymentsStatus,
   getWithdrawalsStatus,
 } from "../../walletService";
 import { getTabsItems } from "./paymentConfig";
@@ -29,11 +30,21 @@ const PaymentsList = () => {
 
   const [selectedTab, setSelectedTab] = useState<string>("1");
 
+  const { data: paymentsStatus } = useApiQuery(
+    ["payments-status/filter"],
+    getPaymentsStatus,
+    {
+      retry: false,
+      enabled: selectedTab === "1",
+    },
+  );
+
   const { data: withdrawalsStatus } = useApiQuery(
     ["withdrawals-status/filter"],
     getWithdrawalsStatus,
     {
       retry: false,
+      enabled: selectedTab === "2",
     },
   );
 
@@ -74,10 +85,11 @@ const PaymentsList = () => {
     setFilter((prevFilter) => ({
       ...prevFilter,
       page: 1,
+      status: undefined,
     }));
   };
 
-  const statusOptions = useMemo(
+  const withdrawalsStatusOptions = useMemo(
     () =>
       withdrawalsStatus?.map((item) => ({
         label: item?.label,
@@ -86,6 +98,14 @@ const PaymentsList = () => {
     [withdrawalsStatus],
   );
 
+  const paymentsStatusOptions = useMemo(
+    () =>
+      paymentsStatus?.map((item) => ({
+        label: item?.label,
+        status: item?.key,
+      })) as ServiceStatus[],
+    [paymentsStatus],
+  );
   const filters = useMemo(
     () => [
       {
@@ -93,10 +113,19 @@ const PaymentsList = () => {
         placeholder: "اختر الحالة",
         label: "الحالة",
         name: "status",
-        options: renderOptionsWithStatusTag(statusOptions),
+        options: renderOptionsWithStatusTag(
+          selectedTab === "1"
+            ? paymentsStatusOptions
+            : withdrawalsStatusOptions,
+        ),
       },
     ],
-    [filter?.status, statusOptions],
+    [
+      filter?.status,
+      paymentsStatusOptions,
+      withdrawalsStatusOptions,
+      selectedTab,
+    ],
   );
 
   return (
@@ -106,6 +135,7 @@ const PaymentsList = () => {
       </h1>
       <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
       <CustomFilter
+        key={selectedTab}
         filters={filters}
         onFilterChange={onChangePaymentClientFilter}
       />

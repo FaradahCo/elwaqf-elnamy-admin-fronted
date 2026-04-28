@@ -2,7 +2,6 @@ import AoiService from "@shared/services/api";
 import type {
   ConsultantItem,
   ConsultantsListParams,
-  ProviderUser,
   ServiceProviderProfile,
   ServicesListResponse,
   UpdateConsultantStatusPayload,
