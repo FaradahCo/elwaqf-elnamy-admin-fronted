@@ -50,6 +50,14 @@ export const paymentClientsColumns: ColumnsType<PaymentClientItem> = [
     ellipsis: true,
   },
   {
+    title: "اسم العميل",
+    dataIndex: "client",
+    key: "client",
+    width: 100,
+    ellipsis: true,
+    render: (client) => client?.waqf_name || "-",
+  },
+  {
     title: "رقم المرجع",
     dataIndex: "code",
     key: "code",
