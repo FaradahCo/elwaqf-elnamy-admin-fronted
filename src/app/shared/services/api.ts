@@ -22,7 +22,7 @@ const AoiService = {
 
   post: async <TInput, TResponse>(
     url: string,
-    data?: TInput
+    data?: TInput,
   ): Promise<TResponse> => {
     const res = await axiosInstance.post<TResponse>(url, data);
     return res.data;
@@ -30,7 +30,7 @@ const AoiService = {
 
   postMultipart: async <TResponse>(
     url: string,
-    data: FormData
+    data: FormData,
   ): Promise<TResponse> => {
     const res = await axiosInstance.post<TResponse>(url, data, {
       headers: {
@@ -42,7 +42,7 @@ const AoiService = {
 
   patch: async <TInput, TResponse>(
     url: string,
-    data?: TInput
+    data?: TInput,
   ): Promise<ApiResponse<TResponse>> => {
     const res = await axiosInstance.patch<ApiResponse<TResponse>>(url, data);
     return res.data;
@@ -50,7 +50,7 @@ const AoiService = {
 
   put: async <TInput, TResponse>(
     url: string,
-    data?: TInput
+    data?: TInput,
   ): Promise<TResponse> => {
     const res = await axiosInstance.put<TResponse>(url, data);
     return res.data;
@@ -59,6 +59,11 @@ const AoiService = {
   delete: async (url: string) => {
     const res = await axiosInstance.delete(url);
     return res.data;
+  },
+  postBlob: async <TInput>(url: string, data?: TInput): Promise<Blob> => {
+    const res = await axiosInstance.post(url, data, { responseType: "blob" });
+    // interceptor returns response.data, which will be a Blob
+    return res as unknown as Blob;
   },
 
   getBlob: async (url: string, params?: any): Promise<Blob> => {
@@ -76,7 +81,7 @@ const AoiService = {
 
 export function useApiMutation<TPayload, TResponse>(
   mutationFn: (payload: TPayload) => Promise<TResponse>,
-  options?: UseMutationOptions<TResponse, Error, TPayload>
+  options?: UseMutationOptions<TResponse, Error, TPayload>,
 ): UseMutationResult<TResponse, Error, TPayload> {
   return useMutation<TResponse, Error, TPayload>({
     mutationFn,
@@ -88,11 +93,20 @@ export function useApiMutation<TPayload, TResponse>(
 export function useApiQuery<TData, TError = Error>(
   queryKey: QueryKey,
   queryFn: QueryFunction<TData>,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ): UseQueryResult<TData, TError> {
   return useQuery<TData, TError>({
     queryKey,
     queryFn,
+    ...options,
+  });
+}
+export function useMultipartMutation<TResponse>(
+  mutationFn: (formData: FormData) => Promise<TResponse>,
+  options?: UseMutationOptions<TResponse, Error, FormData>,
+): UseMutationResult<TResponse, Error, FormData> {
+  return useMutation<TResponse, Error, FormData>({
+    mutationFn,
     ...options,
   });
 }

@@ -16,8 +16,10 @@ import { useListHook } from "@/app/hooks/listHook";
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
 import { useRequestsStatus } from "@/app/hooks/useRequestsStatus";
 import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
+import { useNavigate } from "react-router";
 
 const FollowRequestsList = () => {
+  const navigate = useNavigate();
   const { requestsStatus } = useRequestsStatus();
 
   const {
@@ -111,6 +113,12 @@ const FollowRequestsList = () => {
           loading={isLoading}
           paginationMeta={serviceData?.meta}
           onPaginationChange={handlePaginationChange}
+          onRow={(record) => ({
+            onClick: () => {
+              navigate(`/admin/follow-requests/${record?.id}`);
+            },
+            className: "cursor-pointer",
+          })}
         />
       </div>
     </div>
