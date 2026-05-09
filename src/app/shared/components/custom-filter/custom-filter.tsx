@@ -42,7 +42,7 @@ const CustomFilter = ({ filters, onFilterChange }: CustomFilterProps) => {
   const handleFormChange = (values: any) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      onFilterChange?.(values);
+      onFilterChange?.({ ...values, page: 1});
     }, 800);
   };
 
