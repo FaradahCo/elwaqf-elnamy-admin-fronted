@@ -1,11 +1,82 @@
 @import "./styles/tailwind.config.css";
 @import "tailwindcss";
 
+/* Local fonts from public/fonts */
+@font-face {
+  font-family: "Greta AR";
+  src: url("/fonts/greta_ar_light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Greta AR";
+  src: url("/fonts/greta_ar_regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Greta AR";
+  src: url("/fonts/greta_ar_medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Greta AR";
+  src: url("/fonts/greta_ar_bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Apply font family with higher specificity */
 * {
-  font-family: "Noto Kufi Arabic", sans-serif;
+  font-family: var(--font-family-sans);
   font-optical-sizing: auto;
   direction: rtl;
+}
+
+input::placeholder,
+textarea::placeholder {
+  font-family: var(--font-family-sans);
+  font-size: 15px;
+}
+
+/* Ant Design form controls use app font */
+.ant-input,
+.ant-input-affix-wrapper input,
+.ant-select-selector,
+.ant-picker-input input {
+  font-family: var(--font-family-sans) !important;
+}
+
+/* Custom table header gray background and borders */
+.custom-table .ant-table-thead > tr > th {
+  background: var(--color-gray) !important;
+  border-top: 1px solid var(--color-gray-300, #d1d5db) !important;
+  border-bottom: 1px solid var(--color-gray-300, #d1d5db) !important;
+  font-size: 16px !important;
+}
+
+.custom-table .ant-table-tbody > tr > td {
+  font-size: 15px !important;
+}
+
+/* Enable smooth scrolling globally */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ensure smooth scroll works on all scroll containers */
+html,
+body {
+  scroll-behavior: smooth;
+  font-family: var(--font-family-sans);
 }
 
 .profile .ant-collapse-item {
@@ -143,8 +214,17 @@
 .quill .ql-container {
   direction: rtl;
 }
+.custom-tabs .ant-tabs-tab {
+  margin: 0 !important;
+}
 .custom-tabs .ant-tabs-tab-btn {
-  color: var(--color-second-primary);
+  color: #0f1a2a;
+  padding: 0.2rem 0.8rem;
+}
+
+.custom-tabs.ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  background-color: var(--color-primary);
+  color: white !important;
 }
 
 .main-radio .ant-radio-button-wrapper-checked {

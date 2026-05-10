@@ -19,7 +19,7 @@ const WalletLayout = () => {
           icon="/images/wallet.svg"
           value={walletDashboard?.total_profits ?? 0}
           classesName={[
-            "border border-second-primary p-4 rounded-xl w-64 min-w-64",
+            "border border-second-primary p-4 w-64 min-w-64",
           ]}
         />
         <CardStatistic
@@ -27,7 +27,7 @@ const WalletLayout = () => {
           icon="/images/wallet_2.svg"
           value={walletDashboard?.available_balance ?? 0}
           classesName={[
-            "border border-green-dark text-green-dark rounded-lg p-4 rounded-xl bg-green-light w-64 min-w-64",
+            "border border-green-dark text-green-dark p-4 bg-green-light w-64 min-w-64",
           ]}
         />
 
@@ -36,7 +36,7 @@ const WalletLayout = () => {
           icon="/images/wallet_3.svg"
           value={walletDashboard?.pending_balance ?? 0}
           classesName={[
-            "border border-blue-dark bg-blue-light text-blue-dark rounded-lg p-4 rounded-xl w-64 min-w-64",
+            "border border-blue-dark bg-blue-light text-blue-dark p-4 w-64 min-w-64",
           ]}
         />
 
@@ -45,7 +45,7 @@ const WalletLayout = () => {
           icon="/images/wallet_4.svg"
           value={walletDashboard?.pending_balance ?? 0}
           classesName={[
-            "border border-gray-dark bg-gray-light text-gray-dark rounded-lg p-4 rounded-xl w-64 min-w-64",
+            "border border-gray-dark bg-gray-light text-gray-dark p-4 w-64 min-w-64",
           ]}
         />
       </div>

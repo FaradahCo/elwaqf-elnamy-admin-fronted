@@ -27,7 +27,7 @@ const AuthenticationLayout: React.FC = () => (
     >
       <div className="bg-white px-5 py-3 md:px-5 md:py-5 rounded-lg shadow-lg w-full md:w-3/4">
         <img
-          src="/images/logo.svg"
+          src="/images/second-logo.svg"
           alt="logo"
           className="w-32 md:w-20 mb-4 md:mb-10 mx-auto"
         />
