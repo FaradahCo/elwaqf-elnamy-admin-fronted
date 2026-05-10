@@ -41,7 +41,7 @@ const Home: React.FC = () => {
         <h1 className="font-semibold text-2xl">الرئيسية</h1>
         <Button
           onClick={() => navigate(0)}
-          className="py-3! text-primary! border-primary! hover:text-white! hover:bg-primary! rounded-sm!"
+          className="py-3! text-primary! border-primary! hover:text-white! hover:bg-primary! "
           type="default"
           size="large"
         >

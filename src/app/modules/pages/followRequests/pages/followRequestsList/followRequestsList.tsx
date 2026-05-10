@@ -59,7 +59,7 @@ const FollowRequestsList = () => {
           icon="/images/elements_1.svg"
           value={requestsStatus?.total ?? 0}
           classesName={[
-            "border border-second-primary p-4 rounded-xl w-64 min-w-64",
+            "border border-second-primary p-4 w-64 min-w-64",
           ]}
         />
         <CardStatistic
@@ -71,7 +71,7 @@ const FollowRequestsList = () => {
             )?.count ?? 0
           }
           classesName={[
-            "border border-green-dark text-green-dark rounded-lg p-4 rounded-xl bg-green-light w-64 min-w-64",
+            "border border-green-dark text-green-dark p-4 bg-green-light w-64 min-w-64",
           ]}
         />
 
@@ -84,7 +84,7 @@ const FollowRequestsList = () => {
             )?.count ?? 0
           }
           classesName={[
-            "border border-blue-dark text-blue-dark rounded-lg p-4 rounded-xl bg-blue-light w-64 min-w-64",
+            "border border-blue-dark text-blue-dark p-4 bg-blue-light w-64 min-w-64",
           ]}
         />
 
@@ -97,7 +97,7 @@ const FollowRequestsList = () => {
             )?.count ?? 0
           }
           classesName={[
-            "border border-orange-dark bg-orange-light text-orange-dark rounded-lg p-4 rounded-xl w-64 min-w-64",
+            "border border-orange-dark bg-orange-light text-orange-dark p-4 w-64 min-w-64",
           ]}
         />
       </div>

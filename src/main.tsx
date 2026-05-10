@@ -20,14 +20,51 @@ const queryClient = new QueryClient({
 
 const theme = {
   token: {
-    colorPrimary: "#7ea831",
+    colorPrimary: "#0d0035",
+    fontFamily: "Greta AR, sans-serif",
+    borderRadius: 0,
+    lineWidth: 0.5,
+    controlHeight: 30,
   },
   components: {
     Collapse: {
       borderRadiusLG: 0,
     },
+    Form: {
+      labelFontSize: 16,
+    },
+    Input: {
+      borderRadius: 0,
+      colorPrimary: "#0d0035",
+      paddingBlock: 4,
+      paddingInline: 8,
+      paddingBlockSM: 2,
+      paddingInlineSM: 6,
+      paddingBlockLG: 6,
+      paddingInlineLG: 10,
+    },
+    Select: {
+      borderRadius: 0,
+      paddingBlock: 4,
+      paddingInline: 8,
+      paddingBlockSM: 2,
+      paddingInlineSM: 6,
+      paddingBlockLG: 6,
+      paddingInlineLG: 10,
+      colorPrimary: "#0d0035",
+    },
+    DatePicker: {
+      borderRadius: 0,
+      paddingBlock: 4,
+      paddingInline: 8,
+      paddingBlockSM: 2,
+      paddingInlineSM: 6,
+      paddingBlockLG: 6,
+      paddingInlineLG: 10,
+      colorPrimary: "#0d0035",
+    },
     Steps: {
-      colorPrimary: "#150941",
+      colorPrimary: "#0d0035",
     },
   },
 };
