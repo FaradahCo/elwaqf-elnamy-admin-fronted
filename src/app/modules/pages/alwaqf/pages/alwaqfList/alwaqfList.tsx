@@ -34,6 +34,9 @@ const AlwaqfList = () => {
     queryKey: "getAlwaqfList",
     fetchFn: getAlwaqfList,
     queryOptions: { retry: false },
+    initialFilter: {
+      sort: "-created_at",
+    },
   });
 
   const filters = useMemo(
@@ -62,9 +65,7 @@ const AlwaqfList = () => {
           title="إجمالي الأوقاف"
           icon="/images/elements_1.svg"
           value={alwaqfStatus?.total ?? 0}
-          classesName={[
-            "border border-second-primary p-4 w-64 min-w-64",
-          ]}
+          classesName={["border border-second-primary p-4 w-64 min-w-64"]}
         />
         <CardStatistic
           title="الأوقاف النشطة"

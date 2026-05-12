@@ -46,6 +46,7 @@ const ServiceProvidersList = () => {
     fetchFn: getServiceProviders,
     initialFilter: {
       status: (searchParams.get("status") as ServiceStatusEnum) ?? undefined,
+      sort: "-created_at",
     },
     queryOptions: { retry: false },
   });
