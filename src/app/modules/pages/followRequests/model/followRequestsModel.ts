@@ -24,6 +24,7 @@ export interface FollowRequest {
   quotations: Quotation[];
   active_quotation?: Quotation | null;
   latest_quotation?: Quotation;
+  activities?: Activity[];
 }
 export type Client = {
   id: number;
