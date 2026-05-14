@@ -153,7 +153,7 @@ const followRequestsDetails = () => {
           business_name: followRequest?.service.provider?.business_name,
         }}
       />
-      <RequestHistroy activities={[]} />
+      <RequestHistroy activities={followRequest?.activities || []} />
     </div>
   );
 };

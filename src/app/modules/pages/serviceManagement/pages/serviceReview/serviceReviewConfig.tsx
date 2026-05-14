@@ -1,22 +1,26 @@
-import type { ServiceData } from "../../model/serviceProviderList";
 
 export const serviceLogColumns = [
   {
     title: "الاجراء",
-    dataIndex: "service",
-    key: "title",
-    render: (service: ServiceData) => service?.title || "-",
+    dataIndex: "action_summary",
+    key: "action_summary",
+  },
+  {
+    title: "الحقول المعدلة",
+    dataIndex: "changed_fields",
+    key: "changed_fields",
+    render: (value: string[]) => value?.join(", ") || "-",
   },
   {
     title: "التاريخ",
-    dataIndex: "created_at",
-    key: "created_at",
+    dataIndex: "updated_at",
+    key: "updated_at",
   },
   {
     title: "التفاصيل",
-    dataIndex: "service",
-    key: "description",
-    render: (service: ServiceData) => service?.description || "-",
+    dataIndex: "note",
+    key: "note",
+    render: (note: string) => note || "-",
   },
 ];
 
