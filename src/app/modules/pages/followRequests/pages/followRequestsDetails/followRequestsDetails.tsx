@@ -1,12 +1,14 @@
-import { Avatar, Button, Spin } from "antd";
+import { Avatar, Spin } from "antd";
 import { useApiQuery } from "@shared/services/api";
 import { getServiceRequestById } from "../../followRequestsService";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import Box from "../../components/box/box";
 import ServiceDetails from "../../components/serviceDetails/serviceDetails";
 import Service from "../../components/service/service";
 import RequestHistroy from "../../components/requestHistory/requestHistory";
 import Chat from "@shared/components/chat/Chat";
+import { alwaqfRoutePath } from "../../../alwaqf/alwaqfRoutes";
+import { serviceProviderRoutePath } from "../../../serviceProvider/serviceProvidersRoutes";
 
 const followRequestsDetails = () => {
   const { id } = useParams();
@@ -36,22 +38,41 @@ const followRequestsDetails = () => {
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">التكلفة</p>
-            <p className="flex items-center">
-              {followRequest?.service.min_price}
-              <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
-            </p>
+            {followRequest?.accounting?.client?.cost ? (
+              <p className="flex items-center">
+                {followRequest?.accounting?.client?.cost}
+                <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+              </p>
+            ) : (
+              <p>-</p>
+            )}
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">طريقة الدفع</p>
-            <p>-</p>
+            <p>{followRequest?.accounting?.client?.payment_method || "-"}</p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">الفاتورة</p>
-            <p>-</p>
+            {followRequest?.accounting?.client?.invoice_url ? (
+              <Link
+                to={followRequest?.accounting?.client?.invoice_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex gap-2 border border-gray! p-2!"
+              >
+                <img src="/images/pdf.svg" alt="تنزيل الفاتورة" />
+                الفاتورة
+              </Link>
+            ) : (
+              <p>-</p>
+            )}
           </div>
-          <Button className="mt-6! self-end font-semibold!" type="text">
-            الانتقال إلى صفحة الطلب
-          </Button>
+          <Link
+            to={alwaqfRoutePath.ALWAQF_DETAILS(followRequest?.client?.id!)}
+            className="mt-6! self-end font-semibold! text-brand!"
+          >
+            الانتقال إلى الطلب
+          </Link>
         </Box>
         <Box title="مزود الخدمة">
           <div className="flex gap-4 items-center">
@@ -66,80 +87,119 @@ const followRequestsDetails = () => {
             </p>
           </div>
           <div className="flex gap-4 items-center">
-            <p className="text-[#0F1A2A] font-semibold">التكلفة</p>
-            <p className="flex items-center">
-              {followRequest?.service.min_price}
-              <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
-            </p>
+            <div className="text-[#0F1A2A] font-semibold">التكلفة</div>
+            {followRequest?.accounting?.provider?.cost ? (
+              <p className="flex items-center">
+                {followRequest?.accounting?.provider?.cost}
+                <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+              </p>
+            ) : (
+              <p>-</p>
+            )}
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">الفاتورة</p>
-            <p>-</p>
+            {followRequest?.accounting?.provider?.invoice_url ? (
+              <Link
+                to={followRequest?.accounting?.provider?.invoice_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex gap-2 border border-gray! p-2!"
+              >
+                <img src="/images/pdf.svg" alt="تنزيل الفاتورة" />
+                الفاتورة
+              </Link>
+            ) : (
+              <p>-</p>
+            )}
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">الحوالة</p>
-            <p>-</p>
+            {followRequest?.accounting?.provider?.transfer_url ? (
+              <Link
+                to={followRequest?.accounting?.provider?.transfer_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex gap-2 border border-gray! p-2!"
+              >
+                <img src="/images/pdf.svg" alt="تنزيل الحوالة" />
+                الإيصال
+              </Link>
+            ) : (
+              <p>-</p>
+            )}
           </div>
-          <Button className="mt-6! self-end font-semibold!" type="text">
+          <Link
+            to={serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(
+              followRequest?.service?.provider?.id!,
+            )}
+            className="mt-6! self-end font-semibold! text-brand!"
+          >
             الانتقال إلى طلب المزود
-          </Button>
+          </Link>
         </Box>
         <Box title="المنصة  ">
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">نسبة المنصة</p>
             <p className="flex items-center">
-              {followRequest?.service.min_price}
+              {followRequest?.accounting?.platform?.percentage + "%"}
             </p>
             <p>كود الخصم</p>
-            <p>-</p>
+            <p>{followRequest?.accounting?.platform?.discount_code || "-"}</p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">القيمة</p>
             <p className="flex items-center">
-              -
+              {followRequest?.accounting?.platform?.percentage_value || "000"}
               <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
             </p>
             <p>نسبة الخصم</p>
-            <p>-</p>
+            <p>
+              {followRequest?.accounting?.platform?.discount_percentage + "%"}
+            </p>
           </div>
           <div className="flex gap-4 items-center">
-            <p className="text-[#0F1A2A] font-semibold">الحوالة</p>
-            <p>-</p>
+            <p className="text-[#0F1A2A] font-semibold ">القيمة</p>
+            <p className="flex items-center">
+              {followRequest?.accounting?.platform?.discount_value || "00"}
+              <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+            </p>
           </div>
         </Box>
         <Box title="المستشار">
           <div className="flex gap-4 items-center">
-            <Avatar
+            {/* <Avatar
               className="shadow-lg"
               size="large"
               src={followRequest?.service.provider?.logo}
               alt={followRequest?.service.provider?.business_name}
-            />
+            /> */}
             <p className="text-[#0F1A2A] font-semibold text-lg">
-              {followRequest?.service.provider?.business_name}
-            </p>
-          </div>
-          <div className="flex gap-4 items-center">
-            <p className="text-[#0F1A2A] font-semibold">التكلفة</p>
-            <p className="flex items-center">
-              {followRequest?.service.min_price}
-              <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+              {followRequest?.accounting?.consultant?.name}
             </p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">النسبة</p>
-            <p>-</p>
+            <p>
+              {followRequest?.accounting?.consultant?.percentage
+                ? followRequest?.accounting?.consultant?.percentage + "%"
+                : "0%"}
+            </p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">القيمة</p>
             <p className="flex items-center">
-              -
+              {followRequest?.accounting?.consultant?.value || "00"}
               <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
             </p>
           </div>
-          <Button className="mt-6! self-end font-semibold!" type="text">
+          {/* <Link
+            to="/"
+            className="mt-6! self-end font-semibold! text-brand!"
+            type="text"
+          >
             الانتقال إلى الإسناد المستشار
-          </Button>
+          </Link> */}
         </Box>
       </div>
       <ServiceDetails serviceDetails={followRequest!} />

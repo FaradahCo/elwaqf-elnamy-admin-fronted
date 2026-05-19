@@ -3,7 +3,6 @@ import { useApiMutation } from "@shared/services/api";
 import {
   durationNameConfig,
   getStatusTag,
-  ServiceStatusEnum,
 } from "@shared/services/sharedService";
 import { Button, Tag } from "antd";
 import React from "react";
@@ -117,18 +116,16 @@ const ServiceDetails = React.memo(
               مدة تنفيذ الخدمة
             </span>
             <span>
-              {serviceDetails?.latest_quotation
-                ? serviceDetails?.service?.duration?.time +
-                  " " +
-                  durationNameConfig[
-                    serviceDetails?.service?.duration
-                      ?.type as keyof typeof durationNameConfig
-                  ]
-                : "--"}
+              {serviceDetails.service.duration?.time +
+                " " +
+                durationNameConfig[
+                  serviceDetails.service.duration
+                    ?.type as keyof typeof durationNameConfig
+                ]}
             </span>
           </p>
 
-          <p className="flex justify-between mt-3">
+          <div className="flex justify-between mt-3">
             <span className="text-primary font-semibold text-lg">
               العرض الفني والمالي
             </span>
@@ -150,17 +147,15 @@ const ServiceDetails = React.memo(
             ) : (
               "--"
             )}
-          </p>
+          </div>
 
-          <p className="flex justify-between mt-3">
+          <div className="flex justify-between mt-3">
             <span className="text-primary font-semibold text-lg">التكلفة</span>
-            <span>
-              {serviceDetails?.latest_quotation?.status ===
-              ServiceStatusEnum.accepted
-                ? serviceDetails?.latest_quotation?.price + "ر.س"
-                : "--"}{" "}
-            </span>
-          </p>
+            <p className="flex items-center">
+              {serviceDetails?.service?.min_price}{" "}
+              <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+            </p>
+          </div>
         </div>
 
         <OfferDetails quotations={serviceDetails?.quotations!} />
