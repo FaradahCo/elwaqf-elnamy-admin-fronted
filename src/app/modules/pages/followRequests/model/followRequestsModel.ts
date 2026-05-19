@@ -21,6 +21,7 @@ export interface FollowRequest {
   chat_id?: number;
   service: ServiceData;
   client: Client;
+  accounting?: FollowRequestAccounting;
   quotations: Quotation[];
   active_quotation?: Quotation | null;
   latest_quotation?: Quotation;
@@ -45,6 +46,38 @@ export type Provider = {
   phone?: string;
   profile?: ProviderProfile[];
 };
+
+export type FollowRequestAccounting = {
+  client?: {
+    cost?: number | null;
+    payment_method?: string | null;
+    payment_method_val?: string | null;
+    has_invoice?: boolean;
+    invoice_url?: string | null;
+  };
+  consultant?: {
+    name?: string;
+    percentage?: number | null;
+    value?: number | null;
+  };
+  platform?: {
+    has_percentage?: boolean;
+    percentage?: number;
+    percentage_value?: number;
+    has_discount?: boolean;
+    discount_code?: string | null;
+    discount_percentage?: number;
+    discount_value?: number;
+  };
+  provider?: {
+    cost?: number | null;
+    has_invoice?: boolean;
+    invoice_url?: string | null;
+    has_transfer?: boolean;
+    transfer_url?: string | null;
+  };
+};
+
 export type Quotation = {
   id?: number;
   service_request_id?: number;
