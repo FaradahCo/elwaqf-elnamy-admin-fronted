@@ -6,8 +6,8 @@ export const requestHistoryColumns = [
   },
   {
     title: "التحديث",
-    dataIndex: "created_at",
-    key: "created_at",
+    dataIndex: "description",
+    key: "description",
   },
   {
     title: "التاريخ",
