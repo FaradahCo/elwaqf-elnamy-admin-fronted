@@ -16,8 +16,10 @@ import { useListHook } from "@/app/hooks/listHook";
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
 import { useRequestsStatus } from "@/app/hooks/useRequestsStatus";
 import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
+import { useNavigate } from "react-router";
 
 const FollowRequestsList = () => {
+  const navigate = useNavigate();
   const { requestsStatus } = useRequestsStatus();
 
   const {
@@ -28,10 +30,6 @@ const FollowRequestsList = () => {
   } = useListHook<PaginatedResponse<FollowRequest>, FollowRequestFilterQuery>({
     queryKey: "getServiceRequests",
     fetchFn: getServiceRequests,
-    initialFilter: {
-      page: 1,
-      per_page: 10,
-    },
     queryOptions: { retry: false },
   });
 
@@ -61,7 +59,7 @@ const FollowRequestsList = () => {
           icon="/images/elements_1.svg"
           value={requestsStatus?.total ?? 0}
           classesName={[
-            "border border-second-primary p-4 rounded-xl w-64 min-w-64",
+            "border border-second-primary p-4 w-64 min-w-64",
           ]}
         />
         <CardStatistic
@@ -73,7 +71,7 @@ const FollowRequestsList = () => {
             )?.count ?? 0
           }
           classesName={[
-            "border border-green-dark text-green-dark rounded-lg p-4 rounded-xl bg-green-light w-64 min-w-64",
+            "border border-green-dark text-green-dark p-4 bg-green-light w-64 min-w-64",
           ]}
         />
 
@@ -86,7 +84,7 @@ const FollowRequestsList = () => {
             )?.count ?? 0
           }
           classesName={[
-            "border border-blue-dark text-blue-dark rounded-lg p-4 rounded-xl bg-blue-light w-64 min-w-64",
+            "border border-blue-dark text-blue-dark p-4 bg-blue-light w-64 min-w-64",
           ]}
         />
 
@@ -99,7 +97,7 @@ const FollowRequestsList = () => {
             )?.count ?? 0
           }
           classesName={[
-            "border border-orange-dark bg-orange-light text-orange-dark rounded-lg p-4 rounded-xl w-64 min-w-64",
+            "border border-orange-dark bg-orange-light text-orange-dark p-4 w-64 min-w-64",
           ]}
         />
       </div>
@@ -115,6 +113,12 @@ const FollowRequestsList = () => {
           loading={isLoading}
           paginationMeta={serviceData?.meta}
           onPaginationChange={handlePaginationChange}
+          onRow={(record) => ({
+            onClick: () => {
+              navigate(`/admin/follow-requests/${record?.id}`);
+            },
+            className: "cursor-pointer",
+          })}
         />
       </div>
     </div>

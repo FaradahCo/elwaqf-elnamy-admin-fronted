@@ -3,7 +3,7 @@ import MainHeader from "@shared/components/mainHeader/mainHeader";
 import { Layout, Menu, theme } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { useLogOut } from "../hooks/useLogOut";
 import { consultationRoutePath } from "../modules/pages/consultation/consultationRoutes";
@@ -27,152 +27,219 @@ const MainLayout: React.FC = () => {
   useLogOut();
 
   // Menu items with navigation
-  const menuItems = [
-    {
-      key: "1",
-      label: "لوحة التحكم والتحليل",
-      type: "group" as const,
-      children: [
-        {
-          key: "1-1",
-          icon: <img src="/images/home-icon.svg" alt="home icon" />,
-          label: "الرئيسية",
-          path: pagesRoutePath.HOME,
-        },
-      ],
-    },
+  const menuItems = useMemo(
+    () => [
+      {
+        key: "1",
+        label: <span className="text-[18px] block">لوحة التحكم والتحليل</span>,
+        type: "group" as const,
+        children: [
+          {
+            key: "1-1",
+            icon: (
+              <img
+                src="/images/home-icon.svg"
+                alt="home icon"
+                className="w-6 h-6"
+              />
+            ),
+            label: <span className="text-[18px]!">الرئيسية</span>,
+            path: pagesRoutePath.HOME,
+          },
+        ],
+      },
 
-    {
-      key: "2",
-      label: "إدارة الخدمات والأوقاف",
-      type: "group" as const,
-      children: [
-        {
-          key: "2-1",
-          icon: (
-            <img
-              src="/images/services-managemnet-icon.svg"
-              alt="services-managemnet"
-            />
-          ),
-          label: "إدارة الخدمات",
-          path: pagesRoutePath.SERVICE_MANAGEMENT_LIST,
-        },
-        {
-          key: "2-2",
-          icon: <img src="/images/services.svg" alt="services" />,
-          label: "متابعه الطلبات",
-          path: followRequestsRoutePath.FOLLOW_REQUESTS,
-        },
-        {
-          key: "2-3",
-          icon: (
-            <img
-              src="/images/service-providers-icon.svg"
-              alt="service providers icon"
-            />
-          ),
-          label: "مزودي الخدمات",
-          path: serviceProviderRoutePath.SERVICE_PROVIDERS,
-        },
-        {
-          key: "2-4",
-          icon: <img src="/images/awqaf.svg" alt="awqaf icon" />,
-          label: "الإوقاف",
-          path: alwaqfRoutePath.ALWAQF_LIST,
-        },
-      ],
-    },
+      {
+        key: "2",
+        label: (
+          <span className="text-[15px] block mt-4!">إدارة الخدمات والأوقاف</span>
+        ),
+        type: "group" as const,
+        children: [
+          {
+            key: "2-1",
+            icon: (
+              <img
+                src="/images/services-managemnet-icon.svg"
+                alt="services-managemnet"
+                className="w-6 h-6"
+              />
+            ),
+            label: <span className="text-[18px]!">إدارة الخدمات</span>,
+            path: pagesRoutePath.SERVICE_MANAGEMENT_LIST,
+          },
+          {
+            key: "2-2",
+            icon: (
+              <img
+                src="/images/services.svg"
+                alt="services"
+                className="w-6 h-6"
+              />
+            ),
+            label: <span className="text-[18px]!">متابعه الطلبات</span>,
+            path: followRequestsRoutePath.FOLLOW_REQUESTS,
+          },
+          {
+            key: "2-3",
+            icon: (
+              <img
+                src="/images/service-providers-icon.svg"
+                alt="service providers icon"
+                className="w-6 h-6"
+              />
+            ),
+            label: <span className="text-[18px]!">مزودي الخدمات</span>,
+            path: serviceProviderRoutePath.SERVICE_PROVIDERS,
+          },
+          {
+            key: "2-4",
+            icon: (
+              <img src="/images/awqaf.svg" alt="awqaf icon" className="w-6 h-6" />
+            ),
+            label: <span className="text-[18px]!">الإوقاف</span>,
+            path: alwaqfRoutePath.ALWAQF_LIST,
+          },
+        ],
+      },
 
-    {
-      key: "3",
-      icon: <UploadOutlined />,
-      label: "الإدارة المالية",
-      type: "group" as const,
-      children: [
-        {
-          key: "3-1",
-          icon: (
-            <img
-              src="/images/walet-management.svg"
-              alt="walet-management icon"
-            />
-          ),
-          label: "إدارة المحفظة",
-          path: walletRoutePath.WALLET,
-        },
-        {
-          key: "3-2",
-          icon: <img src="/images/transactions.svg" alt="transactions icon" />,
-          label: "المعاملات المالية",
-          path: walletRoutePath.PAYMENTS,
-        },
-        {
-          key: "3-3",
-          icon: <img src="/images/balances.svg" alt="balances icon" />,
-          label: "الأرصدة",
-          path: walletRoutePath.BALANCES,
-        },
-        {
-          key: "3-4",
-          icon: <img src="/images/discount.svg" alt="discount icon" />,
-          label: "أكواد الخصم",
-          path: pagesRoutePath.DISCOUNT_CODES_LIST,
-        },
-      ],
-    },
-    {
-      key: "4",
-      label: "المحتوى والخدمات المساندة",
-      type: "group" as const,
-      children: [
-        {
-          key: "4-1",
-          path: consultationRoutePath.CONSULTATION,
-          icon: (
-            <img src="/images/consultations.svg" alt="consultations icon" />
-          ),
-          label: "الاستشارة",
-        },
-        {
-          key: "4-2",
-          path: consultantsManagementRoutePath.CONSULTANTS_MANAGEMENT_LIST,
-          icon: (
-            <img
-              src="/images/consultations.svg"
-              alt="consultations management icon"
-            />
-          ),
-          label: "إدارة المستشارين",
-        },
-      ],
-    },
-    {
-      key: "5",
-      label: "النظام والسياسات",
-      type: "group" as const,
-      children: [
-        {
-          key: "5-1",
-          path: "complaints-suggestions",
-          icon: <img src="/images/complents.svg" alt="complaints icon" />,
-          label: "الشكاوى والاقتراحات",
-        },
-        {
-          key: "5-2",
-          icon: <img src="/images/privacy.svg" alt="privacy icon" />,
-          label: "سياسة الخصوصية",
-          path: staticPagesRoutePath.STATIC_PAGES_LIST,
-        },
-        {
-          key: "5-3",
-          path: "settings",
-          icon: <img src="/images/settings.svg" alt="settings icon" />,
-          label: "الاعدادات",
-        },
-      ],
-    },
-  ];
+      {
+        key: "3",
+        icon: <UploadOutlined />,
+        label: <span className="text-[15px] block mt-4!">الإدارة المالية</span>,
+        type: "group" as const,
+        children: [
+          {
+            key: "3-1",
+            icon: (
+              <img
+                src="/images/walet-management.svg"
+                alt="walet-management icon"
+                className="w-6 h-6"
+              />
+            ),
+            label: <span className="text-[18px]!">إدارة المحفظة</span>,
+            path: walletRoutePath.WALLET,
+          },
+          {
+            key: "3-2",
+            icon: (
+              <img
+                src="/images/transactions.svg"
+                alt="transactions icon"
+                className="w-6 h-6"
+              />
+            ),
+            label: <span className="text-[18px]!">المعاملات المالية</span>,
+            path: walletRoutePath.PAYMENTS,
+          },
+          {
+            key: "3-3",
+            icon: (
+              <img
+                src="/images/balances.svg"
+                alt="balances icon"
+                className="w-6 h-6"
+              />
+            ),
+            label: <span className="text-[18px]!">الأرصدة</span>,
+            path: walletRoutePath.BALANCES,
+          },
+          {
+            key: "3-4",
+            icon: (
+              <img
+                src="/images/discount.svg"
+                alt="discount icon"
+                className="w-6 h-6"
+              />
+            ),
+            label: <span className="text-[18px]!">أكواد الخصم</span>,
+            path: pagesRoutePath.DISCOUNT_CODES_LIST,
+          },
+        ],
+      },
+      {
+        key: "4",
+        label: (
+          <span className="text-[15px] block mt-4!">
+            المحتوى والخدمات المساندة
+          </span>
+        ),
+        type: "group" as const,
+        children: [
+          {
+            key: "4-1",
+            path: consultationRoutePath.CONSULTATION,
+            icon: (
+              <img
+                src="/images/consultations.svg"
+                alt="consultations icon"
+                className="w-6 h-6"
+              />
+            ),
+            label: <span className="text-[18px]!">الاستشارة</span>,
+          },
+          {
+            key: "4-2",
+            path: consultantsManagementRoutePath.CONSULTANTS_MANAGEMENT_LIST,
+            icon: (
+              <img
+                src="/images/consultations.svg"
+                alt="consultations management icon"
+                className="w-6 h-6"
+              />
+            ),
+            label: <span className="text-[18px]!">إدارة المستشارين</span>,
+          },
+        ],
+      },
+      {
+        key: "5",
+        label: <span className="text-[15px] block mt-4!">النظام والسياسات</span>,
+        type: "group" as const,
+        children: [
+          {
+            key: "5-1",
+            path: "complaints-suggestions",
+            icon: (
+              <img
+                src="/images/complents.svg"
+                alt="complaints icon"
+                className="w-6 h-6"
+              />
+            ),
+            label: <span className="text-[18px]!">الشكاوى والاقتراحات</span>,
+          },
+          {
+            key: "5-2",
+            icon: (
+              <img
+                src="/images/privacy.svg"
+                alt="privacy icon"
+                className="w-6 h-6"
+              />
+            ),
+            label: <span className="text-[18px]!">سياسة الخصوصية</span>,
+            path: staticPagesRoutePath.STATIC_PAGES_LIST,
+          },
+          {
+            key: "5-3",
+            path: "settings",
+            icon: (
+              <img
+                src="/images/settings.svg"
+                alt="settings icon"
+                className="w-6 h-6"
+              />
+            ),
+            label: <span className="text-[18px]!">الاعدادات</span>,
+          },
+        ],
+      },
+    ],
+    []
+  );
 
   // Helper function to find menu item by key (including nested children)
   const findMenuItemByKey = (items: any[], key: string): any => {

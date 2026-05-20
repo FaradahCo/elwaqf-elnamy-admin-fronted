@@ -84,7 +84,7 @@ const QualityControl = () => {
                 </div>
                 <Link
                   to="service-management"
-                  className="rounded-md! py-2 px-3 border! text-second-primary! font-medium! border-second-primary! hover:bg-second-primary! hover:text-white! transition-colors!"
+                  className="py-2 px-3 border! text-primary! font-medium! border-primary! hover:bg-primary! hover:text-white! transition-colors!"
                 >
                   عرض الخدمة
                 </Link>

@@ -101,6 +101,7 @@ export enum ServiceStatusEnum {
   review = "review",
   exhausted = "exhausted",
   cancelled = "cancelled",
+  accepted = "accepted",
 }
 
 export const getStatusTag = (status: ServiceStatusEnum | string) => {
@@ -127,6 +128,7 @@ export const getStatusTag = (status: ServiceStatusEnum | string) => {
     [ServiceStatusEnum.active]: { color: "#52c41a", text: "مفعل" },
     [ServiceStatusEnum.completed]: { color: "#52c41a", text: "مكتملة" },
     [ServiceStatusEnum.complete]: { color: "#52c41a", text: "مكتملة" },
+    [ServiceStatusEnum.accepted]: { color: "#52c41a", text: "مقبول" },
     [ServiceStatusEnum.hold]: { color: "#fa8c16", text: "معلق" },
     [ServiceStatusEnum.review]: { color: "#fa8c16", text: "معلق" },
     [ServiceStatusEnum.in_progress]: { color: "#fa8c16", text: "جاري العمل" },
@@ -160,7 +162,7 @@ export const transformFilterParams = <T>(filter: T): Record<string, any> => {
   Object.entries(filter).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
       // Send page and per_page directly without filter[] wrapper
-      if (key === "page" || key === "per_page") {
+      if (key === "page" || key === "per_page" || key === "sort") {
         transformedParams[key] = value;
       } else {
         transformedParams[`filter[${key}]`] = value;
@@ -223,4 +225,14 @@ export const handleDownloadAttachment = async (
     console.error("Download error:", error);
     throw error;
   }
+};
+
+export const extractUrl = (text: string): string | null => {
+  if (!text || typeof text !== "string") {
+    return null;
+  }
+
+  // Extract URL from text (matches http:// or https:// followed by non-whitespace characters)
+  const urlMatch = text.match(/https?:\/\/[^\s]+/i);
+  return urlMatch ? urlMatch[0] : null;
 };

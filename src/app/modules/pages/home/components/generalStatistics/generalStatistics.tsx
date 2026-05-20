@@ -30,35 +30,30 @@ const GeneralStatistics = () => {
         label: "عدد الأوقاف",
         count: generalStatistics?.total_clients,
         unit: "وقف",
-        icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
       },
       {
         id: 2,
         label: "عدد المزودين",
         count: generalStatistics?.total_active_providers,
         unit: "مزود خدمة",
-        icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
       },
       {
         id: 3,
         label: "عدد المستشارين",
         count: generalStatistics?.total_consultations,
         unit: "مستشار",
-        icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
       },
       {
         id: 4,
         label: "عدد الخدمات",
         count: generalStatistics?.total_services,
         unit: "خدمة",
-        icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
       },
       {
         id: 5,
         label: "عدد الباقات",
         count: generalStatistics?.total_packages,
         unit: "باقة",
-        icon: <img src="/images/namilogo.png" alt="شعار الوقف النامي" />,
       },
     ],
     [generalStatistics],
@@ -89,10 +84,7 @@ const GeneralStatistics = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {stats.map((stat) => (
-          <div key={stat.id} className="flex flex-col p-2 rounded-2xl bg-white">
-            <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 mb-3">
-              {stat.icon}
-            </div>
+          <div key={stat.id} className="flex flex-col p-2 border border-gray-200 bg-white">
 
             <p className="text-xl text-gray-600 mb-2">{stat.label}</p>
 

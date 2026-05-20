@@ -18,6 +18,7 @@ export type PaginatedResponse<T> = {
 export type PaginatedParams = {
   page?: number;
   per_page?: number;
+  sort?: string;
 };
 
 export enum ServiceClassification {

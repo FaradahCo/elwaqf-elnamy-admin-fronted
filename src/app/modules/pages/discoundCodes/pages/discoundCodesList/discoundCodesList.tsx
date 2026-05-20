@@ -113,10 +113,6 @@ const DiscoundCodesList = () => {
   >({
     queryKey: "discound-codes",
     fetchFn: DiscoundCodes,
-    initialFilter: {
-      page: 1,
-      per_page: 10,
-    },
     queryOptions: { retry: false },
   });
 
@@ -163,7 +159,7 @@ const DiscoundCodesList = () => {
           icon="/images/elements.svg"
           value={20}
           classesName={[
-            "border border-green-dark text-green-dark rounded-lg p-4 rounded-xl bg-green-light w-64 min-w-64",
+            "border border-green-dark text-green-dark p-4 bg-green-light w-64 min-w-64",
           ]}
         />
         <CardStatistic
@@ -171,7 +167,7 @@ const DiscoundCodesList = () => {
           icon="/images/elements.svg"
           value={28}
           classesName={[
-            "border border-second-primary p-4 rounded-xl w-64 min-w-64",
+            "border border-second-primary p-4 w-64 min-w-64",
           ]}
         />
       </div>

@@ -84,6 +84,7 @@ export interface BankTransferListParams extends PaginatedParams {
 
 export interface PaymentClientListParams extends PaginatedParams {
   name?: string;
+  status?: string;
 }
 
 export type PaymentClientItem = {
@@ -172,3 +173,8 @@ export const DedpositReasons = [
   "بيانات الحساب المحوّل إليه غير مطابقة للبيانات المعتمدة",
   "سبب آخر",
 ];
+
+export type WithdrawalsStatus = {
+  key: string;
+  label: string;
+};

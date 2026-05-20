@@ -40,6 +40,7 @@ const PrimaryEntityData = memo(
                   <Radio.Button value="institution">مؤسسة</Radio.Button>
                   <Radio.Button value="company">شركة</Radio.Button>
                   <Radio.Button value="individual">فرد</Radio.Button>
+                  <Radio.Button value="association">جمعية</Radio.Button>
                 </Radio.Group>
               </LabelContent>
             </div>
@@ -76,7 +77,7 @@ const PrimaryEntityData = memo(
             <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4!">
               <LabelContent label="الرقم الضريبي (VAT Number)">
                 <p className="p-2 rounded-lg border border-gray-200">
-                  {providerData?.profile?.[0]?.vat_number}
+                  {providerData?.profile?.[0]?.vat_number || "-"}
                 </p>
               </LabelContent>
             </div>
@@ -95,7 +96,9 @@ const PrimaryEntityData = memo(
 
             <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4!">
               <LabelContent label="الرقم الموحد">
-                <p className="p-2 rounded-lg border border-gray-200">700</p>
+                <p className="p-2 rounded-lg border border-gray-200">
+                  {providerData?.profile?.[0]?.seven_hundred || "-"}
+                </p>
               </LabelContent>
             </div>
           </>

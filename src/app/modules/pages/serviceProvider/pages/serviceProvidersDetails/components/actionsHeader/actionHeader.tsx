@@ -47,7 +47,9 @@ const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
         />
 
         <div className="mt-4">
-          <p className="text-lg font-bold mb-2">{providerData?.name}</p>
+          <p className="text-lg font-bold mb-2">
+            {providerData?.profile?.[0]?.business_name}
+          </p>
           <span className="text-gray-500 text-sm">
             منذ {providerData?.profile?.[0]?.created_at}
           </span>
@@ -76,7 +78,10 @@ const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
           </>
         )}
         {providerData?.status !== ServiceStatusEnum.review && (
-          <Tag className="py-1! px-4!" color={getStatusTag(providerData?.status!).color}>
+          <Tag
+            className="py-1! px-4!"
+            color={getStatusTag(providerData?.status!).color}
+          >
             <span className="text-sm">{providerData?.status_label}</span>
           </Tag>
         )}

@@ -33,11 +33,10 @@ const AlwaqfList = () => {
   } = useListHook<PaginatedResponse<Alwaqf>, AlwaqfFilterQuery>({
     queryKey: "getAlwaqfList",
     fetchFn: getAlwaqfList,
-    initialFilter: {
-      page: 1,
-      per_page: 10,
-    },
     queryOptions: { retry: false },
+    initialFilter: {
+      sort: "-created_at",
+    },
   });
 
   const filters = useMemo(
@@ -66,9 +65,7 @@ const AlwaqfList = () => {
           title="إجمالي الأوقاف"
           icon="/images/elements_1.svg"
           value={alwaqfStatus?.total ?? 0}
-          classesName={[
-            "border border-second-primary p-4 rounded-xl w-64 min-w-64",
-          ]}
+          classesName={["border border-second-primary p-4 w-64 min-w-64"]}
         />
         <CardStatistic
           title="الأوقاف النشطة"
@@ -79,7 +76,7 @@ const AlwaqfList = () => {
             )?.count ?? 0
           }
           classesName={[
-            "border border-green-dark text-green-dark rounded-lg p-4 rounded-xl bg-green-light w-64 min-w-64",
+            "border border-green-dark text-green-dark p-4 bg-green-light w-64 min-w-64",
           ]}
         />
 
@@ -92,7 +89,7 @@ const AlwaqfList = () => {
             )?.count ?? 0
           }
           classesName={[
-            "border border-blue-dark text-blue-dark rounded-lg p-4 rounded-xl bg-blue-light w-64 min-w-64",
+            "border border-blue-dark text-blue-dark p-4 bg-blue-light w-64 min-w-64",
           ]}
         />
 
@@ -105,7 +102,7 @@ const AlwaqfList = () => {
             )?.count ?? 0
           }
           classesName={[
-            "border border-orange-dark bg-orange-light text-orange-dark rounded-lg p-4 rounded-xl w-64 min-w-64",
+            "border border-orange-dark bg-orange-light text-orange-dark p-4 w-64 min-w-64",
           ]}
         />
       </div>
