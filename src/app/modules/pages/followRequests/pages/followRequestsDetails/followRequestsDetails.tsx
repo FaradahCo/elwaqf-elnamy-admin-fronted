@@ -7,6 +7,8 @@ import ServiceDetails from "../../components/serviceDetails/serviceDetails";
 import Service from "../../components/service/service";
 import RequestHistroy from "../../components/requestHistory/requestHistory";
 import Chat from "@shared/components/chat/Chat";
+import { alwaqfRoutePath } from "../../../alwaqf/alwaqfRoutes";
+import { serviceProviderRoutePath } from "../../../serviceProvider/serviceProvidersRoutes";
 
 const followRequestsDetails = () => {
   const { id } = useParams();
@@ -65,8 +67,11 @@ const followRequestsDetails = () => {
               <p>-</p>
             )}
           </div>
-          <Link to="/" className="mt-6! self-end font-semibold! text-brand!">
-            الانتقال إلى طلب المزود
+          <Link
+            to={alwaqfRoutePath.ALWAQF_DETAILS(followRequest?.client?.id!)}
+            className="mt-6! self-end font-semibold! text-brand!"
+          >
+            الانتقال إلى صفحة الطلب
           </Link>
         </Box>
         <Box title="مزود الخدمة">
@@ -124,7 +129,12 @@ const followRequestsDetails = () => {
               <p>-</p>
             )}
           </div>
-          <Link to="/" className="mt-6! self-end font-semibold! text-brand!">
+          <Link
+            to={serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(
+              followRequest?.service?.provider?.id!,
+            )}
+            className="mt-6! self-end font-semibold! text-brand!"
+          >
             الانتقال إلى طلب المزود
           </Link>
         </Box>
@@ -183,13 +193,13 @@ const followRequestsDetails = () => {
               <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
             </p>
           </div>
-          <Link
+          {/* <Link
             to="/"
             className="mt-6! self-end font-semibold! text-brand!"
             type="text"
           >
             الانتقال إلى الإسناد المستشار
-          </Link>
+          </Link> */}
         </Box>
       </div>
       <ServiceDetails serviceDetails={followRequest!} />
