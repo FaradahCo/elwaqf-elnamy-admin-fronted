@@ -57,8 +57,15 @@ const PrimaryEntityData = memo(
             </div>
             <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4!">
               <LabelContent label="رقم السجل التجاري">
-                <p className="p-2 rounded-lg border border-gray-200">
-                  {providerData?.profile?.[0]?.cr_number}
+                <p className="p-2 rounded-lg border border-gray-200 text-right">
+                  {providerData?.profile?.[0]?.cr_number || "-"}
+                </p>
+              </LabelContent>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4!">
+              <LabelContent label="نبذة تعريفية">
+                <p className="p-2 rounded-lg border border-gray-200 min-h-30">
+                  {providerData?.profile?.[0]?.bio}
                 </p>
               </LabelContent>
             </div>

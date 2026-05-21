@@ -35,6 +35,7 @@ const Consultation = () => {
     initialFilter: {
       page: 1,
       per_page: 10,
+      sort: "-created_at",
     },
     queryOptions: { retry: false },
   });
