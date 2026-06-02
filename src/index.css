@@ -151,18 +151,6 @@ body {
   }
 }
 
-/* Custom table header gray background and borders */
-.custom-table .ant-table-thead > tr > th {
-  background: var(--color-gray-light) !important;
-  border-top: 1px solid var(--color-gray-light, #d1d5db) !important;
-  border-bottom: 1px solid var(--color-gray-light, #d1d5db) !important;
-  font-size: 16px !important;
-}
-
-.custom-table .ant-table-tbody > tr > td {
-  font-size: 15px !important;
-}
-
 .services-steps .ant-steps-item::after {
   top: calc(50% - 13px) !important;
 }
