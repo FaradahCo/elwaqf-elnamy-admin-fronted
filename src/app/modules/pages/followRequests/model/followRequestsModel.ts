@@ -48,7 +48,7 @@ export interface FollowRequest {
   chat_id?: number;
   service: ServiceData;
   client: Client;
-  accounting?: FollowRequestAccounting;
+  // accounting?: FollowRequestAccounting;
   quotations: Quotation[];
   active_quotation?: Quotation | null;
   latest_quotation?: Quotation;
