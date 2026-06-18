@@ -1,5 +1,5 @@
 import { useApiQuery } from "@shared/services/api";
-import { Pagination } from "antd";
+import { Pagination, Spin } from "antd";
 import { useState } from "react";
 import { useParams } from "react-router";
 import ServiceCard from "../../components/serviceCard/serviceCard";
@@ -12,7 +12,7 @@ const ServiceProvider = () => {
     page: 1,
     per_page: 10,
   });
-  const { data: serviceProvider } = useApiQuery(
+  const { data: serviceProvider, isLoading } = useApiQuery(
     ["service-provider-profile", Number(id)],
     () => getServiceProviderProfile(id),
     {
@@ -20,6 +20,13 @@ const ServiceProvider = () => {
       retry: false,
     },
   );
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-100">
+        <Spin size="large" />
+      </div>
+    );
 
   return (
     <>

@@ -25,6 +25,9 @@ const ConsultantsManagementList: React.FC = () => {
     queryKey: "consultants-management",
     fetchFn: getConsultantsManagement,
     queryOptions: { retry: false },
+    initialFilter:{
+      sort:'-created_at'
+    }
   });
   const updateConsultantStatusMutation = useApiMutation(
     (payload: UpdateConsultantStatusPayload) => {
@@ -38,7 +41,7 @@ const ConsultantsManagementList: React.FC = () => {
   }, [consultantsManagement?.data, form]);
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center h-100">
         <Spin size="large" />
       </div>
     );

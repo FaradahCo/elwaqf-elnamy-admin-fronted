@@ -1,13 +1,15 @@
 import { Avatar, Button, Spin } from "antd";
 import { useApiQuery } from "@shared/services/api";
 import { getServiceRequestById } from "../../followRequestsService";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import Box from "../../components/box/box";
 import ServiceDetails from "../../components/serviceDetails/serviceDetails";
 import Service from "../../components/service/service";
 import RequestHistroy from "../../components/requestHistory/requestHistory";
 import Chat from "@shared/components/chat/Chat";
 import { handleDownloadAttachment } from "@shared/services/sharedService";
+import { alwaqfRoutePath } from "../../../alwaqf/alwaqfRoutes";
+import { serviceProviderRoutePath } from "../../../serviceProvider/serviceProvidersRoutes";
 
 const followRequestsDetails = () => {
   const { id } = useParams();
@@ -69,9 +71,12 @@ const followRequestsDetails = () => {
               )}
             </p>
           </div>
-          <Button className="mt-6! self-end font-semibold!" type="text">
+          <Link
+            to={alwaqfRoutePath.ALWAQF_DETAILS(followRequest?.client?.id!)}
+            className="mt-6! self-end font-semibold! text-brand!"
+          >
             الانتقال إلى صفحة الطلب
-          </Button>
+          </Link>
         </Box>
         <Box title="مزود الخدمة">
           <div className="flex gap-4 items-center">
@@ -134,9 +139,14 @@ const followRequestsDetails = () => {
               )}
             </p>
           </div>
-          <Button className="mt-6! self-end font-semibold!" type="text">
+          <Link
+            to={serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(
+              followRequest?.service?.provider?.id!,
+            )}
+            className="mt-6! self-end font-semibold! text-brand!"
+          >
             الانتقال إلى طلب المزود
-          </Button>
+          </Link>
         </Box>
         <Box title="المنصة">
           <div className="flex gap-4 items-center">
@@ -169,37 +179,38 @@ const followRequestsDetails = () => {
         </Box>
         <Box title="المستشار">
           <div className="flex gap-4 items-center">
-            <Avatar
+            {/* <Avatar
               className="shadow-lg"
               size="large"
               src={followRequest?.service.provider?.logo}
               alt={followRequest?.service.provider?.business_name}
-            />
+            /> */}
             <p className="text-[#0F1A2A] font-semibold text-lg">
-              {followRequest?.service.provider?.business_name}
-            </p>
-          </div>
-          <div className="flex gap-4 items-center">
-            <p className="text-[#0F1A2A] font-semibold">التكلفة</p>
-            <p className="flex items-center">
-              {followRequest?.service.min_price}
-              <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+              {followRequest?.accounting?.consultant?.name}
             </p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">النسبة</p>
-            <p>-</p>
+            <p>
+              {followRequest?.accounting?.consultant?.percentage
+                ? followRequest?.accounting?.consultant?.percentage + "%"
+                : "0%"}
+            </p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">القيمة</p>
             <p className="flex items-center">
-              -
+              {followRequest?.accounting?.consultant?.value || "00"}
               <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
             </p>
           </div>
-          <Button className="mt-6! self-end font-semibold!" type="text">
+          {/* <Link
+            to="/"
+            className="mt-6! self-end font-semibold! text-brand!"
+            type="text"
+          >
             الانتقال إلى الإسناد المستشار
-          </Button>
+          </Link> */}
         </Box>
       </div>
       <ServiceDetails serviceDetails={followRequest!} />
