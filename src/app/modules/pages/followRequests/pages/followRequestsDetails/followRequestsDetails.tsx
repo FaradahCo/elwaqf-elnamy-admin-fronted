@@ -7,6 +7,7 @@ import ServiceDetails from "../../components/serviceDetails/serviceDetails";
 import Service from "../../components/service/service";
 import RequestHistroy from "../../components/requestHistory/requestHistory";
 import Chat from "@shared/components/chat/Chat";
+import { handleDownloadAttachment } from "@shared/services/sharedService";
 
 const followRequestsDetails = () => {
   const { id } = useParams();
@@ -29,7 +30,6 @@ const followRequestsDetails = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Box title="الوقف">
           <div className="flex gap-4 items-center">
-            {/* <Avatar size="large" src={followRequest?.service.provider?.logo} /> */}
             <p className="text-[#0F1A2A] font-semibold text-lg">
               {followRequest?.client.name}
             </p>
@@ -37,17 +37,37 @@ const followRequestsDetails = () => {
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">التكلفة</p>
             <p className="flex items-center">
-              {followRequest?.service.min_price}
-              <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+              {followRequest?.accounting?.client?.cost ? (
+                <>
+                  {followRequest?.accounting?.client?.cost}
+                  <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+                </>
+              ) : (
+                "--"
+              )}
             </p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">طريقة الدفع</p>
-            <p>-</p>
+            <p>{followRequest?.accounting?.client?.payment_method ?? "--"}</p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">الفاتورة</p>
-            <p>-</p>
+            <p>
+              {followRequest?.accounting?.client?.invoice_url ? (
+                <Button
+                  onClick={() =>
+                    handleDownloadAttachment(
+                      followRequest?.accounting?.client?.invoice_url ?? "",
+                    )
+                  }
+                >
+                  الفاتورة
+                </Button>
+              ) : (
+                "--"
+              )}
+            </p>
           </div>
           <Button className="mt-6! self-end font-semibold!" type="text">
             الانتقال إلى صفحة الطلب
@@ -68,43 +88,83 @@ const followRequestsDetails = () => {
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">التكلفة</p>
             <p className="flex items-center">
-              {followRequest?.service.min_price}
-              <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+              {followRequest?.accounting?.provider?.cost ? (
+                <>
+                  {followRequest?.accounting?.provider?.cost}
+                  <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+                </>
+              ) : (
+                "--"
+              )}
             </p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">الفاتورة</p>
-            <p>-</p>
+            <p>
+              {followRequest?.accounting?.provider?.invoice_url ? (
+                <Button
+                  onClick={() =>
+                    handleDownloadAttachment(
+                      followRequest?.accounting?.provider?.invoice_url ?? "",
+                    )
+                  }
+                >
+                  الفاتورة
+                </Button>
+              ) : (
+                "--"
+              )}
+            </p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">الحوالة</p>
-            <p>-</p>
+            <p>
+              {followRequest?.accounting?.provider?.transfer_url ? (
+                <Button
+                  onClick={() =>
+                    handleDownloadAttachment(
+                      followRequest?.accounting?.provider?.transfer_url ?? "",
+                    )
+                  }
+                >
+                  الحوالة
+                </Button>
+              ) : (
+                "--"
+              )}
+            </p>
           </div>
           <Button className="mt-6! self-end font-semibold!" type="text">
             الانتقال إلى طلب المزود
           </Button>
         </Box>
-        <Box title="المنصة  ">
+        <Box title="المنصة">
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">نسبة المنصة</p>
             <p className="flex items-center">
-              {followRequest?.service.min_price}
+              {followRequest?.accounting?.platform?.percentage}
             </p>
-            <p>كود الخصم</p>
-            <p>-</p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">القيمة</p>
             <p className="flex items-center">
-              -
-              <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+              {followRequest?.accounting?.platform?.discount_value ? (
+                <p>
+                  {followRequest?.accounting?.platform?.discount_value}
+                  <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+                </p>
+              ) : (
+                "--"
+              )}
             </p>
-            <p>نسبة الخصم</p>
-            <p>-</p>
           </div>
           <div className="flex gap-4 items-center">
-            <p className="text-[#0F1A2A] font-semibold">الحوالة</p>
-            <p>-</p>
+            <p className="text-[#0F1A2A] font-semibold">كود الخصم</p>
+            <p>{followRequest?.accounting?.platform?.discount_code ?? "--"}</p>
+          </div>
+          <div className="flex gap-4 items-center">
+            <p className="text-[#0F1A2A] font-semibold">نسبة الخصم</p>
+            <p>{followRequest?.accounting?.platform?.discount_percentage}</p>
           </div>
         </Box>
         <Box title="المستشار">
