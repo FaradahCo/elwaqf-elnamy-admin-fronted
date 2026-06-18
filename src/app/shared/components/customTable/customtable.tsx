@@ -75,6 +75,7 @@ export const CustomTable = <T extends Record<string, any>>({
     total: paginationMeta?.total || 0,
     showSizeChanger: true,
     showQuickJumper: false,
+    locale: { items_per_page: "/ الصفحة" },
     showTotal: (total, range) =>
       `${range?.[0] || 0}-${range?.[1] || 0} من ${total} عنصر`,
     pageSizeOptions: ["10", "50", "100", "200"],
