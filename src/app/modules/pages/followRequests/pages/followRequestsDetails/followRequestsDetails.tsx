@@ -1,14 +1,14 @@
-import { Avatar, Spin } from "antd";
 import { useApiQuery } from "@shared/services/api";
-import { getServiceRequestById } from "../../followRequestsService";
+import { handleDownloadAttachment } from "@shared/services/sharedService";
+import { Avatar, Button, Spin } from "antd";
 import { Link, useParams } from "react-router";
-import Box from "../../components/box/box";
-import ServiceDetails from "../../components/serviceDetails/serviceDetails";
-import Service from "../../components/service/service";
-import RequestHistroy from "../../components/requestHistory/requestHistory";
-import Chat from "@shared/components/chat/Chat";
 import { alwaqfRoutePath } from "../../../alwaqf/alwaqfRoutes";
 import { serviceProviderRoutePath } from "../../../serviceProvider/serviceProvidersRoutes";
+import Box from "../../components/box/box";
+import RequestHistroy from "../../components/requestHistory/requestHistory";
+import Service from "../../components/service/service";
+import ServiceDetails from "../../components/serviceDetails/serviceDetails";
+import { getServiceRequestById } from "../../followRequestsService";
 
 const followRequestsDetails = () => {
   const { id } = useParams();
@@ -31,41 +31,44 @@ const followRequestsDetails = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Box title="الوقف">
           <div className="flex gap-4 items-center">
-            {/* <Avatar size="large" src={followRequest?.service.provider?.logo} /> */}
             <p className="text-[#0F1A2A] font-semibold text-lg">
               {followRequest?.client.name}
             </p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">التكلفة</p>
-            {followRequest?.accounting?.client?.cost ? (
-              <p className="flex items-center">
-                {followRequest?.accounting?.client?.cost}
-                <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
-              </p>
-            ) : (
-              <p>-</p>
-            )}
+            <p className="flex items-center">
+              {followRequest?.accounting?.client?.cost ? (
+                <>
+                  {followRequest?.accounting?.client?.cost}
+                  <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+                </>
+              ) : (
+                "--"
+              )}
+            </p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">طريقة الدفع</p>
-            <p>{followRequest?.accounting?.client?.payment_method || "-"}</p>
+            <p>{followRequest?.accounting?.client?.payment_method ?? "--"}</p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">الفاتورة</p>
-            {followRequest?.accounting?.client?.invoice_url ? (
-              <Link
-                to={followRequest?.accounting?.client?.invoice_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex gap-2 border border-gray! p-2!"
-              >
-                <img src="/images/pdf.svg" alt="تنزيل الفاتورة" />
-                الفاتورة
-              </Link>
-            ) : (
-              <p>-</p>
-            )}
+            <p>
+              {followRequest?.accounting?.client?.invoice_url ? (
+                <Button
+                  onClick={() =>
+                    handleDownloadAttachment(
+                      followRequest?.accounting?.client?.invoice_url ?? "",
+                    )
+                  }
+                >
+                  الفاتورة
+                </Button>
+              ) : (
+                "--"
+              )}
+            </p>
           </div>
           <Link
             to={alwaqfRoutePath.ALWAQF_DETAILS(followRequest?.client?.id!)}
@@ -87,47 +90,53 @@ const followRequestsDetails = () => {
             </p>
           </div>
           <div className="flex gap-4 items-center">
-            <div className="text-[#0F1A2A] font-semibold">التكلفة</div>
-            {followRequest?.accounting?.provider?.cost ? (
-              <p className="flex items-center">
-                {followRequest?.accounting?.provider?.cost}
-                <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
-              </p>
-            ) : (
-              <p>-</p>
-            )}
+            <p className="text-[#0F1A2A] font-semibold">التكلفة</p>
+            <p className="flex items-center">
+              {followRequest?.accounting?.provider?.cost ? (
+                <>
+                  {followRequest?.accounting?.provider?.cost}
+                  <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+                </>
+              ) : (
+                "--"
+              )}
+            </p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">الفاتورة</p>
-            {followRequest?.accounting?.provider?.invoice_url ? (
-              <Link
-                to={followRequest?.accounting?.provider?.invoice_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex gap-2 border border-gray! p-2!"
-              >
-                <img src="/images/pdf.svg" alt="تنزيل الفاتورة" />
-                الفاتورة
-              </Link>
-            ) : (
-              <p>-</p>
-            )}
+            <p>
+              {followRequest?.accounting?.provider?.invoice_url ? (
+                <Button
+                  onClick={() =>
+                    handleDownloadAttachment(
+                      followRequest?.accounting?.provider?.invoice_url ?? "",
+                    )
+                  }
+                >
+                  الفاتورة
+                </Button>
+              ) : (
+                "--"
+              )}
+            </p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">الحوالة</p>
-            {followRequest?.accounting?.provider?.transfer_url ? (
-              <Link
-                to={followRequest?.accounting?.provider?.transfer_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex gap-2 border border-gray! p-2!"
-              >
-                <img src="/images/pdf.svg" alt="تنزيل الحوالة" />
-                الإيصال
-              </Link>
-            ) : (
-              <p>-</p>
-            )}
+            <p>
+              {followRequest?.accounting?.provider?.transfer_url ? (
+                <Button
+                  onClick={() =>
+                    handleDownloadAttachment(
+                      followRequest?.accounting?.provider?.transfer_url ?? "",
+                    )
+                  }
+                >
+                  الحوالة
+                </Button>
+              ) : (
+                "--"
+              )}
+            </p>
           </div>
           <Link
             to={serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(
@@ -138,32 +147,33 @@ const followRequestsDetails = () => {
             الانتقال إلى طلب المزود
           </Link>
         </Box>
-        <Box title="المنصة  ">
+        <Box title="المنصة">
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">نسبة المنصة</p>
             <p className="flex items-center">
-              {followRequest?.accounting?.platform?.percentage + "%"}
+              {followRequest?.accounting?.platform?.percentage}
             </p>
-            <p>كود الخصم</p>
-            <p>{followRequest?.accounting?.platform?.discount_code || "-"}</p>
           </div>
           <div className="flex gap-4 items-center">
             <p className="text-[#0F1A2A] font-semibold">القيمة</p>
             <p className="flex items-center">
-              {followRequest?.accounting?.platform?.percentage_value || "000"}
-              <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
-            </p>
-            <p>نسبة الخصم</p>
-            <p>
-              {followRequest?.accounting?.platform?.discount_percentage + "%"}
+              {followRequest?.accounting?.platform?.discount_value ? (
+                <p>
+                  {followRequest?.accounting?.platform?.discount_value}
+                  <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
+                </p>
+              ) : (
+                "--"
+              )}
             </p>
           </div>
           <div className="flex gap-4 items-center">
-            <p className="text-[#0F1A2A] font-semibold ">القيمة</p>
-            <p className="flex items-center">
-              {followRequest?.accounting?.platform?.discount_value || "00"}
-              <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
-            </p>
+            <p className="text-[#0F1A2A] font-semibold">كود الخصم</p>
+            <p>{followRequest?.accounting?.platform?.discount_code ?? "--"}</p>
+          </div>
+          <div className="flex gap-4 items-center">
+            <p className="text-[#0F1A2A] font-semibold">نسبة الخصم</p>
+            <p>{followRequest?.accounting?.platform?.discount_percentage}</p>
           </div>
         </Box>
         <Box title="المستشار">
@@ -204,7 +214,7 @@ const followRequestsDetails = () => {
       </div>
       <ServiceDetails serviceDetails={followRequest!} />
       <Service outputs={followRequest?.service?.outputs || []} />
-      <Chat
+      {/* <Chat
         chat_id={followRequest?.chat_id!}
         role="admin"
         user={{
@@ -212,7 +222,7 @@ const followRequestsDetails = () => {
           image: followRequest?.service.provider?.logo,
           business_name: followRequest?.service.provider?.business_name,
         }}
-      />
+      /> */}
       <RequestHistroy activities={followRequest?.activities || []} />
     </div>
   );

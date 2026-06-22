@@ -69,11 +69,13 @@ export const CustomTable = <T extends Record<string, any>>({
   const hasSelected = selectedRowKeys.length > 0;
 
   const paginationConfig: TablePaginationConfig = {
+    className: "text-center",
     current: paginationMeta?.current_page || 1,
     pageSize: paginationMeta?.per_page || defaultPageSize,
     total: paginationMeta?.total || 0,
     showSizeChanger: true,
     showQuickJumper: false,
+    locale: { items_per_page: "/ الصفحة" },
     showTotal: (total, range) =>
       `${range?.[0] || 0}-${range?.[1] || 0} من ${total} عنصر`,
     pageSizeOptions: ["10", "50", "100", "200"],
@@ -87,7 +89,7 @@ export const CustomTable = <T extends Record<string, any>>({
         onPaginationChange(1, size);
       }
     },
-    position: ["bottomRight"],
+    position: ["bottomCenter"],
   };
 
   return (

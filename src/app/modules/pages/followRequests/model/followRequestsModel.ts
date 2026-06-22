@@ -12,6 +12,33 @@ export interface FollowRequestFilterQuery extends PaginatedParams {
   title?: string;
 }
 
+export interface Accounting {
+  client: {
+    cost?: number | null;
+    has_invoice?: boolean;
+    invoice_url?: string | null;
+    payment_method?: string | null;
+    payment_method_val?: string | null;
+  };
+  consultant?: any;
+  platform?: {
+    discount_code?: string | null;
+    discount_percentage?: number;
+    discount_value?: number;
+    has_discount?: boolean;
+    has_percentage?: boolean;
+    percentage?: number;
+    percentage_value?: number;
+  };
+  provider?: {
+    cost?: number | null;
+    has_invoice?: boolean;
+    has_transfer?: boolean;
+    invoice_url?: string | null;
+    transfer_url?: string | null;
+  };
+}
+
 export interface FollowRequest {
   id: number;
   status: ServiceStatusEnum;
@@ -21,11 +48,12 @@ export interface FollowRequest {
   chat_id?: number;
   service: ServiceData;
   client: Client;
-  accounting?: FollowRequestAccounting;
+  // accounting?: FollowRequestAccounting;
   quotations: Quotation[];
   active_quotation?: Quotation | null;
   latest_quotation?: Quotation;
   activities?: Activity[];
+  accounting?: Accounting;
 }
 export type Client = {
   id: number;

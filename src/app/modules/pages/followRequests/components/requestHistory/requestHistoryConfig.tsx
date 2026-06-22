@@ -5,11 +5,6 @@ export const requestHistoryColumns = [
     key: "action_type_label",
   },
   {
-    title: "التحديث",
-    dataIndex: "description",
-    key: "description",
-  },
-  {
     title: "التاريخ",
     dataIndex: "created_at",
     key: "created_at",
@@ -18,5 +13,10 @@ export const requestHistoryColumns = [
     title: "بواسطة",
     dataIndex: "actor_name",
     key: "actor_name",
+  },
+  {
+    title: " التفاصيل",
+    dataIndex: "description",
+    key: "description",
   },
 ];
