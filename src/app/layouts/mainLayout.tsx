@@ -52,7 +52,9 @@ const MainLayout: React.FC = () => {
       {
         key: "2",
         label: (
-          <span className="text-[15px] block mt-4!">إدارة الخدمات والأوقاف</span>
+          <span className="text-[15px] block mt-4!">
+            إدارة الخدمات والأوقاف
+          </span>
         ),
         type: "group" as const,
         children: [
@@ -95,7 +97,11 @@ const MainLayout: React.FC = () => {
           {
             key: "2-4",
             icon: (
-              <img src="/images/awqaf.svg" alt="awqaf icon" className="w-6 h-6" />
+              <img
+                src="/images/awqaf.svg"
+                alt="awqaf icon"
+                className="w-6 h-6"
+              />
             ),
             label: <span className="text-[18px]!">الإوقاف</span>,
             path: alwaqfRoutePath.ALWAQF_LIST,
@@ -196,21 +202,23 @@ const MainLayout: React.FC = () => {
       },
       {
         key: "5",
-        label: <span className="text-[15px] block mt-4!">النظام والسياسات</span>,
+        label: (
+          <span className="text-[15px] block mt-4!">النظام والسياسات</span>
+        ),
         type: "group" as const,
         children: [
-          {
-            key: "5-1",
-            path: "complaints-suggestions",
-            icon: (
-              <img
-                src="/images/complents.svg"
-                alt="complaints icon"
-                className="w-6 h-6"
-              />
-            ),
-            label: <span className="text-[18px]!">الشكاوى والاقتراحات</span>,
-          },
+          // {
+          //   key: "5-1",
+          //   path: "complaints-suggestions",
+          //   icon: (
+          //     <img
+          //       src="/images/complents.svg"
+          //       alt="complaints icon"
+          //       className="w-6 h-6"
+          //     />
+          //   ),
+          //   label: <span className="text-[18px]!">الشكاوى والاقتراحات</span>,
+          // },
           {
             key: "5-2",
             icon: (
@@ -220,7 +228,7 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">سياسة الخصوصية</span>,
+            label: <span className="text-[18px]!">لصفحات الثابتة</span>,
             path: staticPagesRoutePath.STATIC_PAGES_LIST,
           },
           {
@@ -238,7 +246,7 @@ const MainLayout: React.FC = () => {
         ],
       },
     ],
-    []
+    [],
   );
 
   // Helper function to find menu item by key (including nested children)

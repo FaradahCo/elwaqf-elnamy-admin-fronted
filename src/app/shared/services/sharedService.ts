@@ -236,3 +236,10 @@ export const extractUrl = (text: string): string | null => {
   const urlMatch = text.match(/https?:\/\/[^\s]+/i);
   return urlMatch ? urlMatch[0] : null;
 };
+export const removeNullValues = (obj: Record<string, any>) => {
+  return Object.fromEntries(
+    Object.entries(obj).filter(
+      ([_, value]) => value !== null && value !== undefined,
+    ),
+  );
+};

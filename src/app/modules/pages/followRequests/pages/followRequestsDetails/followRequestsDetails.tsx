@@ -1,9 +1,7 @@
 import { useApiQuery } from "@shared/services/api";
 import { handleDownloadAttachment } from "@shared/services/sharedService";
 import { Avatar, Button, Spin } from "antd";
-import { Link, useParams } from "react-router";
-import { alwaqfRoutePath } from "../../../alwaqf/alwaqfRoutes";
-import { serviceProviderRoutePath } from "../../../serviceProvider/serviceProvidersRoutes";
+import { useParams } from "react-router";
 import Box from "../../components/box/box";
 import RequestHistroy from "../../components/requestHistory/requestHistory";
 import Service from "../../components/service/service";
@@ -70,12 +68,6 @@ const followRequestsDetails = () => {
               )}
             </p>
           </div>
-          <Link
-            to={alwaqfRoutePath.ALWAQF_DETAILS(followRequest?.client?.id!)}
-            className="mt-6! self-end font-semibold! text-brand!"
-          >
-            الانتقال إلى صفحة الطلب
-          </Link>
         </Box>
         <Box title="مزود الخدمة">
           <div className="flex gap-4 items-center">
@@ -138,14 +130,6 @@ const followRequestsDetails = () => {
               )}
             </p>
           </div>
-          <Link
-            to={serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(
-              followRequest?.service?.provider?.id!,
-            )}
-            className="mt-6! self-end font-semibold! text-brand!"
-          >
-            الانتقال إلى طلب المزود
-          </Link>
         </Box>
         <Box title="المنصة">
           <div className="flex gap-4 items-center">
