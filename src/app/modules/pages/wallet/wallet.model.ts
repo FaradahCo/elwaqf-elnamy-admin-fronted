@@ -141,12 +141,14 @@ export type Wallet = {
   total_transactions: string;
   total_balance: 1;
   updated_at: string;
-  ownerable: {
-    type: "Client" | "Provider";
-    id: number;
-    name: string;
-    joined_at: string;
-  };
+  ownerable: Ownerable;
+};
+
+export type Ownerable = {
+  type: "Client" | "Provider";
+  id: number;
+  name: string;
+  joined_at: string;
 };
 
 export interface WalletListParams extends PaginatedParams {
