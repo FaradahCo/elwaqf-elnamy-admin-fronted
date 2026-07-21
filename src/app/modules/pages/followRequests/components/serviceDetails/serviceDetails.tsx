@@ -106,10 +106,14 @@ const ServiceDetails = React.memo(
             <span className="text-primary font-semibold text-lg">
               تاريخ بداية/نهاية الخدمة
             </span>
-            <span>
-              {serviceDetails?.active_quotation?.starts_at},{" "}
-              {serviceDetails?.active_quotation?.valid_until}
-            </span>
+            {serviceDetails?.active_quotation?.starts_at ? (
+              <span>
+                {serviceDetails?.active_quotation?.starts_at},{" "}
+                {serviceDetails?.active_quotation?.valid_until ?? "-"}
+              </span>
+            ) : (
+              "--"
+            )}
           </p>
           <p className="flex justify-between mt-3">
             <span className="text-primary font-semibold text-lg">

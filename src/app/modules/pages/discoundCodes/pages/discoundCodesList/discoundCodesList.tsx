@@ -105,6 +105,7 @@ const DiscoundCodesList = () => {
   const {
     data: discoundCodes,
     isLoading,
+    filter,
     handleFilterChange,
     handlePaginationChange,
   } = useListHook<
@@ -166,9 +167,7 @@ const DiscoundCodesList = () => {
           title="أكواد ملفية"
           icon="/images/elements.svg"
           value={28}
-          classesName={[
-            "border border-second-primary p-4 w-64 min-w-64",
-          ]}
+          classesName={["border border-second-primary p-4 w-64 min-w-64"]}
         />
       </div>
 
@@ -183,7 +182,11 @@ const DiscoundCodesList = () => {
           </Button>
         </main>
 
-        <CustomFilter filters={filters} onFilterChange={handleFilterChange} />
+        <CustomFilter
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          initialValues={filter}
+        />
 
         <CustomTable<DiscoundCodeItem>
           columns={ColumnsList}

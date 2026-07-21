@@ -1,5 +1,7 @@
+import { removeNullValues } from "@shared/services/sharedService";
 import { type UseQueryOptions } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
+import { useSearchParams } from "react-router";
 import { useApiQuery } from "../shared/services/api";
 
 export interface UseListHookOptions<TData, TFilterQuery> {
@@ -18,6 +20,18 @@ export interface UseListHookReturn<TData, TFilterQuery> {
   handlePaginationChange: (page: number, per_page: number) => void;
 }
 
+const parseSearchParamsToFilter = (
+  searchParams: URLSearchParams,
+): Record<string, any> => {
+  const result: Record<string, any> = {};
+  searchParams.forEach((value, key) => {
+    if (value !== undefined && value !== null && value !== "") {
+      result[key] = value;
+    }
+  });
+  return result;
+};
+
 export const useListHook = <TData, TFilterQuery>(
   options: UseListHookOptions<TData, TFilterQuery>,
 ): UseListHookReturn<TData, TFilterQuery> => {
@@ -28,12 +42,17 @@ export const useListHook = <TData, TFilterQuery>(
     enabled = true,
     queryOptions = {},
   } = options;
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [filter, setFilter] = useState<TFilterQuery>({
-    page: 1,
-    per_page: 10,
-    sort: "minus-created_at",
-    ...initialFilter!,
+  const [filter, setFilter] = useState<TFilterQuery>(() => {
+    const urlFilter = parseSearchParamsToFilter(searchParams);
+    return {
+      sort: "minus-created_at",
+      page: 1,
+      per_page: 10,
+      ...initialFilter,
+      ...urlFilter,
+    } as TFilterQuery;
   });
 
   const { data, isLoading } = useApiQuery<TData, Error>(
@@ -46,22 +65,20 @@ export const useListHook = <TData, TFilterQuery>(
   );
 
   const handleFilterChange = useCallback((filterValues: TFilterQuery) => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      ...filterValues,
-    }));
+    setFilter((prevFilter) => {
+      const updated = { ...prevFilter, ...filterValues } as TFilterQuery;
+      setSearchParams(new URLSearchParams(removeNullValues(updated!)));
+      return updated;
+    });
   }, []);
 
   const handlePaginationChange = useCallback(
     (page: number, per_page: number) => {
-      setFilter(
-        (prevFilter) =>
-          ({
-            ...prevFilter,
-            page,
-            per_page,
-          }) as TFilterQuery,
-      );
+      setFilter((prevFilter) => {
+        const updated = { ...prevFilter, page, per_page } as TFilterQuery;
+        setSearchParams(new URLSearchParams(removeNullValues(updated!)));
+        return updated;
+      });
     },
     [],
   );

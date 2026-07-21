@@ -31,18 +31,23 @@ export type CustomFilterProps = {
     props?: { [key: string]: any };
   }[];
   onFilterChange?: (values: any) => void;
+  initialValues?: Record<string, any>;
 };
 
 type FilterConfig = CustomFilterProps["filters"][number];
 
-const CustomFilter = ({ filters, onFilterChange }: CustomFilterProps) => {
+const CustomFilter = ({
+  filters,
+  onFilterChange,
+  initialValues,
+}: CustomFilterProps) => {
   const [form] = Form.useForm();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleFormChange = (values: any) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      onFilterChange?.({ ...values, page: 1});
+      onFilterChange?.({ ...values, page: 1 });
     }, 800);
   };
 
@@ -106,7 +111,12 @@ const CustomFilter = ({ filters, onFilterChange }: CustomFilterProps) => {
   };
 
   return (
-    <Form form={form} layout="vertical" onValuesChange={handleFormChange}>
+    <Form
+      form={form}
+      layout="vertical"
+      onValuesChange={handleFormChange}
+      initialValues={initialValues}
+    >
       <Row gutter={16} align="bottom">
         {filters.map((filter, index) => (
           <Col xs={24} md={6} key={index}>

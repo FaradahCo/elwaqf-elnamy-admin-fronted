@@ -95,9 +95,7 @@ export const ServiceManagementList = () => {
           title="خدمة"
           icon="/images/elements.svg"
           value={serviceData?.meta?.total ?? 0}
-          classesName={[
-            "border border-second-primary p-4 w-64 min-w-64",
-          ]}
+          classesName={["border border-second-primary p-4 w-64 min-w-64"]}
         />
         <CardStatistic
           title="نشطة"
@@ -139,7 +137,11 @@ export const ServiceManagementList = () => {
       <div className="bg-white shadow rounded-lg p-4 mt-5">
         <h1 className="text-lg font-semibold">إدارة الخدمات</h1>
         <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
-        <CustomFilter filters={filters} onFilterChange={handleFilterChange} />
+        <CustomFilter
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          initialValues={filter}
+        />
 
         <CustomTable<ServiceData>
           columns={getColumnsList(filter?.type ?? "service")}

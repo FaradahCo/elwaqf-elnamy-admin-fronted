@@ -60,7 +60,7 @@ const WithDrawOfBalance = ({
   const handelSubmitConfirmWithdraw = (
     bool: boolean,
     answerType: "complete" | "reject",
-    reason?: string
+    reason?: string,
   ): void => {
     if (bool && uploadedLogo) {
       const formData = new FormData();
@@ -118,7 +118,7 @@ const WithDrawOfBalance = ({
         <p className="">الإيصال</p>
         {!uploadedLogo ? (
           <Upload
-            accept="image/*"
+            accept=".pdf,image/*"
             beforeUpload={() => false}
             maxCount={1}
             onChange={handleLogoUpload}
