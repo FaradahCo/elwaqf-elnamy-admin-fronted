@@ -30,6 +30,7 @@ const AlwaqfList = () => {
     isLoading,
     handleFilterChange,
     handlePaginationChange,
+    filter,
   } = useListHook<PaginatedResponse<Alwaqf>, AlwaqfFilterQuery>({
     queryKey: "getAlwaqfList",
     fetchFn: getAlwaqfList,
@@ -109,7 +110,11 @@ const AlwaqfList = () => {
       <div className="bg-white shadow rounded-lg p-4 mt-5">
         <h1 className="text-lg font-semibold">الأوقاف</h1>
         <div className="w-16 h-1 bg-primary mt-2 rounded mb-10"></div>
-        <CustomFilter filters={filters} onFilterChange={handleFilterChange} />
+        <CustomFilter
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          initialValues={filter}
+        />
         <CustomTable<Alwaqf>
           columns={alwaqfColumns}
           dataSource={alwaqfData?.data ?? []}
