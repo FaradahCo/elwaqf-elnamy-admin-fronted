@@ -228,7 +228,7 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">لصفحات الثابتة</span>,
+            label: <span className="text-[18px]!">الصفحات الثابتة</span>,
             path: staticPagesRoutePath.STATIC_PAGES_LIST,
           },
           {
