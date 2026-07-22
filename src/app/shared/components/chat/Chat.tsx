@@ -1,15 +1,12 @@
-import { Spin, Tabs, message } from "antd";
+import { Spin, Tabs } from "antd";
 import "dayjs/locale/ar";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import type { Attachement, ChatModel, ChatResponse } from "./chat.model";
-import { filterchat, sendMessage, showChat } from "./chatService";
+import { filterchat, showChat } from "./chatService";
 import ChatHeader, { type ChatHeaderUser } from "./components/ChatHeader";
 import ChatMessageItem from "./components/ChatMessageItem";
-import MessageInput, { type MessageInputRef } from "./components/MessageInput";
 import FilteredMessageItem from "./components/FilteredMessageItem";
-import { useApiQuery, useMultipartMutation } from "../../services/api";
-import type { RootState } from "../../../store";
+import { useApiQuery } from "../../services/api";
 type Role = "provider" | "client" | "admin";
 const Chat = ({
   chat_id,
@@ -25,9 +22,7 @@ const Chat = ({
   chatMessageType?: string;
 }) => {
   const [activeTab, setActiveTab] = useState("all");
-  const messageInputRef = useRef<MessageInputRef>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const currentUser = useSelector((state: RootState) => state.user.user);
 
   const tabs = [
     { id: "photos", label: "الصور", type: "image" as const },
@@ -44,74 +39,26 @@ const Chat = ({
   }, []);
 
   // Single filtered messages query that changes based on activeTab
-  const {
-    data: chatResponse,
-    refetch: refetchFilteredMessages,
-    isLoading: isLoadingMessages,
-  } = useApiQuery<ChatModel>(
-    ["messages-filtered", chat_id, activeTab, role],
-    () => {
-      const filterType = tabs.find((tab) => tab.id === activeTab)?.type;
-      return filterType
-        ? filterchat(role, chat_id, {
-            type: filterType,
-          })
-        : showChat(role, chat_id);
-    },
-    {
-      retry: false,
-      enabled: !!chat_id,
-    },
-  );
-
-  // Refetch function
-  const refetchMessages = useCallback(() => {
-    refetchFilteredMessages();
-  }, [refetchFilteredMessages]);
-
-  // Send message mutation
-  const sendMessageMutation = useMultipartMutation(
-    (formData: FormData) => sendMessage(role, formData),
-    {
-      onSuccess: () => {
-        messageInputRef.current?.clearInput();
-        refetchMessages();
+  const { data: chatResponse, isLoading: isLoadingMessages } =
+    useApiQuery<ChatModel>(
+      ["messages-filtered", chat_id, activeTab, role],
+      () => {
+        const filterType = tabs.find((tab) => tab.id === activeTab)?.type;
+        return filterType
+          ? filterchat(role, chat_id, {
+              type: filterType,
+            })
+          : showChat(role, chat_id);
       },
-    },
-  );
+      {
+        retry: false,
+        enabled: !!chat_id,
+      },
+    );
 
   const handleTabChange = useCallback((key: string) => {
     setActiveTab(key);
   }, []);
-
-  const handleSendMessage = useCallback(
-    async (messageText: string, selectedFiles: File[]) => {
-      if (!messageText.trim() && selectedFiles.length === 0) {
-        message.warning("يرجى إدخال رسالة أو اختيار ملف");
-        return;
-      }
-
-      try {
-        // Create FormData for multipart request
-        const formData = new FormData();
-        formData.append("chat_id", chat_id.toString());
-
-        if (messageText.trim()) {
-          formData.append("body", messageText.trim());
-        }
-
-        // Append multiple files
-        selectedFiles.forEach((file, index) => {
-          formData.append(`attachments[${index}]`, file);
-        });
-
-        await sendMessageMutation.mutateAsync(formData);
-      } catch (error) {
-        console.error("Error sending message:", error);
-      }
-    },
-    [chat_id, sendMessageMutation, refetchMessages],
-  );
 
   useEffect(() => {
     if (
@@ -194,13 +141,13 @@ const Chat = ({
         </div>
       </div>
 
-      <MessageInput
+      {/* <MessageInput
         ref={messageInputRef}
         onSendMessage={handleSendMessage}
         currentUser={currentUser}
         isSending={sendMessageMutation.isPending}
         onInputFocus={() => setActiveTab("all")}
-      />
+      /> */}
     </div>
   );
 };

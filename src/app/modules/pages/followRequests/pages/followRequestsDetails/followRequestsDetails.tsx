@@ -7,6 +7,7 @@ import RequestHistroy from "../../components/requestHistory/requestHistory";
 import Service from "../../components/service/service";
 import ServiceDetails from "../../components/serviceDetails/serviceDetails";
 import { getServiceRequestById } from "../../followRequestsService";
+import Chat from "@shared/components/chat/Chat";
 
 const followRequestsDetails = () => {
   const { id } = useParams();
@@ -198,7 +199,7 @@ const followRequestsDetails = () => {
       </div>
       <ServiceDetails serviceDetails={followRequest!} />
       <Service outputs={followRequest?.service?.outputs || []} />
-      {/* <Chat
+      <Chat
         chat_id={followRequest?.chat_id!}
         role="admin"
         user={{
@@ -206,7 +207,7 @@ const followRequestsDetails = () => {
           image: followRequest?.service.provider?.logo,
           business_name: followRequest?.service.provider?.business_name,
         }}
-      /> */}
+      />
       <RequestHistroy activities={followRequest?.activities || []} />
     </div>
   );
