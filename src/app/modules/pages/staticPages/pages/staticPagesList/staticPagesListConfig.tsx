@@ -25,12 +25,12 @@ export const getStaticPagesListColumns = ({
   },
   {
     title: "الحالة",
-    dataIndex: "isPublished",
-    key: "isPublished",
-    render: (isPublished: boolean) => {
+    dataIndex: "is_published",
+    key: "is_published",
+    render: (is_published: boolean) => {
       return (
-        <Tag color={isPublished ? "success" : "error"}>
-          {isPublished ? "مفعلة" : "غير مفعلة"}
+        <Tag color={is_published ? "success" : "error"}>
+          {is_published ? "مفعلة" : "غير مفعلة"}
         </Tag>
       );
     },

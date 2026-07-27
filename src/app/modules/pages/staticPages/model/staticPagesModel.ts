@@ -13,6 +13,7 @@ export type StaticPageItem = {
   show_in_footer?: boolean;
   show_in_menu?: boolean;
   scope?: string;
+  is_published?: boolean;
   actions?: {
     edit: boolean;
     delete: boolean;
