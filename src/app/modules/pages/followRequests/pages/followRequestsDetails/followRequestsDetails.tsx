@@ -1,14 +1,13 @@
 import { useApiQuery } from "@shared/services/api";
 import { handleDownloadAttachment } from "@shared/services/sharedService";
 import { Avatar, Button, Spin } from "antd";
-import { Link, useParams } from "react-router";
-import { alwaqfRoutePath } from "../../../alwaqf/alwaqfRoutes";
-import { serviceProviderRoutePath } from "../../../serviceProvider/serviceProvidersRoutes";
+import { useParams } from "react-router";
 import Box from "../../components/box/box";
 import RequestHistroy from "../../components/requestHistory/requestHistory";
 import Service from "../../components/service/service";
 import ServiceDetails from "../../components/serviceDetails/serviceDetails";
 import { getServiceRequestById } from "../../followRequestsService";
+import Chat from "@shared/components/chat/Chat";
 
 const followRequestsDetails = () => {
   const { id } = useParams();
@@ -70,12 +69,6 @@ const followRequestsDetails = () => {
               )}
             </p>
           </div>
-          <Link
-            to={alwaqfRoutePath.ALWAQF_DETAILS(followRequest?.client?.id!)}
-            className="mt-6! self-end font-semibold! text-brand!"
-          >
-            الانتقال إلى صفحة الطلب
-          </Link>
         </Box>
         <Box title="مزود الخدمة">
           <div className="flex gap-4 items-center">
@@ -138,14 +131,6 @@ const followRequestsDetails = () => {
               )}
             </p>
           </div>
-          <Link
-            to={serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(
-              followRequest?.service?.provider?.id!,
-            )}
-            className="mt-6! self-end font-semibold! text-brand!"
-          >
-            الانتقال إلى طلب المزود
-          </Link>
         </Box>
         <Box title="المنصة">
           <div className="flex gap-4 items-center">
@@ -214,7 +199,7 @@ const followRequestsDetails = () => {
       </div>
       <ServiceDetails serviceDetails={followRequest!} />
       <Service outputs={followRequest?.service?.outputs || []} />
-      {/* <Chat
+      <Chat
         chat_id={followRequest?.chat_id!}
         role="admin"
         user={{
@@ -222,7 +207,7 @@ const followRequestsDetails = () => {
           image: followRequest?.service.provider?.logo,
           business_name: followRequest?.service.provider?.business_name,
         }}
-      /> */}
+      />
       <RequestHistroy activities={followRequest?.activities || []} />
     </div>
   );

@@ -3,7 +3,6 @@ import type { StaticPageItem } from "../../model/staticPagesModel";
 import { Dropdown, Button, Tag } from "antd";
 import type { MenuProps } from "antd";
 import { MoreOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { getStatusTag } from "@shared/services/sharedService";
 
 interface StaticPagesListColumnsProps {
   onEdit: (record: StaticPageItem) => void;
@@ -26,11 +25,14 @@ export const getStaticPagesListColumns = ({
   },
   {
     title: "الحالة",
-    dataIndex: "status",
-    key: "status",
-    render: (status: string) => {
-      const config = getStatusTag(status);
-      return <Tag color={config.color}>{config.text}</Tag>;
+    dataIndex: "is_published",
+    key: "is_published",
+    render: (is_published: boolean) => {
+      return (
+        <Tag color={is_published ? "success" : "error"}>
+          {is_published ? "مفعلة" : "غير مفعلة"}
+        </Tag>
+      );
     },
   },
   {

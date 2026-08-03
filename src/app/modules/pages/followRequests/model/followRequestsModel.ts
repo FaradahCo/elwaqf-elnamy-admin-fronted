@@ -54,6 +54,15 @@ export interface FollowRequest {
   latest_quotation?: Quotation;
   activities?: Activity[];
   accounting?: Accounting;
+  invoice?: {
+    code?: string;
+    created_at?: string;
+    id?: number;
+    odoo_url?: string | null;
+    total_cost?: string;
+  };
+  start_date?: string;
+  end_date?: string;
 }
 export type Client = {
   id: number;

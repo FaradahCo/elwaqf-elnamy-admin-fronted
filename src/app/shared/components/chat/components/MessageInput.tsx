@@ -1,5 +1,10 @@
 import { App, Avatar, Button, Input } from "antd";
-import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 
 interface MessageInputProps {
   onSendMessage: (messageText: string, selectedFiles: File[]) => void;
@@ -36,7 +41,9 @@ const MessageInput = forwardRef<MessageInputRef, MessageInputProps>(
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(e.target.files || []);
-      const fileLargeThan1MB = files.filter((file) => file.size > 5 * 1024 * 1024);
+      const fileLargeThan1MB = files.filter(
+        (file) => file.size > 5 * 1024 * 1024,
+      );
       if (fileLargeThan1MB.length > 0) {
         message.warning("يرجى اختيار ملفات أصغر من 5MB");
         return;
@@ -70,7 +77,9 @@ const MessageInput = forwardRef<MessageInputRef, MessageInputProps>(
                   key={index}
                   className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg"
                 >
-                  <span className="text-xs text-gray-600 truncate max-w-32">{file.name}</span>
+                  <span className="text-xs text-gray-600 truncate max-w-32">
+                    {file.name}
+                  </span>
                   <button
                     type="button"
                     onClick={() => removeFile(index)}
@@ -86,11 +95,18 @@ const MessageInput = forwardRef<MessageInputRef, MessageInputProps>(
 
         {/* Message Input Area */}
         <div className="border-t border-gray-200 p-4">
-          <form onSubmit={handleSendMessage} className="flex items-center gap-3">
+          <form
+            onSubmit={handleSendMessage}
+            className="flex items-center gap-3"
+          >
             {/* User Avatar - Moved to Right */}
             <Avatar
               size={60}
-              src={currentUser?.image ?? currentUser?.profile?.[0]?.logo ?? "/images/user.png"}
+              src={
+                currentUser?.image ??
+                currentUser?.profile?.[0]?.logo ??
+                "/images/user.png"
+              }
               className="bg-second-primary"
             />
 
@@ -128,7 +144,9 @@ const MessageInput = forwardRef<MessageInputRef, MessageInputProps>(
                 suffix={
                   <div className="flex items-center gap-1">
                     {selectedFiles.length > 0 && (
-                      <span className="text-xs text-green-600">{selectedFiles.length} ملف</span>
+                      <span className="text-xs text-green-600">
+                        {selectedFiles.length} ملف
+                      </span>
                     )}
                     <Button
                       type="text"
@@ -146,7 +164,7 @@ const MessageInput = forwardRef<MessageInputRef, MessageInputProps>(
         </div>
       </>
     );
-  }
+  },
 );
 
 MessageInput.displayName = "MessageInput";

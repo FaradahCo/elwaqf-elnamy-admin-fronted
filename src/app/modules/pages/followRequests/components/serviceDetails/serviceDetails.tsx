@@ -106,10 +106,13 @@ const ServiceDetails = React.memo(
             <span className="text-primary font-semibold text-lg">
               تاريخ بداية/نهاية الخدمة
             </span>
-            <span>
-              {serviceDetails?.active_quotation?.starts_at},{" "}
-              {serviceDetails?.active_quotation?.valid_until}
-            </span>
+            {serviceDetails?.start_date ? (
+              <span>
+                {serviceDetails?.start_date}, {serviceDetails?.end_date ?? "-"}
+              </span>
+            ) : (
+              "--"
+            )}
           </p>
           <p className="flex justify-between mt-3">
             <span className="text-primary font-semibold text-lg">
@@ -137,11 +140,7 @@ const ServiceDetails = React.memo(
                 className="flex items-center gap-2 border border-gray-200 rounded-md py-2 px-1 cursor-pointer hover:bg-gray-100"
                 onClick={() => onPreivewQuotation()}
               >
-                <img
-                  src="/images/PDF Ribbon.svg"
-                  alt="file"
-                  className="w-6 h-6"
-                />
+                <img src="/images/pdf.svg" alt="file" className="w-6 h-6" />
                 العرض الفني والمالي.pdf
               </Button>
             ) : (
@@ -152,7 +151,7 @@ const ServiceDetails = React.memo(
           <div className="flex justify-between mt-3">
             <span className="text-primary font-semibold text-lg">التكلفة</span>
             <p className="flex items-center">
-              {serviceDetails?.service?.min_price}{" "}
+              {serviceDetails?.invoice?.total_cost ?? "-"}{" "}
               <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
             </p>
           </div>

@@ -1,6 +1,6 @@
 import type { TabsProps } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import type { Wallet, WalletListParams } from "../../wallet.model";
+import type { Ownerable, Wallet, WalletListParams } from "../../wallet.model";
 import BalancesPlatform from "./balancesPlatform";
 import BalancesProvider from "./balancesProvider";
 import BalancesClient from "./balancesClient";
@@ -11,7 +11,7 @@ export const getTabsItems = (
   providerWallets: PaginatedResponse<Wallet>,
   clientWallets: PaginatedResponse<Wallet>,
   isLoading: boolean = false,
-  onChangeBalanceFilter: (filter: WalletListParams) => void
+  onChangeBalanceFilter: (filter: WalletListParams) => void,
 ): TabsProps["items"] => [
   {
     key: "1",
@@ -65,7 +65,7 @@ export const balancesColumns: ColumnsType<Wallet> = [
     render: (ownerable: Wallet["ownerable"]) => ownerable?.name || "-",
   },
   {
-    title: "قيمة العرض",
+    title: "اجمالي الأرباح",
     dataIndex: "total_transactions",
     key: "offer_value",
     width: 100,
@@ -78,7 +78,7 @@ export const balancesColumns: ColumnsType<Wallet> = [
     ),
   },
   {
-    title: "الربح",
+    title: "رصيد متاح",
     dataIndex: "available_balance",
     key: "profit",
     width: 100,
@@ -169,9 +169,10 @@ export const otherBalancesColumns: ColumnsType<Wallet> = [
   },
   {
     title: "تاريخ الانضمام",
-    dataIndex: "updated_at",
-    key: "updated_at",
+    dataIndex: "ownerable",
+    key: "joined_at",
     width: 100,
     ellipsis: true,
+    render: (ownerable: Ownerable) => ownerable?.joined_at || "-",
   },
 ];

@@ -35,7 +35,7 @@ const StaticPageForm: React.FC = () => {
     {
       enabled: !!id,
       retry: false,
-    }
+    },
   );
 
   const createMutation = useApiMutation<StaticPageItem, StaticPageItem>(
@@ -45,7 +45,7 @@ const StaticPageForm: React.FC = () => {
         queryClient.invalidateQueries({ queryKey: ["static-pages"] });
         navigate(staticPagesRoutePath.STATIC_PAGES_LIST);
       },
-    }
+    },
   );
 
   const updateMutation = useApiMutation<StaticPageItem, StaticPageItem>(
@@ -55,7 +55,7 @@ const StaticPageForm: React.FC = () => {
         queryClient.invalidateQueries({ queryKey: ["static-pages"] });
         navigate(staticPagesRoutePath.STATIC_PAGES_LIST);
       },
-    }
+    },
   );
 
   const handleSubmit = useCallback(
@@ -70,7 +70,7 @@ const StaticPageForm: React.FC = () => {
         createMutation.mutate(payload);
       }
     },
-    [id, createMutation, updateMutation]
+    [id, createMutation, updateMutation],
   );
 
   const handlePreview = useCallback(() => {
@@ -84,8 +84,7 @@ const StaticPageForm: React.FC = () => {
         title: staticPage.title,
         slug: staticPage.slug,
         content: staticPage.content,
-        is_published:
-          staticPage.status === "active" || staticPage.status === "published",
+        is_published: staticPage.is_published,
         show_in_registration: staticPage.show_in_registration,
         show_in_footer: staticPage.show_in_footer,
         show_in_menu: staticPage.show_in_menu,
