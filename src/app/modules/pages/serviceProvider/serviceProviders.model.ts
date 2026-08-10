@@ -18,7 +18,8 @@ export type ServiceProviders = {
   business_name?: string;
   business_type?: string;
   bio?: string | null;
-  is_consultant?: number;
+  is_consultant?: boolean;
+  is_waqf_market?: boolean;
   country?: string;
   city?: string;
   district?: string;
@@ -30,6 +31,15 @@ export type ServiceProviders = {
   status_label?: string;
   logo?: string;
   created_at?: string;
+};
+export type MarketplaceStatusItem = {
+  team_id: number;
+  is_waqf_market: boolean;
+  is_consultant: boolean;
+};
+
+export type UpdateMarketplaceStatusData = {
+  items: MarketplaceStatusItem[];
 };
 export type Fields = Array<Field>;
 export type Field = {
