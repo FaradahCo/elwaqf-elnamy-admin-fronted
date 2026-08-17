@@ -7,6 +7,7 @@ import type {
   serviceProvidersStatus,
   serviceProvidersStatusResponse,
   Wallet,
+  UpdateMarketplaceStatusData,
 } from "./serviceProviders.model";
 import { transformFilterParams } from "@shared/services/sharedService";
 import AoiService from "@shared/services/api";
@@ -93,6 +94,14 @@ export const updateServiceProviderStatus = async (
 ) => {
   return AoiService.patch<Partial<serviceProvidersStatus>, unknown>(
     `admin/providers/${id}/update`,
+    data,
+  );
+};
+export const updateMarketplaceStatus = async (
+  data: UpdateMarketplaceStatusData,
+) => {
+  return AoiService.patch<UpdateMarketplaceStatusData, unknown>(
+    "/admin/providers/marketplace-status",
     data,
   );
 };
