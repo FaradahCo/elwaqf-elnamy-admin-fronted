@@ -1,19 +1,19 @@
-import { useApiMutation, useApiQuery } from "@shared/services/api";
 import CustomTable from "@shared/components/customTable/customtable";
+import { useApiMutation, useApiQuery } from "@shared/services/api";
 import { useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Card, Form, InputNumber, Spin } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { Button, Card, Form, InputNumber, Spin } from "antd";
 import { useCallback, useMemo } from "react";
-import type {
-  CommissionSettings,
-  CommissionSettingsPayload,
-} from "../../model/commissionSettingsModel";
 import {
   getCommissionSettings,
   getCommissionSettingsLogs,
   updateCommissionSettings,
 } from "../../commissionSettingsService";
+import type {
+  CommissionSettings,
+  CommissionSettingsPayload,
+} from "../../model/commissionSettingsModel";
 import { commissionSettingsLogsColumns } from "./commissionSettingsConfig";
+import Alert from "@shared/components/alert/alert";
 
 const CommissionSettingsPage = () => {
   const [form] = Form.useForm();
@@ -78,7 +78,7 @@ const CommissionSettingsPage = () => {
 
   if (isSettingsLoading) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center">
+      <div className="flex min-h-100 items-center justify-center">
         <Spin size="large" />
       </div>
     );
@@ -86,25 +86,26 @@ const CommissionSettingsPage = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Page Title */}
-      <div  >
+      <div>
         <h1 className="m-0 text-2xl font-bold text-primary">
           إعدادات نسبة العمولة المزدوجة
         </h1>
         <div className="w-16 h-1 bg-second-primary mt-2 rounded"></div>
-
       </div>
 
-      {/* Commission Settings */}
-      <Card className="!rounded-none !border-[#E5E7EB] !shadow-none">
-        {/* Info Alert */}
+      <Card className="rounded-none! border-[#E5E7EB]! shadow-none!">
         <Alert
+          title="التغييرات تنطبق على العقود الجديدة فقط - العقود الحالية لا تتأثر"
+          description="التغييرات تنطبق على العقود الجديدة فقط - العقود الحالية لا تتأثر"
+          alertIcon="/images/info-icon.svg"
+        />
+        {/* <Alert
           type="info"
           showIcon
           icon={<InfoCircleOutlined />}
           message="التغييرات تنطبق على العقود الجديدة فقط - العقود الحالية لا تتأثر"
-          className="mb-5! !rounded-none !border-0 !border-r-4 !border-r-[#4D9AFF] !bg-[#F0F6FF] "
-        />
+          className="mb-5! rounded-none! !border-0 !border-r-4 !border-r-[#4D9AFF] !bg-[#F0F6FF] "
+        /> */}
 
         <Form
           form={form}
@@ -136,7 +137,7 @@ const CommissionSettingsPage = () => {
             ]}
           >
             <InputNumber
-              className="!h-11 !w-full"
+              className="h-11! w-full!"
               size="large"
               min={0}
               max={100}
@@ -145,11 +146,10 @@ const CommissionSettingsPage = () => {
             />
           </Form.Item>
 
-          <p className="mb-6 mt-[-12px] text-xs text-[#6B7280]">
+          <p className="mb-6 -mt-3 text-xs text-[#6B7280]">
             النسبة الافتراضية المطبقة على المزود الأول الذي يقدم نفس العرض
           </p>
 
-          {/* Second Commission */}
           <Form.Item
             name="offering_provider_commission_rate"
             label={
@@ -157,7 +157,7 @@ const CommissionSettingsPage = () => {
                 نسبة العمولة للمزود الثاني (المستشار)
               </span>
             }
-            className="!mb-5"
+            className="mb-5!"
             rules={[
               {
                 required: true,
@@ -172,7 +172,7 @@ const CommissionSettingsPage = () => {
             ]}
           >
             <InputNumber
-              className="!h-11 !w-full"
+              className="h-11! w-full!"
               size="large"
               min={0}
               max={100}
@@ -181,7 +181,7 @@ const CommissionSettingsPage = () => {
             />
           </Form.Item>
 
-          <p className="mb-7 mt-[-12px] text-xs text-[#6B7280]">
+          <p className="mb-7 -mt-3 text-xs text-[#6B7280]">
             النسبة الثانوية المطبقة على المزود الثاني الذي يقدم العرض
           </p>
 
@@ -194,7 +194,7 @@ const CommissionSettingsPage = () => {
                 size="large"
                 loading={updateMutation.isPending}
                 disabled={updateMutation.isPending}
-                className=" !rounded-none !border-0 !bg-brand !px-8 !text-sm !font-medium"
+                className=" rounded-none! border-0! bg-brand! px-8! text-sm! font-medium!"
               >
                 حفظ التغييرات
               </Button>
@@ -204,10 +204,7 @@ const CommissionSettingsPage = () => {
       </Card>
 
       {/* Logs */}
-      <Card
-        
-        className="mt-5 !rounded-none !border-[#E5E7EB] !shadow-none"
-      >
+      <Card className="mt-5 rounded-none! border-[#E5E7EB]! shadow-none!">
         <h2 className="mb-5 text-lg font-bold text-primary">
           سجل تحديثات العمولة
         </h2>

@@ -54,9 +54,9 @@ const ServiceProvidersList = () => {
     },
     queryOptions: { retry: false },
   });
-  const { mutate: updateMarketplace } = useApiMutation(
-    (data: UpdateMarketplaceStatusData) =>
-      updateMarketplaceStatus(data),
+
+  const updateMarketplace = useApiMutation(
+    (data: UpdateMarketplaceStatusData) => updateMarketplaceStatus(data),
     {
       onSuccess: () => {
         queryClient.invalidateQueries({
@@ -65,29 +65,27 @@ const ServiceProvidersList = () => {
       },
     },
   );
+
   const handleToggleChange = (
     record: ServiceProviders,
     field: "is_waqf_market" | "is_consultant",
     checked: boolean,
   ) => {
     if (!record.team_id) return;
-  
+
     const item = {
       team_id: record.team_id,
       is_waqf_market:
-        field === "is_waqf_market"
-          ? checked
-          : Boolean(record.is_waqf_market),
+        field === "is_waqf_market" ? checked : Boolean(record.is_waqf_market),
       is_consultant:
-        field === "is_consultant"
-          ? checked
-          : Boolean(record.is_consultant),
+        field === "is_consultant" ? checked : Boolean(record.is_consultant),
     };
-  
-    updateMarketplace({
+
+    updateMarketplace.mutate({
       items: [item],
     });
   };
+
   const filters = useMemo(
     () => [
       {
