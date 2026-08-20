@@ -1,14 +1,17 @@
 import CustomTable from "@shared/components/customTable/customtable";
-import { useApiQuery } from "@shared/services/api";
+import { useApiMutation, useApiQuery } from "@shared/services/api";
+import { useQueryClient } from "@tanstack/react-query";
 import { ServiceStatusEnum } from "@shared/services/sharedService";
 import { useMemo } from "react";
 import type {
   ServiceProviders,
   ServiceProvidersListFilterQuery,
+  UpdateMarketplaceStatusData,
 } from "../../serviceProviders.model";
 import {
   getSeriviceProvidersStatus,
   getServiceProviders,
+  updateMarketplaceStatus,
 } from "../../serviceProvidersServices";
 import { serviceProvidersListColumns } from "./serviceProvidersListConfig";
 import type { CustomFilterType } from "@shared/components/custom-filter/custom-filter";
@@ -24,6 +27,7 @@ import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/
 const ServiceProvidersList = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const queryClient = useQueryClient();
   const { data: serviceProvidersStatus } = useApiQuery(
     ["serviceProvidersStatus"],
     () => getSeriviceProvidersStatus(),
@@ -50,6 +54,38 @@ const ServiceProvidersList = () => {
     },
     queryOptions: { retry: false },
   });
+
+  const updateMarketplace = useApiMutation(
+    (data: UpdateMarketplaceStatusData) => updateMarketplaceStatus(data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["getServiceProviders"],
+        });
+      },
+    },
+  );
+
+  const handleToggleChange = (
+    record: ServiceProviders,
+    field: "is_waqf_market" | "is_consultant",
+    checked: boolean,
+  ) => {
+    if (!record.team_id) return;
+
+    const item = {
+      team_id: record.team_id,
+      is_waqf_market:
+        field === "is_waqf_market" ? checked : Boolean(record.is_waqf_market),
+      is_consultant:
+        field === "is_consultant" ? checked : Boolean(record.is_consultant),
+    };
+
+    updateMarketplace.mutate({
+      items: [item],
+    });
+  };
+
   const filters = useMemo(
     () => [
       {
@@ -82,18 +118,13 @@ const ServiceProvidersList = () => {
     [serviceProvidersStatus?.data, filter?.status, fields],
   );
 
-  const handleRowClick = (record: ServiceProviders) => ({
-    onClick: () => {
-      navigate(
-        record?.status === ServiceStatusEnum.review
-          ? serviceProviderRoutePath.SERVICE_PROVIDER_REVIEWS(record?.team_id!)
-          : serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(
-              record?.team_id!,
-            ),
-      );
-    },
-    className: "cursor-pointer hover:bg-gray-50",
-  });
+  const handleProviderClick = (record: ServiceProviders) => {
+    navigate(
+      record?.status === ServiceStatusEnum.review
+        ? serviceProviderRoutePath.SERVICE_PROVIDER_REVIEWS(record?.team_id!)
+        : serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(record?.team_id!),
+    );
+  };
 
   return (
     <div className="py-10">
@@ -106,12 +137,14 @@ const ServiceProvidersList = () => {
           initialValues={filter}
         />
         <CustomTable
-          columns={serviceProvidersListColumns}
+          columns={serviceProvidersListColumns(
+            handleToggleChange,
+            handleProviderClick,
+          )}
           dataSource={serviceProvidersData?.data ?? []}
           showSelection={false}
           className={["mt-6 overflow-x-auto"]}
           loading={isLoading}
-          onRow={handleRowClick}
           rowKey="user_id"
           paginationMeta={serviceProvidersData?.meta}
           onPaginationChange={handlePaginationChange}
