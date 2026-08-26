@@ -1,19 +1,19 @@
-import CustomTable from "@shared/components/customTable/customtable";
 import { useApiMutation, useApiQuery } from "@shared/services/api";
+import CustomTable from "@shared/components/customTable/customtable";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Card, Form, InputNumber, Spin } from "antd";
+import { Alert, Button, Card, Form, InputNumber, Spin } from "antd";
+import { InfoCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { useCallback, useMemo } from "react";
+import type {
+  CommissionSettings,
+  CommissionSettingsPayload,
+} from "../../model/commissionSettingsModel";
 import {
   getCommissionSettings,
   getCommissionSettingsLogs,
   updateCommissionSettings,
 } from "../../commissionSettingsService";
-import type {
-  CommissionSettings,
-  CommissionSettingsPayload,
-} from "../../model/commissionSettingsModel";
 import { commissionSettingsLogsColumns } from "./commissionSettingsConfig";
-import Alert from "@shared/components/alert/alert";
 
 const CommissionSettingsPage = () => {
   const [form] = Form.useForm();
@@ -78,7 +78,7 @@ const CommissionSettingsPage = () => {
 
   if (isSettingsLoading) {
     return (
-      <div className="flex min-h-100 items-center justify-center">
+      <div className="flex min-h-[400px] items-center justify-center">
         <Spin size="large" />
       </div>
     );
@@ -86,6 +86,7 @@ const CommissionSettingsPage = () => {
 
   return (
     <div className="flex flex-col gap-5">
+      {/* Page Title */}
       <div>
         <h1 className="m-0 text-2xl font-bold text-primary">
           إعدادات نسبة العمولة المزدوجة
@@ -93,19 +94,16 @@ const CommissionSettingsPage = () => {
         <div className="w-16 h-1 bg-second-primary mt-2 rounded"></div>
       </div>
 
+      {/* Commission Settings */}
       <Card className="rounded-none! border-[#E5E7EB]! shadow-none!">
+        {/* Info Alert */}
         <Alert
-          title="التغييرات تنطبق على العقود الجديدة فقط - العقود الحالية لا تتأثر"
-          description="التغييرات تنطبق على العقود الجديدة فقط - العقود الحالية لا تتأثر"
-          alertIcon="/images/info-icon.svg"
-        />
-        {/* <Alert
           type="info"
           showIcon
           icon={<InfoCircleOutlined />}
           message="التغييرات تنطبق على العقود الجديدة فقط - العقود الحالية لا تتأثر"
-          className="mb-5! rounded-none! !border-0 !border-r-4 !border-r-[#4D9AFF] !bg-[#F0F6FF] "
-        /> */}
+          className="mb-5! rounded-none! border-0! border-r-4! border-r-[#4D9AFF]! bg-[#F0F6FF]!"
+        />
 
         <Form
           form={form}
@@ -122,7 +120,7 @@ const CommissionSettingsPage = () => {
                 نسبة العمولة للمزود الأول (العارض)
               </span>
             }
-            className="!mb-5"
+            className="mb-5!"
             rules={[
               {
                 required: true,
@@ -146,10 +144,14 @@ const CommissionSettingsPage = () => {
             />
           </Form.Item>
 
-          <p className="mb-6 -mt-3 text-xs text-[#6B7280]">
-            النسبة الافتراضية المطبقة على المزود الأول الذي يقدم نفس العرض
+          <p className="mb-6 mt-[-12px] flex items-center gap-1 text-xs text-[#6B7280]">
+            <QuestionCircleOutlined />
+            <span>
+              النسبة المئوية المُطبقة على المزود الأول الذي يُنشيء العرض
+            </span>
           </p>
 
+          {/* Second Commission */}
           <Form.Item
             name="offering_provider_commission_rate"
             label={
@@ -181,12 +183,15 @@ const CommissionSettingsPage = () => {
             />
           </Form.Item>
 
-          <p className="mb-7 -mt-3 text-xs text-[#6B7280]">
-            النسبة الثانوية المطبقة على المزود الثاني الذي يقدم العرض
+          <p className="mb-7 mt-[-12px] flex items-center gap-1 text-xs text-[#6B7280]">
+            <QuestionCircleOutlined />
+            <span>
+              النسبة المئوية المُطبقة على المزود الثاني الذي يقدم على العرض
+            </span>
           </p>
 
           {/* Save Button */}
-          <Form.Item className="!mb-0">
+          <Form.Item className="mb-0!">
             <div className="flex justify-end">
               <Button
                 type="primary"
