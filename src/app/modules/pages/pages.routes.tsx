@@ -9,6 +9,7 @@ import { serviceManagementRoutes } from "./serviceManagement/serviceManagementRo
 import { ServiceProviderRoutes } from "./serviceProvider/serviceProvidersRoutes";
 import { staticPagesRoutes } from "./staticPages/staticPagesRoutes";
 import walletRoutes from "./wallet/walletRoutes";
+import { commissionSettingsRoutes } from "./commissionSettings/commissionSettingsRoutes";
 
 export const pagesRoutes: RouteObject[] = [
   {
@@ -67,6 +68,10 @@ export const pagesRoutes: RouteObject[] = [
         path: "static-pages",
         children: [...staticPagesRoutes],
       },
+      {
+        path: "settings",
+        children: [...commissionSettingsRoutes],
+      },
     ],
   },
 ];
@@ -81,4 +86,5 @@ export const pagesRoutePath = {
   WALLET_BALANCES: "/admin/wallet/balances",
   CONSULTANTS_MANAGEMENT_LIST: "/admin/consultants-management",
   STATIC_PAGES_LIST: "/admin/static-pages",
+  COMMISSION_SETTINGS: "/admin/settings",
 };

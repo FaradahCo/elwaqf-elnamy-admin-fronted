@@ -233,7 +233,7 @@ const MainLayout: React.FC = () => {
           },
           {
             key: "5-3",
-            path: "settings",
+            path: pagesRoutePath.COMMISSION_SETTINGS,
             icon: (
               <img
                 src="/images/settings.svg"

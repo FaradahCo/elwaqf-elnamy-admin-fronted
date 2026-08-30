@@ -25,9 +25,9 @@ const ConsultantsManagementList: React.FC = () => {
     queryKey: "consultants-management",
     fetchFn: getConsultantsManagement,
     queryOptions: { retry: false },
-    initialFilter:{
-      sort:'-created_at'
-    }
+    initialFilter: {
+      sort: "-created_at",
+    },
   });
   const updateConsultantStatusMutation = useApiMutation(
     (payload: UpdateConsultantStatusPayload) => {
@@ -91,6 +91,9 @@ const ConsultantsManagementList: React.FC = () => {
       <div className="mt-6 flex justify-center">
         <Pagination
           showSizeChanger
+          locale={{
+            items_per_page: "عدد المستشارين في الصفحة",
+          }}
           onShowSizeChange={handlePaginationChange}
           defaultCurrent={filter.page || 1}
           current={filter.page || 1}

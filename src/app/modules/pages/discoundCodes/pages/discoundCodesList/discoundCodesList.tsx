@@ -192,7 +192,6 @@ const DiscoundCodesList = () => {
           columns={ColumnsList}
           dataSource={discoundCodes?.data ?? []}
           showSelection={true}
-          // onSelectionChange={handleSelectionChange}
           className={["mt-6"]}
           loading={isLoading}
           paginationMeta={discoundCodes?.meta}

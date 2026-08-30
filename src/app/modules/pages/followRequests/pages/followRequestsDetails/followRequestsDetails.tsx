@@ -143,8 +143,10 @@ const followRequestsDetails = () => {
             <p className="text-[#0F1A2A] font-semibold">القيمة</p>
             <p className="flex items-center">
               {followRequest?.accounting?.platform?.discount_value ? (
-                <p>
-                  {followRequest?.accounting?.platform?.discount_value}
+                <p className="flex items-center gap-2">
+                  <span>
+                    {followRequest?.accounting?.platform?.discount_value}
+                  </span>
                   <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
                 </p>
               ) : (
@@ -163,12 +165,6 @@ const followRequestsDetails = () => {
         </Box>
         <Box title="المستشار">
           <div className="flex gap-4 items-center">
-            {/* <Avatar
-              className="shadow-lg"
-              size="large"
-              src={followRequest?.service.provider?.logo}
-              alt={followRequest?.service.provider?.business_name}
-            /> */}
             <p className="text-[#0F1A2A] font-semibold text-lg">
               {followRequest?.accounting?.consultant?.name}
             </p>
@@ -188,13 +184,6 @@ const followRequestsDetails = () => {
               <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
             </p>
           </div>
-          {/* <Link
-            to="/"
-            className="mt-6! self-end font-semibold! text-brand!"
-            type="text"
-          >
-            الانتقال إلى الإسناد المستشار
-          </Link> */}
         </Box>
       </div>
       <ServiceDetails serviceDetails={followRequest!} />
