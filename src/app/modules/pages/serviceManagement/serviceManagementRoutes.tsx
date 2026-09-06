@@ -7,7 +7,7 @@ export const serviceManagementRoutes: RouteObject[] = [
       import("./pages/serviceManagementList/serviceManagementList").then(
         (m) => ({
           Component: m.default,
-        })
+        }),
       ),
   },
   {

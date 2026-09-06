@@ -1,11 +1,16 @@
 import { triggerForceLogout } from "@/app/store/slices/authSlice";
 import { store } from "@/app/store";
+import type { FormInstance } from "antd";
 import AoiService from "./api";
 import {
   type Field,
   type PaginatedResponse,
   type ServiceStatus,
 } from "@shared/model/shared.model";
+
+type FormErrorResponse = {
+  errors?: Record<string, string | string[]>;
+};
 
 export const ServiceClassificationConfig: Record<string, { label: string }> = {
   all: { label: "الكل" },
@@ -32,8 +37,8 @@ export const durationNameConfig = {
 
 export type DurationName = keyof typeof durationNameConfig;
 
-export const handleFormErrors = <T = any>(
-  errorResponse: any,
+export const handleFormErrors = <T = Record<string, unknown>>(
+  errorResponse: FormErrorResponse | null | undefined,
 ): Array<{
   name: keyof T;
   errors: string[];
@@ -49,16 +54,16 @@ export const handleFormErrors = <T = any>(
   const fieldErrors = Object.entries(errorResponse.errors).map(
     ([fieldName, errorValue]) => ({
       name: fieldName as keyof T,
-      errors: Array.isArray(errorValue) ? errorValue : [errorValue],
+      errors: Array.isArray(errorValue) ? errorValue : [String(errorValue)],
     }),
   );
 
   return fieldErrors;
 };
 
-export const setFormFieldErrors = <T = any>(
-  form: any,
-  errorResponse: any,
+export const setFormFieldErrors = <T = Record<string, unknown>>(
+  form: FormInstance,
+  errorResponse: FormErrorResponse | null | undefined,
 ): void => {
   const fieldErrors = handleFormErrors<T>(errorResponse);
 
@@ -67,12 +72,14 @@ export const setFormFieldErrors = <T = any>(
   }
 };
 
-export const convertEnumToArrayList = (
-  enumObj: any,
-): { label: string; value: any }[] => {
+export const convertEnumToArrayList = <
+  T extends Record<string, string | number>,
+>(
+  enumObj: T,
+): { label: string; value: T[keyof T] }[] => {
   return Object.entries(enumObj).map(([key, value]) => ({
     label: key,
-    value: value,
+    value: value as T[keyof T],
   }));
 };
 
@@ -102,6 +109,7 @@ export enum ServiceStatusEnum {
   exhausted = "exhausted",
   cancelled = "cancelled",
   accepted = "accepted",
+  under_negotiation = "under_negotiation",
 }
 
 export const getStatusTag = (status: ServiceStatusEnum | string) => {
@@ -131,7 +139,7 @@ export const getStatusTag = (status: ServiceStatusEnum | string) => {
     [ServiceStatusEnum.accepted]: { color: "#52c41a", text: "مقبول" },
     [ServiceStatusEnum.hold]: { color: "#fa8c16", text: "معلق" },
     [ServiceStatusEnum.review]: { color: "#fa8c16", text: "معلق" },
-    [ServiceStatusEnum.in_progress]: { color: "#fa8c16", text: "جاري العمل" },
+    [ServiceStatusEnum.in_progress]: { color: "#00a8ff", text: "جاري العمل" },
     [ServiceStatusEnum.removed]: { color: "#8c8c8c", text: "محذوف" },
     [ServiceStatusEnum.scheduled]: { color: "#fa8c16", text: "مجدول" },
     [ServiceStatusEnum.canceled]: { color: "#ff4d4f", text: "ملغي" },
@@ -139,6 +147,10 @@ export const getStatusTag = (status: ServiceStatusEnum | string) => {
     [ServiceStatusEnum.testing]: { color: "#722ed1", text: "تجريبي" },
     [ServiceStatusEnum.expired]: { color: "#ff4d4f", text: "منتهي" },
     [ServiceStatusEnum.exhausted]: { color: "#8c8c8c", text: "مستنفذ" },
+    [ServiceStatusEnum.under_negotiation]: {
+      color: "#e6ac42",
+      text: "قبد التفاوض",
+    },
 
     [ServiceStatusEnum.revision_pending]: {
       color: "#722ed1",
@@ -154,10 +166,12 @@ export const getStatusTag = (status: ServiceStatusEnum | string) => {
   return config;
 };
 
-export const transformFilterParams = <T>(filter: T): Record<string, any> => {
+export const transformFilterParams = <T>(
+  filter: T,
+): Record<string, unknown> => {
   if (!filter) return {};
 
-  const transformedParams: Record<string, any> = {};
+  const transformedParams: Record<string, unknown> = {};
 
   Object.entries(filter).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
@@ -236,10 +250,12 @@ export const extractUrl = (text: string): string | null => {
   const urlMatch = text.match(/https?:\/\/[^\s]+/i);
   return urlMatch ? urlMatch[0] : null;
 };
-export const removeNullValues = (obj: Record<string, any>) => {
+export const removeNullValues = (
+  obj: Record<string, unknown>,
+): Record<string, string> => {
   return Object.fromEntries(
-    Object.entries(obj).filter(
-      ([_, value]) => value !== null && value !== undefined,
-    ),
+    Object.entries(obj)
+      .filter(([, value]) => value !== null && value !== undefined)
+      .map(([key, value]) => [key, String(value)]),
   );
 };

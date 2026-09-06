@@ -76,24 +76,6 @@ const MainHeader = ({ collapsed, onToggleCollapse }: HeaderProps) => {
       </div>
 
       <div className="flex items-center gap-2 md:gap-4">
-        <div className="hidden md:flex items-center gap-2 lg:gap-3">
-          <img
-            src="/images/cart.svg"
-            alt="Cart"
-            className="h-5 w-5 lg:h-6 lg:w-6 cursor-pointer hover:opacity-80 transition-opacity"
-          />
-          <img
-            src="/images/notifications.svg"
-            alt="Notifications"
-            className="h-5 w-5 lg:h-6 lg:w-6 cursor-pointer hover:opacity-80 transition-opacity"
-          />
-          <img
-            src="/images/envolove.svg"
-            alt="Messages"
-            className="h-5 w-5 lg:h-6 lg:w-6 cursor-pointer hover:opacity-80 transition-opacity"
-          />
-        </div>
-
         {/* Profile Dropdown */}
         <Dropdown
           menu={{ items: profileMenuItems }}
@@ -105,7 +87,7 @@ const MainHeader = ({ collapsed, onToggleCollapse }: HeaderProps) => {
               size="small"
               src={user?.image}
               icon={!user?.image && <UserOutlined />}
-              className="bg-green-600 md:!w-8 md:!h-8"
+              className="bg-green-600 md:w-8! md:h-8!"
             />
             {user && (
               <span className="hidden md:block text-sm font-medium text-gray-700">

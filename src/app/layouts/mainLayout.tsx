@@ -15,6 +15,12 @@ import { staticPagesRoutePath } from "../modules/pages/staticPages/staticPagesRo
 import { followRequestsRoutePath } from "../modules/pages/followRequests/followRequestsRoutes";
 import { alwaqfRoutePath } from "../modules/pages/alwaqf/alwaqfRoutes";
 
+type MenuNavItem = {
+  key?: string;
+  path?: string;
+  children?: MenuNavItem[];
+};
+
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [openKeys, setOpenKeys] = useState<string[]>([]);
@@ -250,7 +256,10 @@ const MainLayout: React.FC = () => {
   );
 
   // Helper function to find menu item by key (including nested children)
-  const findMenuItemByKey = (items: any[], key: string): any => {
+  const findMenuItemByKey = (
+    items: MenuNavItem[],
+    key: string,
+  ): MenuNavItem | null => {
     for (const item of items) {
       if (item.key === key) {
         return item;
@@ -264,7 +273,10 @@ const MainLayout: React.FC = () => {
   };
 
   // Helper function to find menu item by path (including nested children)
-  const findMenuItemByPath = (items: any[], path: string): any => {
+  const findMenuItemByPath = (
+    items: MenuNavItem[],
+    path: string,
+  ): MenuNavItem | null => {
     for (const item of items) {
       if (item.path === path) {
         return item;
@@ -286,10 +298,10 @@ const MainLayout: React.FC = () => {
   };
 
   // Get current selected key based on location
-  const getSelectedKey = () => {
+  const getSelectedKey = (): string[] => {
     const currentPath = location.pathname;
     const selectedItem = findMenuItemByPath(menuItems, currentPath);
-    if (selectedItem) {
+    if (selectedItem?.key) {
       return [selectedItem.key];
     }
     return ["0"];
@@ -326,7 +338,7 @@ const MainLayout: React.FC = () => {
           />
         </Header>
         <Content
-          className="overflow-auto"
+          className="overflow-auto h-screen!"
           style={{
             margin: "0 16px",
             padding: "15px 5px",

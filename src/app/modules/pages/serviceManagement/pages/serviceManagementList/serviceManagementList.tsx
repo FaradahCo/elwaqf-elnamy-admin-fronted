@@ -16,18 +16,15 @@ import CustomFilter from "@shared/components/custom-filter/custom-filter";
 import { useSearchParams } from "react-router";
 import { useServiceStatus } from "@/app/hooks/useServiceStatus";
 import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
+import { useServiceFields } from "@/app/hooks/useServiceFields";
 const TYPE_OPTIONS = [
   { label: "الخدمات", value: "service" },
   { label: "الباقات", value: "package" },
 ];
-const PACKAGE_TYPES = [
-  { value: "healthcare", label: "الرعاية الصحية" },
-  { value: "education", label: "التعليم" },
-  { value: "technology", label: "التكنولوجيا" },
-  { value: "social", label: "الخدمات الاجتماعية" },
-];
+
 export const ServiceManagementList = () => {
   const [searchParams] = useSearchParams();
+  const { fields } = useServiceFields();
   const {
     data: serviceData,
     isLoading,
@@ -43,7 +40,7 @@ export const ServiceManagementList = () => {
     },
     queryOptions: { retry: false },
   });
-  const { serviceStatus } = useServiceStatus(filter?.type!);
+  const { serviceStatus } = useServiceStatus(filter?.type ?? "service");
   const filters = useMemo(
     () => [
       {
@@ -61,7 +58,10 @@ export const ServiceManagementList = () => {
           filter.type === "service" ? "اختر مجال الخدمات" : "اختر مجال الباقات",
         label: filter.type === "service" ? "مجال الخدمات" : "مجال الباقات",
         name: "field_id",
-        options: PACKAGE_TYPES,
+        options: fields?.map((field) => ({
+          value: field.id,
+          label: field.name,
+        })),
       },
       {
         type: "select" as CustomFilterType,
@@ -86,20 +86,20 @@ export const ServiceManagementList = () => {
         },
       },
     ],
-    [serviceStatus?.data, filter?.type, filter?.status],
+    [serviceStatus?.data, filter?.type, filter?.status, fields],
   );
   return (
     <div className="py-10">
       <div className="flex gap-5 flex-wrap flex-row flex-center justify-start">
         <CardStatistic
           title="خدمة"
-          icon="/images/elements.svg"
+          icon="/images/circle.svg"
           value={serviceData?.meta?.total ?? 0}
           classesName={["border border-second-primary p-4 w-64 min-w-64"]}
         />
         <CardStatistic
           title="نشطة"
-          icon="/images/elements.svg"
+          icon="/images/circle_1.svg"
           value={
             serviceStatus?.data?.find((status) => status.status === "approved")
               ?.count ?? 0
@@ -111,7 +111,7 @@ export const ServiceManagementList = () => {
 
         <CardStatistic
           title="بانتظار الاعتماد"
-          icon="/images/elements.svg"
+          icon="/images/circle_2.svg"
           value={
             serviceStatus?.data?.find(
               (status) => status.status === "revision_pending",
@@ -124,7 +124,7 @@ export const ServiceManagementList = () => {
 
         <CardStatistic
           title="معلّقة"
-          icon="/images/elements.svg"
+          icon="/images/circle_3.svg"
           value={
             serviceStatus?.data?.find((status) => status.status === "inactive")
               ?.count ?? 0
@@ -146,7 +146,7 @@ export const ServiceManagementList = () => {
         <CustomTable<ServiceData>
           columns={getColumnsList(filter?.type ?? "service")}
           dataSource={serviceData?.data ?? []}
-          showSelection={true}
+          showSelection={false}
           className={["mt-6"]}
           loading={isLoading}
           paginationMeta={serviceData?.meta}
