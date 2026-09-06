@@ -22,8 +22,8 @@ export interface UseListHookReturn<TData, TFilterQuery> {
 
 const parseSearchParamsToFilter = (
   searchParams: URLSearchParams,
-): Record<string, any> => {
-  const result: Record<string, any> = {};
+): Record<string, string> => {
+  const result: Record<string, string> = {};
   searchParams.forEach((value, key) => {
     if (value !== undefined && value !== null && value !== "") {
       result[key] = value;
@@ -47,7 +47,7 @@ export const useListHook = <TData, TFilterQuery>(
   const [filter, setFilter] = useState<TFilterQuery>(() => {
     const urlFilter = parseSearchParamsToFilter(searchParams);
     return {
-      sort: "minus-created_at",
+      sort: "-created_at",
       page: 1,
       per_page: 10,
       ...initialFilter,
@@ -64,23 +64,34 @@ export const useListHook = <TData, TFilterQuery>(
     },
   );
 
-  const handleFilterChange = useCallback((filterValues: TFilterQuery) => {
-    setFilter((prevFilter) => {
-      const updated = { ...prevFilter, ...filterValues } as TFilterQuery;
-      setSearchParams(new URLSearchParams(removeNullValues(updated!)));
-      return updated;
-    });
-  }, []);
+  const handleFilterChange = useCallback(
+    (filterValues: TFilterQuery) => {
+      setFilter((prevFilter) => {
+        const updated = { ...prevFilter, ...filterValues } as TFilterQuery;
+        setSearchParams(
+          new URLSearchParams(
+            removeNullValues(updated as Record<string, unknown>),
+          ),
+        );
+        return updated;
+      });
+    },
+    [setSearchParams],
+  );
 
   const handlePaginationChange = useCallback(
     (page: number, per_page: number) => {
       setFilter((prevFilter) => {
         const updated = { ...prevFilter, page, per_page } as TFilterQuery;
-        setSearchParams(new URLSearchParams(removeNullValues(updated!)));
+        setSearchParams(
+          new URLSearchParams(
+            removeNullValues(updated as Record<string, unknown>),
+          ),
+        );
         return updated;
       });
     },
-    [],
+    [setSearchParams],
   );
 
   return {

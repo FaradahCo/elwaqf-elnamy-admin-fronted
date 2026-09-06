@@ -68,7 +68,6 @@ axiosInstance.interceptors.response.use(
       case 422:
         message.error(error.response?.data?.message || error.message);
         break;
-
       case 429:
         message.error(error.response?.data?.message || error.message);
         break;

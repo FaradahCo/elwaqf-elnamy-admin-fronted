@@ -28,23 +28,21 @@ const ServiceProviderLayout = () => {
     <>
       <div className="flex gap-5 flex-wrap flex-row flex-center justify-start">
         <CardStatistic
-          title="إجمالي الخدمات"
-          icon="/images/elements_1.svg"
+          title="إجمالي المزودين"
+          icon="/images/user-group-03.svg"
           value={
             id
-              ? serviceProviderDashboard?.total_service_requests!
+              ? (serviceProviderDashboard?.total_service_requests ?? 0)
               : (serviceProvidersStatus?.total ?? 0)
           }
-          classesName={[
-            "border border-second-primary p-4 w-64 min-w-64",
-          ]}
+          classesName={["border border-primary p-4 w-64 min-w-64"]}
         />
         <CardStatistic
-          title="الطلبات المكتملة"
-          icon="/images/elements_2.svg"
+          title="مزود نشط"
+          icon="/images/user.svg"
           value={
             id
-              ? serviceProviderDashboard?.completed_service_requests!
+              ? (serviceProviderDashboard?.completed_service_requests ?? 0)
               : (serviceProvidersStatus?.data?.find(
                   (item) => item?.status === ServiceStatusEnum.active,
                 )?.count ?? 0)
@@ -55,11 +53,11 @@ const ServiceProviderLayout = () => {
         />
 
         <CardStatistic
-          title="جاري العمل"
-          icon="/images/elements_3.svg"
+          title="مزود قيد المراجعة"
+          icon="/images/user (1).svg"
           value={
             id
-              ? serviceProviderDashboard?.in_progress_service_requests!
+              ? (serviceProviderDashboard?.in_progress_service_requests ?? 0)
               : (serviceProvidersStatus?.data?.find(
                   (item) => item?.status === ServiceStatusEnum.in_progress,
                 )?.count ?? 0)
@@ -70,11 +68,11 @@ const ServiceProviderLayout = () => {
         />
 
         <CardStatistic
-          title="الرصيد معلق"
-          icon="/images/elements_4.svg"
+          title="مزود غير مكتمل"
+          icon="/images/user (2).svg"
           value={
             id
-              ? serviceProviderDashboard?.locked_balance!
+              ? (serviceProviderDashboard?.locked_balance ?? 0)
               : (serviceProvidersStatus?.data?.find(
                   (item) => item?.status === ServiceStatusEnum.review,
                 )?.count ?? 0)

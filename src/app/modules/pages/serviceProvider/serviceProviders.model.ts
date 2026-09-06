@@ -140,6 +140,25 @@ export type ServiceItem = {
   published_at?: string | null;
   updated_at?: string;
   created_at?: string;
+  remaining_time?: Deadline;
+};
+
+export type Deadline = {
+  expired: boolean;
+  start_date: {
+    date: string;
+    time_am_pm: string;
+    time_24h: string;
+    date_readable: string;
+  };
+  deadline: {
+    date: string;
+    time_am_pm: string;
+    time_24h: string;
+    date_readable: string;
+  };
+  remaining_days: number;
+  human_readable: string;
 };
 export type ProviderDashboard = {
   total_service_requests: number;

@@ -1,7 +1,6 @@
 import type { Provider } from "@/app/modules/pages/followRequests/model/followRequestsModel";
-import { Button, Modal, Tag } from "antd";
+import { App, Button, Image, Input, Modal, Tag } from "antd";
 import { memo, useState } from "react";
-import { Image } from "antd";
 import {
   ServiceStatusEnum,
   getStatusTag,
@@ -11,32 +10,56 @@ import { updateServiceProviderStatus } from "../../../../serviceProvidersService
 import { useApiMutation } from "@shared/services/api";
 import { useQueryClient } from "@tanstack/react-query";
 
+const { TextArea } = Input;
+
 const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
   const [confirmModalOpen, setConfirmModalOpen] = useState<string | null>(null);
+  const [rejectReason, setRejectReason] = useState("");
   const queryClient = useQueryClient();
+  const { message } = App.useApp();
+  const teamId = providerData?.profile?.at(0)?.team_id;
+
   const updateStatusMutation = useApiMutation(
-    (status) =>
-      updateServiceProviderStatus(providerData?.profile?.at(0)?.team_id!, {
-        status: status as ServiceStatusEnum,
-      }),
+    ({ status, reason }: { status: ServiceStatusEnum; reason?: string }) => {
+      return updateServiceProviderStatus(teamId!, {
+        status,
+        ...(reason ? { reason } : {}),
+      });
+    },
     {
       onSuccess: (res) => {
-        queryClient.setQueryData(
-          ["provider-data", providerData?.profile?.at(0)?.team_id],
-          res,
-        );
+        queryClient.setQueryData(["provider-data", teamId], res);
         setConfirmModalOpen(null);
+        setRejectReason("");
       },
     },
   );
 
-  const changeProviderStatus = () => {
-    if (confirmModalOpen === "inactive") {
-      updateStatusMutation.mutate("inactive");
-    } else {
-      updateStatusMutation.mutate("active");
-    }
+  const closeModal = () => {
+    setConfirmModalOpen(null);
+    setRejectReason("");
   };
+
+  const changeProviderStatus = () => {
+    if (!teamId) return;
+
+    if (confirmModalOpen === "inactive") {
+      if (!rejectReason.trim()) {
+        message.warning("يرجى إدخال سبب الرفض");
+        return;
+      }
+      updateStatusMutation.mutate({
+        status: ServiceStatusEnum.inactive,
+        reason: rejectReason.trim(),
+      });
+      return;
+    }
+
+    updateStatusMutation.mutate({
+      status: ServiceStatusEnum.active,
+    });
+  };
+
   return (
     <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow mt-4">
       <div className="flex items-start gap-4">
@@ -80,39 +103,57 @@ const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
         {providerData?.status !== ServiceStatusEnum.review && (
           <Tag
             className="py-1! px-4!"
-            color={getStatusTag(providerData?.status!).color}
+            color={getStatusTag(providerData?.status ?? "").color}
           >
             <span className="text-sm">{providerData?.status_label}</span>
           </Tag>
         )}
       </div>
+
       <Modal
-        open={!!confirmModalOpen}
-        onCancel={() => setConfirmModalOpen(null)}
+        open={confirmModalOpen === "active"}
+        onCancel={closeModal}
         footer={null}
       >
         <Confirm
-          confirmIcon={
-            confirmModalOpen === "inactive"
-              ? "/images/cancel-circle.svg"
-              : undefined
-          }
-          title={
-            confirmModalOpen === "inactive"
-              ? "رفض طلب مزوّد الخدمة"
-              : "قبول طلب مزوّد الخدمة"
-          }
-          description={
-            confirmModalOpen === "inactive"
-              ? "يرجى توضيح سبب الرفض ليتم إخطار المزوّد به"
-              : ""
-          }
+          title="قبول طلب مزوّد الخدمة"
+          description=""
           confirmText="تأكيد"
           cancelText="إلغاء"
           onConfirm={changeProviderStatus}
-          onCancel={() => setConfirmModalOpen(null)}
+          onCancel={closeModal}
           loading={updateStatusMutation.isPending}
         />
+      </Modal>
+
+      <Modal
+        open={confirmModalOpen === "inactive"}
+        onCancel={closeModal}
+        footer={null}
+      >
+        <Confirm
+          confirmIcon="/images/cancel-circle.svg"
+          title="رفض طلب مزوّد الخدمة"
+          description="يرجى توضيح سبب الرفض ليتم إخطار المزوّد به"
+          confirmText="تأكيد"
+          cancelText="إلغاء"
+          onConfirm={changeProviderStatus}
+          onCancel={closeModal}
+          loading={updateStatusMutation.isPending}
+        >
+          <div className="mt-6 text-right">
+            <label className="mb-2 block text-sm font-medium">
+              سبب الرفض <span className="text-red-500">*</span>
+            </label>
+            <TextArea
+              rows={8}
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              placeholder="اكتب سبب الرفض هنا..."
+              className="min-h-40!"
+            />
+          </div>
+        </Confirm>
       </Modal>
     </div>
   );

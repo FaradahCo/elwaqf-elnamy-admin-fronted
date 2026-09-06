@@ -50,7 +50,6 @@ const ServiceProvidersList = () => {
     fetchFn: getServiceProviders,
     initialFilter: {
       status: (searchParams.get("status") as ServiceStatusEnum) ?? undefined,
-      sort: "-created_at",
     },
     queryOptions: { retry: false },
   });
@@ -119,10 +118,12 @@ const ServiceProvidersList = () => {
   );
 
   const handleProviderClick = (record: ServiceProviders) => {
+    if (record?.team_id == null) return;
+
     navigate(
-      record?.status === ServiceStatusEnum.review
-        ? serviceProviderRoutePath.SERVICE_PROVIDER_REVIEWS(record?.team_id!)
-        : serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(record?.team_id!),
+      record.status === ServiceStatusEnum.review
+        ? serviceProviderRoutePath.SERVICE_PROVIDER_REVIEWS(record.team_id)
+        : serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(record.team_id),
     );
   };
 
