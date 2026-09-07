@@ -13,17 +13,19 @@ import { useQueryClient } from "@tanstack/react-query";
 const { TextArea } = Input;
 
 const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
-  const [confirmModalOpen, setConfirmModalOpen] = useState<string | null>(null);
+  const [confirmModalOpen, setConfirmModalOpen] = useState<
+    "active" | "inactive" | "disable" | null
+  >(null);
   const [rejectReason, setRejectReason] = useState("");
   const queryClient = useQueryClient();
   const { message } = App.useApp();
   const teamId = providerData?.profile?.at(0)?.team_id;
 
   const updateStatusMutation = useApiMutation(
-    ({ status, reason }: { status: ServiceStatusEnum; reason?: string }) => {
+    ({ status, note }: { status: ServiceStatusEnum; note?: string }) => {
       return updateServiceProviderStatus(teamId!, {
         status,
-        ...(reason ? { reason } : {}),
+        ...(note ? { note } : {}),
       });
     },
     {
@@ -43,14 +45,14 @@ const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
   const changeProviderStatus = () => {
     if (!teamId) return;
 
-    if (confirmModalOpen === "inactive") {
+    if (confirmModalOpen === "inactive" || confirmModalOpen === "disable") {
       if (!rejectReason.trim()) {
         message.warning("يرجى إدخال سبب الرفض");
         return;
       }
       updateStatusMutation.mutate({
         status: ServiceStatusEnum.inactive,
-        reason: rejectReason.trim(),
+        note: rejectReason.trim(),
       });
       return;
     }
@@ -100,6 +102,17 @@ const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
             </Button>
           </>
         )}
+        {providerData?.status !== ServiceStatusEnum.review &&
+          providerData?.status !== ServiceStatusEnum.inactive && (
+            <Button
+              className="bg-error! text-white! py-4!"
+              onClick={() => setConfirmModalOpen("disable")}
+              disabled={updateStatusMutation.isPending}
+              loading={updateStatusMutation.isPending}
+            >
+              تعطيل
+            </Button>
+          )}
         {providerData?.status !== ServiceStatusEnum.review && (
           <Tag
             className="py-1! px-4!"
@@ -127,14 +140,22 @@ const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
       </Modal>
 
       <Modal
-        open={confirmModalOpen === "inactive"}
+        open={confirmModalOpen === "inactive" || confirmModalOpen === "disable"}
         onCancel={closeModal}
         footer={null}
       >
         <Confirm
           confirmIcon="/images/cancel-circle.svg"
-          title="رفض طلب مزوّد الخدمة"
-          description="يرجى توضيح سبب الرفض ليتم إخطار المزوّد به"
+          title={
+            confirmModalOpen === "inactive"
+              ? "رفض طلب مزوّد الخدمة"
+              : "تعطيل مزوّد الخدمة"
+          }
+          description={
+            confirmModalOpen === "inactive"
+              ? "يرجى توضيح سبب الرفض ليتم إخطار المزوّد به"
+              : "يرجى توضيح سبب التعطيل ليتم إخطار المزوّد به"
+          }
           confirmText="تأكيد"
           cancelText="إلغاء"
           onConfirm={changeProviderStatus}
@@ -143,13 +164,18 @@ const ActionHeader = memo(({ providerData }: { providerData: Provider }) => {
         >
           <div className="mt-6 text-right">
             <label className="mb-2 block text-sm font-medium">
-              سبب الرفض <span className="text-red-500">*</span>
+              سبب {confirmModalOpen === "inactive" ? "الرفض" : "التعطيل"}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <TextArea
               rows={8}
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
-              placeholder="اكتب سبب الرفض هنا..."
+              placeholder={
+                confirmModalOpen === "inactive"
+                  ? "اكتب سبب الرفض هنا..."
+                  : "اكتب سبب التعطيل هنا..."
+              }
               className="min-h-40!"
             />
           </div>

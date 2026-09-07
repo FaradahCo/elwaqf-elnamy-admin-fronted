@@ -50,6 +50,7 @@ const MainLayout: React.FC = () => {
               />
             ),
             label: <span className="text-[18px]!">الرئيسية</span>,
+            title: "الرئيسية",
             path: pagesRoutePath.HOME,
           },
         ],
@@ -74,6 +75,7 @@ const MainLayout: React.FC = () => {
               />
             ),
             label: <span className="text-[18px]!">إدارة الخدمات</span>,
+            title: "إدارة الخدمات",
             path: pagesRoutePath.SERVICE_MANAGEMENT_LIST,
           },
           {
@@ -86,6 +88,7 @@ const MainLayout: React.FC = () => {
               />
             ),
             label: <span className="text-[18px]!">متابعه الطلبات</span>,
+            title: "متابعه الطلبات",
             path: followRequestsRoutePath.FOLLOW_REQUESTS,
           },
           {
@@ -98,6 +101,7 @@ const MainLayout: React.FC = () => {
               />
             ),
             label: <span className="text-[18px]!">مزودي الخدمات</span>,
+            title: "مزودي الخدمات",
             path: serviceProviderRoutePath.SERVICE_PROVIDERS,
           },
           {
@@ -110,6 +114,7 @@ const MainLayout: React.FC = () => {
               />
             ),
             label: <span className="text-[18px]!">الإوقاف</span>,
+            title: "الإوقاف",
             path: alwaqfRoutePath.ALWAQF_LIST,
           },
         ],
@@ -131,6 +136,7 @@ const MainLayout: React.FC = () => {
               />
             ),
             label: <span className="text-[18px]!">إدارة المحفظة</span>,
+            title: "إدارة المحفظة",
             path: walletRoutePath.WALLET,
           },
           {
@@ -143,6 +149,7 @@ const MainLayout: React.FC = () => {
               />
             ),
             label: <span className="text-[18px]!">المعاملات المالية</span>,
+            title: "المعاملات المالية",
             path: walletRoutePath.PAYMENTS,
           },
           {
@@ -155,6 +162,7 @@ const MainLayout: React.FC = () => {
               />
             ),
             label: <span className="text-[18px]!">الأرصدة</span>,
+            title: "الأرصدة",
             path: walletRoutePath.BALANCES,
           },
           {
@@ -167,6 +175,7 @@ const MainLayout: React.FC = () => {
               />
             ),
             label: <span className="text-[18px]!">أكواد الخصم</span>,
+            title: "أكواد الخصم",
             path: pagesRoutePath.DISCOUNT_CODES_LIST,
           },
         ],
@@ -191,6 +200,7 @@ const MainLayout: React.FC = () => {
               />
             ),
             label: <span className="text-[18px]!">الاستشارة</span>,
+            title: "الاستشارة",
           },
           {
             key: "4-2",
@@ -203,6 +213,7 @@ const MainLayout: React.FC = () => {
               />
             ),
             label: <span className="text-[18px]!">إدارة المستشارين</span>,
+            title: "إدارة المستشارين",
           },
         ],
       },
@@ -235,6 +246,7 @@ const MainLayout: React.FC = () => {
               />
             ),
             label: <span className="text-[18px]!">الصفحات الثابتة</span>,
+            title: "الصفحات الثابتة",
             path: staticPagesRoutePath.STATIC_PAGES_LIST,
           },
           {
@@ -248,6 +260,7 @@ const MainLayout: React.FC = () => {
               />
             ),
             label: <span className="text-[18px]!">الاعدادات</span>,
+            title: "الاعدادات",
           },
         ],
       },
@@ -316,15 +329,25 @@ const MainLayout: React.FC = () => {
         collapsible
         collapsed={collapsed}
         width={280}
-        collapsedWidth={80}
+        collapsedWidth={88}
+        className={`main-sider ${collapsed ? "main-sider--collapsed" : ""}`}
       >
-        <img src="/images/شعار سواقف.svg" alt="logo" className="mx-auto mt-5" />
+        <div className="main-sider__logo flex items-center justify-center py-4 px-2">
+          <img
+            src="/images/شعار سواقف.svg"
+            alt="logo"
+            className={`transition-all duration-200 ${
+              collapsed ? "w-10 h-10 object-contain" : "w-auto max-w-45"
+            }`}
+          />
+        </div>
         <Menu
-          className="py-5!"
+          className="main-sider__menu py-2!"
           theme="dark"
           mode="inline"
+          inlineCollapsed={collapsed}
           selectedKeys={selectedKeys}
-          openKeys={openKeys}
+          openKeys={collapsed ? [] : openKeys}
           onOpenChange={setOpenKeys}
           onClick={handleMenuClick}
           items={menuItems}
