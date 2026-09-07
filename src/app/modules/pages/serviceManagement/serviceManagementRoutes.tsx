@@ -21,5 +21,5 @@ export const serviceManagementRoutes: RouteObject[] = [
 
 export const serviceManagementRoutePath = {
   SERVICE_MANAGEMENT_LIST: "/admin/service-management",
-  SERVICE_REVIEW: "/admin/service-management/reviews/:id",
+  SERVICE_REVIEW: (id: string) => `/admin/service-management/reviews/${id}`,
 };

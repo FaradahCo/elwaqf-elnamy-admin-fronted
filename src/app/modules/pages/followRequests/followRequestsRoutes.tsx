@@ -21,5 +21,5 @@ export const followRequestsRoutes: RouteObject[] = [
 
 export const followRequestsRoutePath = {
   FOLLOW_REQUESTS: "/admin/follow-requests",
-  FOLLOW_REQUESTS_DETAILS: "/admin/follow-requests/:id",
+  FOLLOW_REQUESTS_DETAILS: (id: string) => `/admin/follow-requests/${id}`,
 };

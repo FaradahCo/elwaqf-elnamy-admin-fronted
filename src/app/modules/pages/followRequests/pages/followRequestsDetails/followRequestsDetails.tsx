@@ -9,7 +9,7 @@ import ServiceDetails from "../../components/serviceDetails/serviceDetails";
 import { getServiceRequestById } from "../../followRequestsService";
 import Chat from "@shared/components/chat/Chat";
 
-const followRequestsDetails = () => {
+const FollowRequestsDetails = () => {
   const { id } = useParams();
   const { data: followRequest, isLoading } = useApiQuery(
     ["follow-requests", id],
@@ -143,12 +143,12 @@ const followRequestsDetails = () => {
             <p className="text-[#0F1A2A] font-semibold">القيمة</p>
             <p className="flex items-center">
               {followRequest?.accounting?.platform?.discount_value ? (
-                <p className="flex items-center gap-2">
+                <span className="flex items-center gap-2">
                   <span>
                     {followRequest?.accounting?.platform?.discount_value}
                   </span>
                   <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
-                </p>
+                </span>
               ) : (
                 "--"
               )}
@@ -188,18 +188,20 @@ const followRequestsDetails = () => {
       </div>
       <ServiceDetails serviceDetails={followRequest!} />
       <Service outputs={followRequest?.service?.outputs || []} />
-      <Chat
-        chat_id={followRequest?.chat_id!}
-        role="admin"
-        user={{
-          name: followRequest?.client.name!,
-          image: followRequest?.service.provider?.logo,
-          business_name: followRequest?.service.provider?.business_name,
-        }}
-      />
+      {followRequest?.chat_id != null && (
+        <Chat
+          chat_id={followRequest.chat_id}
+          role="admin"
+          user={{
+            name: followRequest.client?.name ?? "",
+            image: followRequest.service?.provider?.logo,
+            business_name: followRequest.service?.provider?.business_name,
+          }}
+        />
+      )}
       <RequestHistroy activities={followRequest?.activities || []} />
     </div>
   );
 };
 
-export default followRequestsDetails;
+export default FollowRequestsDetails;

@@ -46,7 +46,7 @@ const Wallet = () => {
           </p>
         </div>
         <div className="flex flex-col gap-5 text-2xl p-4">
-          <h2>رصيد المحفظة</h2>
+          <h2> الرصيد المعلق</h2>
           <p className="text-second-primary text-4xl">
             {wallet?.available_balance}
             <span className="inline-block">

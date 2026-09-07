@@ -10,15 +10,21 @@ import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/
 import CustomFilter from "@shared/components/custom-filter/custom-filter";
 import CustomTable from "@shared/components/customTable/customtable";
 import { useMemo } from "react";
-import { useOutletContext } from "react-router";
-import type { ServiceProvidersListFilterQuery } from "../../../../serviceProviders.model";
+import { useNavigate, useOutletContext } from "react-router";
+import type {
+  ServiceItem,
+  ServiceProvidersListFilterQuery,
+} from "../../../../serviceProviders.model";
 import { getProviderRequests } from "../../../../serviceProvidersServices";
 import { requestsConfigColumns } from "./requestsConfig";
+import { followRequestsRoutePath } from "@/app/modules/pages/followRequests/followRequestsRoutes";
 
 const Requests = () => {
   const providerData = useOutletContext<Provider>();
   const { requestsStatus } = useRequestsStatus();
   const { fields } = useServiceFields();
+  const navigate = useNavigate();
+  const teamId = providerData?.profile?.at(0)?.team_id;
 
   const {
     data: requests,
@@ -30,20 +36,20 @@ const Requests = () => {
     ServiceProvidersListFilterQuery
   >({
     queryKey: "providerRequests",
-    fetchFn: (filter) =>
-      getProviderRequests(providerData?.profile?.at(0)?.team_id!, filter),
+    fetchFn: (filter) => getProviderRequests(teamId as number, filter),
     initialFilter: {
       page: 1,
       per_page: 10,
     },
+    enabled: typeof teamId === "number",
     queryOptions: { retry: false },
   });
 
   const transformedFields = useMemo(
     () =>
       fields?.map((field) => ({
-        label: field?.name,
-        value: field?.id,
+        label: field?.name ?? "",
+        value: field?.id ?? "",
       })),
     [fields],
   );
@@ -72,11 +78,18 @@ const Requests = () => {
     ],
     [requestsStatus?.data, transformedFields],
   );
+
+  const viewRequest = (record: ServiceItem) => {
+    if (!record.id) return;
+    navigate(
+      followRequestsRoutePath.FOLLOW_REQUESTS_DETAILS(record.id.toString()),
+    );
+  };
   return (
     <div className="pt-8 px-4 bg-white">
       <CustomFilter filters={filters} onFilterChange={handleFilterChange} />
       <CustomTable
-        columns={requestsConfigColumns}
+        columns={requestsConfigColumns(viewRequest)}
         dataSource={requests?.data ?? []}
         showSelection={false}
         className={["mt-6 overflow-x-auto"]}

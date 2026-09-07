@@ -1,13 +1,18 @@
-import { Tag } from "antd";
+import { Button, Tag } from "antd";
 import type {
   Consultation,
+  RemainingTime,
   Service,
   ServiceRequest,
   TeamProvider,
 } from "../../../../alwaqfModel";
 import { getStatusTag } from "@shared/services/sharedService";
 
-export const consultationConfigColumns = [
+import { EyeOutlined } from "@ant-design/icons";
+
+export const consultationConfigColumns = (
+  viewConsultation: (record: ServiceRequest | Consultation) => void,
+) => [
   {
     key: "id",
     dataIndex: "id",
@@ -16,8 +21,8 @@ export const consultationConfigColumns = [
   {
     key: "service",
     dataIndex: "service",
-    title: "الخدمة",
-    render: (service: Service) => service?.title,
+    title: "اسم الخدمة",
+    render: (service: Service) => service?.title ?? "-",
   },
   {
     key: "team",
@@ -26,17 +31,25 @@ export const consultationConfigColumns = [
     render: (team: TeamProvider) => team?.name,
   },
   {
+    key: "created_at",
+    dataIndex: "created_at",
+    title: "تاريخ الطلب",
+  },
+  {
+    key: "remaining_time",
+    dataIndex: "remaining_time",
+    title: "الوقت المتبقي",
+    render: (remaining_time: RemainingTime) =>
+      remaining_time?.remaining_days ?? "-",
+  },
+  {
     key: "team",
     dataIndex: "team",
     title: "مجال الطلب",
     render: (team: TeamProvider) =>
       team?.fields?.map((field) => field.name).join(", "),
   },
-  {
-    key: "created_at",
-    dataIndex: "created_at",
-    title: "تاريخ الطلب",
-  },
+
   {
     key: "status",
     dataIndex: "status",
@@ -48,6 +61,15 @@ export const consultationConfigColumns = [
       >
         {record?.status_label}
       </Tag>
+    ),
+  },
+  {
+    key: "actions",
+    title: "استعراض الطلب",
+    render: (record: ServiceRequest | Consultation) => (
+      <Button className="border-none!" onClick={() => viewConsultation(record)}>
+        <EyeOutlined />
+      </Button>
     ),
   },
 ];

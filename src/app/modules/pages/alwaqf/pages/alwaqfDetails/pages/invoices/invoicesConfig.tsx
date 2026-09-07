@@ -10,7 +10,7 @@ export const invoicesConfigColumns = [
   {
     key: "code",
     dataIndex: "code",
-    title: "فاتورة ضريبية",
+    title: "فاتورة ضريبية مبسطة",
   },
   {
     key: "created_at",

@@ -1,22 +1,26 @@
 import { useListHook } from "@/app/hooks/listHook";
+import { useConsultationStatus } from "@/app/hooks/useConsultationStatus";
+import type { Consultation } from "@/app/modules/pages/alwaqf/alwaqfModel";
+import type { Provider } from "@/app/modules/pages/followRequests/model/followRequestsModel";
+import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
 import CustomFilter, {
   type CustomFilterType,
 } from "@shared/components/custom-filter/custom-filter";
 import CustomTable from "@shared/components/customTable/customtable";
 import type { PaginatedResponse } from "@shared/model/shared.model";
 import { useMemo } from "react";
-import { getProviderConsultations } from "../../../../serviceProvidersServices";
-import type { ServiceProvidersListFilterQuery } from "../../../../serviceProviders.model";
-import type { Provider } from "@/app/modules/pages/followRequests/model/followRequestsModel";
 import { useOutletContext } from "react-router";
-import type { Consultation } from "@/app/modules/pages/alwaqf/alwaqfModel";
+import type {
+  ServiceItem,
+  ServiceProvidersListFilterQuery,
+} from "../../../../serviceProviders.model";
+import { getProviderConsultations } from "../../../../serviceProvidersServices";
 import { consultationConfigColumns } from "./consultationConfig";
-import { useConsultationStatus } from "@/app/hooks/useConsultationStatus";
-import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
 
 const Consultation = () => {
   const providerData = useOutletContext<Provider>();
   const { consultationStatus } = useConsultationStatus();
+  const teamId = providerData?.profile?.at(0)?.team_id;
 
   const {
     data: consultations,
@@ -28,13 +32,13 @@ const Consultation = () => {
     ServiceProvidersListFilterQuery
   >({
     queryKey: "providerConsultations",
-    fetchFn: (filter) =>
-      getProviderConsultations(providerData?.profile?.at(0)?.team_id!, filter),
+    fetchFn: (filter) => getProviderConsultations(teamId as number, filter),
     initialFilter: {
       page: 1,
       per_page: 10,
       sort: "-created_at",
     },
+    enabled: typeof teamId === "number",
     queryOptions: { retry: false },
   });
 
@@ -56,11 +60,15 @@ const Consultation = () => {
     ],
     [consultationStatus?.data],
   );
+
+  const viewConsultation = (record: ServiceItem) => {
+    console.log(record);
+  };
   return (
     <div className="pt-8 px-4 bg-white">
       <CustomFilter filters={filters} onFilterChange={handleFilterChange} />
       <CustomTable
-        columns={consultationConfigColumns}
+        columns={consultationConfigColumns(viewConsultation)}
         dataSource={consultations?.data ?? []}
         showSelection={false}
         className={["mt-6 overflow-x-auto"]}

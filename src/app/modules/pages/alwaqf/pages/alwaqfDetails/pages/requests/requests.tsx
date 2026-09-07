@@ -8,7 +8,7 @@ import CustomFilter, {
 import CustomTable from "@shared/components/customTable/customtable";
 import type { PaginatedResponse } from "@shared/model/shared.model";
 import { useMemo } from "react";
-import { useOutletContext } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import type {
   AlwaqfServiceQuery,
   Client,
@@ -16,11 +16,13 @@ import type {
 } from "../../../../alwaqfModel";
 import { getAlWaqfServiceRequests } from "../../../../alwaqfService";
 import { requestsConfigColumns } from "./requestsConfig";
+import { followRequestsRoutePath } from "@/app/modules/pages/followRequests/followRequestsRoutes";
 
 const Requests = () => {
   const clientData = useOutletContext<Client>();
   const { requestsStatus } = useRequestsStatus();
   const { fields } = useServiceFields();
+  const navigate = useNavigate();
 
   const {
     data: serviceRequests,
@@ -72,11 +74,17 @@ const Requests = () => {
     [transformedFields, requestsStatus?.data],
   );
 
+  const viewRequest = (record: ServiceRequest) => {
+    navigate(
+      followRequestsRoutePath.FOLLOW_REQUESTS_DETAILS(record.id.toString()),
+    );
+  };
+
   return (
     <div className="pt-8 px-4 bg-white">
       <CustomFilter filters={filters} onFilterChange={handleFilterChange} />
       <CustomTable
-        columns={requestsConfigColumns}
+        columns={requestsConfigColumns(viewRequest)}
         dataSource={serviceRequests?.data ?? []}
         showSelection={false}
         className={["mt-6 overflow-x-auto"]}

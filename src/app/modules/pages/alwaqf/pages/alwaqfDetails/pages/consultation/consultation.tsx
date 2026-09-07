@@ -8,10 +8,11 @@ import type {
   AlwaqfServiceQuery,
   Client,
   Consultation,
+  ServiceRequest,
 } from "../../../../alwaqfModel";
 import type { PaginatedResponse } from "@shared/model/shared.model";
 import { useListHook } from "@/app/hooks/listHook";
-import { useOutletContext } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 
 import { consultationConfigColumns } from "./consultationConfig";
 import { useServiceFields } from "@/app/hooks/useServiceFields";
@@ -20,6 +21,7 @@ import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/
 
 const Consultation = () => {
   const clientData = useOutletContext<Client>();
+  const navigate = useNavigate();
 
   const { consultationStatus } = useConsultationStatus();
   const { fields } = useServiceFields();
@@ -73,11 +75,16 @@ const Consultation = () => {
     ],
     [transformedFields, consultationStatus?.data],
   );
+
+  const viewConsultation = (record: ServiceRequest | Consultation) => {
+    navigate(`/alwaqf/consultation/${record.id}`);
+  };
+
   return (
     <div className="pt-8 px-4 bg-white">
       <CustomFilter filters={filters} onFilterChange={handleFilterChange} />
       <CustomTable
-        columns={consultationConfigColumns}
+        columns={consultationConfigColumns(viewConsultation)}
         dataSource={consultations?.data ?? []}
         showSelection={false}
         className={["mt-6 overflow-x-auto"]}
