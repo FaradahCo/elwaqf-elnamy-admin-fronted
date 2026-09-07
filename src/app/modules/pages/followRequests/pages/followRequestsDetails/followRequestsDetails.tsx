@@ -1,16 +1,19 @@
+import Chat from "@shared/components/chat/Chat";
 import { useApiQuery } from "@shared/services/api";
 import { handleDownloadAttachment } from "@shared/services/sharedService";
 import { Avatar, Button, Spin } from "antd";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import { alwaqfRoutePath } from "../../../alwaqf/alwaqfRoutes";
+import { serviceProviderRoutePath } from "../../../serviceProvider/serviceProvidersRoutes";
 import Box from "../../components/box/box";
 import RequestHistroy from "../../components/requestHistory/requestHistory";
 import Service from "../../components/service/service";
 import ServiceDetails from "../../components/serviceDetails/serviceDetails";
 import { getServiceRequestById } from "../../followRequestsService";
-import Chat from "@shared/components/chat/Chat";
 
 const FollowRequestsDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data: followRequest, isLoading } = useApiQuery(
     ["follow-requests", id],
     () => getServiceRequestById(id!),
@@ -69,6 +72,17 @@ const FollowRequestsDetails = () => {
               )}
             </p>
           </div>
+          <Button
+            onClick={() =>
+              navigate(
+                alwaqfRoutePath.ALWAQF_REQUESTS(followRequest?.client?.id ?? 0),
+              )
+            }
+            className="mt-6! self-end font-semibold! text-second-primary!"
+            type="text"
+          >
+            الانتقال إلى صفحة الطلب
+          </Button>
         </Box>
         <Box title="مزود الخدمة">
           <div className="flex gap-4 items-center">
@@ -131,6 +145,19 @@ const FollowRequestsDetails = () => {
               )}
             </p>
           </div>
+          <Button
+            onClick={() =>
+              navigate(
+                serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(
+                  followRequest?.service?.provider?.id ?? 0,
+                ),
+              )
+            }
+            className="mt-6! self-end font-semibold! text-second-primary!"
+            type="text"
+          >
+            الانتقال إلى المزود
+          </Button>
         </Box>
         <Box title="المنصة">
           <div className="flex gap-4 items-center">
