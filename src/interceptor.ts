@@ -49,8 +49,13 @@ axiosInstance.interceptors.request.use(
 // Response interceptor
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-    // Only show success message for non-GET requests
-    if (response.config.method?.toLowerCase() !== "get") {
+    const skipSuccessMessage =
+      response.config.headers?.["X-Skip-Success-Message"];
+
+    if (
+      response.config.method?.toLowerCase() !== "get" &&
+      !skipSuccessMessage
+    ) {
       message.success(response.data.message || "تمت العملية بنجاح");
     }
     return response.data;

@@ -1,3 +1,4 @@
+import { AuthenticationService } from "@/app/modules/authentication/authenticationService";
 import { pagesRoutePath } from "@/app/modules/pages/pages.routes";
 import type { RootState } from "@/app/store";
 import {
@@ -8,6 +9,7 @@ import {
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { useApiMutation } from "@shared/services/api";
 import { triggerForceLogoutForInterceptor } from "@shared/services/sharedService";
 import { Avatar, Button, Dropdown } from "antd";
 import { useSelector } from "react-redux";
@@ -20,10 +22,11 @@ interface HeaderProps {
 
 const MainHeader = ({ collapsed, onToggleCollapse }: HeaderProps) => {
   const user = useSelector((state: RootState) => state.user?.user);
-
-  const handleLogout = () => {
-    triggerForceLogoutForInterceptor();
-  };
+  const logOutMutation = useApiMutation(AuthenticationService.logout, {
+    onSuccess: () => {
+      triggerForceLogoutForInterceptor();
+    },
+  });
 
   const profileMenuItems = [
     {
@@ -51,7 +54,7 @@ const MainHeader = ({ collapsed, onToggleCollapse }: HeaderProps) => {
       key: "3",
       label: (
         <div
-          onClick={handleLogout}
+          onClick={logOutMutation.mutate}
           className="flex items-center gap-2 text-red-600 cursor-pointer"
         >
           <LogoutOutlined />

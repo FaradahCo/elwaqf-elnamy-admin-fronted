@@ -8,9 +8,13 @@ import type {
 } from "@tanstack/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance, { type ApiResponse } from "../../../interceptor";
+import type { AxiosRequestConfig } from "axios";
 
 const AoiService = {
-  get: async <TResponse>(url: string, params?: any): Promise<TResponse> => {
+  get: async <TResponse>(
+    url: string,
+    params?: Record<string, unknown>,
+  ): Promise<TResponse> => {
     const res = await axiosInstance.get<TResponse>(url, {
       params: params,
       paramsSerializer: {
@@ -23,8 +27,9 @@ const AoiService = {
   post: async <TInput, TResponse>(
     url: string,
     data?: TInput,
+    config?: AxiosRequestConfig,
   ): Promise<TResponse> => {
-    const res = await axiosInstance.post<TResponse>(url, data);
+    const res = await axiosInstance.post<TResponse>(url, data, config);
     return res.data;
   },
 
@@ -66,7 +71,10 @@ const AoiService = {
     return res as unknown as Blob;
   },
 
-  getBlob: async (url: string, params?: any): Promise<Blob> => {
+  getBlob: async (
+    url: string,
+    params?: Record<string, unknown>,
+  ): Promise<Blob> => {
     const res = await axiosInstance.get(url, {
       params: params,
       responseType: "blob",
