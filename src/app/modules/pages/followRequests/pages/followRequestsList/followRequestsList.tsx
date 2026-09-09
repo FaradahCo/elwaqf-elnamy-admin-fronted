@@ -40,7 +40,7 @@ const FollowRequestsList = () => {
         type: "input" as CustomFilterType,
         placeholder: "ابحث عن اسم الخدمة أو العميل...",
         label: "ابحث عن",
-        name: "service.title",
+        name: "name",
       },
       {
         type: "select" as CustomFilterType,
