@@ -45,10 +45,10 @@ const Consultation = () => {
   const filters = useMemo(
     () => [
       {
-        name: "service.title",
+        name: "user.name",
         type: "input" as CustomFilterType,
-        placeholder: "ابحث عن اسم الخدمة",
-        label: "اسم الخدمة",
+        placeholder: "ابحث عن اسم الخدمة / العميل",
+        label: "اسم الخدمة / العميل",
       },
       {
         type: "select" as CustomFilterType,
