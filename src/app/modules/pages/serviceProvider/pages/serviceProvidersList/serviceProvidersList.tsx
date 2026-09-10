@@ -23,9 +23,12 @@ import { useNavigate, useSearchParams } from "react-router";
 import { serviceProviderRoutePath } from "../../serviceProvidersRoutes";
 import { useServiceFields } from "@/app/hooks/useServiceFields";
 import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
+import { setActiveTab } from "@/app/store/slices/serviceProviderDetailsTab";
+import { useDispatch } from "react-redux";
 
 const ServiceProvidersList = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const { data: serviceProvidersStatus } = useApiQuery(
@@ -119,7 +122,7 @@ const ServiceProvidersList = () => {
 
   const handleProviderClick = (record: ServiceProviders) => {
     if (record?.team_id == null) return;
-
+    dispatch(setActiveTab(0));
     navigate(
       record.status === ServiceStatusEnum.review
         ? serviceProviderRoutePath.SERVICE_PROVIDER_REVIEWS(record.team_id)
