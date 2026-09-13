@@ -2,7 +2,6 @@ import { Button, Tag } from "antd";
 import type {
   Consultation,
   RemainingTime,
-  Service,
   ServiceRequest,
   TeamProvider,
 } from "../../../../alwaqfModel";
@@ -17,12 +16,6 @@ export const consultationConfigColumns = (
     key: "id",
     dataIndex: "id",
     title: "ID",
-  },
-  {
-    key: "service",
-    dataIndex: "service",
-    title: "اسم الخدمة",
-    render: (service: Service) => service?.title ?? "-",
   },
   {
     key: "team",
