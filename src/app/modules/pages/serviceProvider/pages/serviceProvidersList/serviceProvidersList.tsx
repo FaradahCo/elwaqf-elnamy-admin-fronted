@@ -91,7 +91,7 @@ const ServiceProvidersList = () => {
   const filters = useMemo(
     () => [
       {
-        name: "user_name",
+        name: "business_name",
         type: "input" as CustomFilterType,
         placeholder: "ابحث عن مزود الخدمة",
         label: "مزود الخدمة",
