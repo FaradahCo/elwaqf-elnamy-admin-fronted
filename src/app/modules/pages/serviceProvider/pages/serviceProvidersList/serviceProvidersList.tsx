@@ -23,9 +23,12 @@ import { useNavigate, useSearchParams } from "react-router";
 import { serviceProviderRoutePath } from "../../serviceProvidersRoutes";
 import { useServiceFields } from "@/app/hooks/useServiceFields";
 import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
+import { setActiveTab } from "@/app/store/slices/serviceProviderDetailsTab";
+import { useDispatch } from "react-redux";
 
 const ServiceProvidersList = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const { data: serviceProvidersStatus } = useApiQuery(
@@ -50,7 +53,6 @@ const ServiceProvidersList = () => {
     fetchFn: getServiceProviders,
     initialFilter: {
       status: (searchParams.get("status") as ServiceStatusEnum) ?? undefined,
-      sort: "-created_at",
     },
     queryOptions: { retry: false },
   });
@@ -89,7 +91,7 @@ const ServiceProvidersList = () => {
   const filters = useMemo(
     () => [
       {
-        name: "user_name",
+        name: "business_name",
         type: "input" as CustomFilterType,
         placeholder: "ابحث عن مزود الخدمة",
         label: "مزود الخدمة",
@@ -119,10 +121,12 @@ const ServiceProvidersList = () => {
   );
 
   const handleProviderClick = (record: ServiceProviders) => {
+    if (record?.team_id == null) return;
+    dispatch(setActiveTab(0));
     navigate(
-      record?.status === ServiceStatusEnum.review
-        ? serviceProviderRoutePath.SERVICE_PROVIDER_REVIEWS(record?.team_id!)
-        : serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(record?.team_id!),
+      record.status === ServiceStatusEnum.review
+        ? serviceProviderRoutePath.SERVICE_PROVIDER_REVIEWS(record.team_id)
+        : serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(record.team_id),
     );
   };
 

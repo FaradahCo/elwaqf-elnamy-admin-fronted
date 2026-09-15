@@ -42,7 +42,13 @@ const ServiceReview = () => {
   const navigate = useNavigate();
   const handleOk = async () => {
     const formData = await rejectServiceRef.current?.validateForm();
-    rejectServiceRevisionMutation.mutate(formData);
+    const revisionId = serviceData?.pending_revision?.id;
+    if (revisionId == null || !formData?.reason) return;
+
+    rejectServiceRevisionMutation.mutate({
+      id: revisionId,
+      reason: formData.reason,
+    });
   };
 
   const handleCancel = () => {
@@ -62,13 +68,13 @@ const ServiceReview = () => {
     ["revisions-services-id", id],
     () => getRevisionsByServiceId({ service_id: id }),
     {
-      enabled: !!serviceData?.id,
+      enabled: !!id,
       retry: false,
     },
   );
 
   const approveServiceRevisionMutation = useApiMutation(
-    () => approveServiceRevision(serviceData?.pending_revision?.id!),
+    (revisionId: number) => approveServiceRevision(revisionId),
     {
       onSuccess: () => {
         navigate("/admin/service-management");
@@ -77,11 +83,8 @@ const ServiceReview = () => {
   );
 
   const rejectServiceRevisionMutation = useApiMutation(
-    (formData: any) => {
-      return rejectServiceRevision(serviceData?.pending_revision?.id!, {
-        reason: formData?.reason,
-      });
-    },
+    ({ id: revisionId, reason }: { id: number; reason: string }) =>
+      rejectServiceRevision(revisionId, { reason }),
     {
       onSuccess: () => {
         setIsModalOpen(false);
@@ -98,7 +101,7 @@ const ServiceReview = () => {
       children: (
         <CustomTable
           columns={serviceLogColumns}
-          dataSource={revisionsByServiceData?.data!}
+          dataSource={revisionsByServiceData?.data ?? []}
           showPagination={false}
           showSelection={false}
           className={[]}
@@ -107,11 +110,8 @@ const ServiceReview = () => {
     },
   ];
   const updateStatusMutation = useApiMutation(
-    (status) => {
-      return updateService(serviceData?.id!, {
-        status: status as ServiceStatusEnum,
-      });
-    },
+    ({ serviceId, status }: { serviceId: string; status: ServiceStatusEnum }) =>
+      updateService(serviceId, { status }),
     {
       onSuccess: (res) => {
         queryClient.setQueryData(["serviceRevisionData", id], {
@@ -123,10 +123,14 @@ const ServiceReview = () => {
   );
 
   const { serviceStatus: serviceStatusOptions } = useServiceStatus(
-    serviceData?.type!,
+    serviceData?.type ?? "service",
   );
   const handleStatusChange = (newStatus: ServiceStatusEnum) => {
-    updateStatusMutation.mutate(newStatus);
+    if (!serviceData?.id) return;
+    updateStatusMutation.mutate({
+      serviceId: serviceData.id,
+      status: newStatus,
+    });
   };
 
   return (
@@ -173,24 +177,15 @@ const ServiceReview = () => {
                     {serviceStatusOptions?.data
                       ?.filter(
                         (item) =>
-                          item.status === ServiceStatusEnum.hold ||
-                          item.status === ServiceStatusEnum.approved ||
-                          item.status === ServiceStatusEnum.inactive ||
-                          item.status === ServiceStatusEnum.removed ||
-                          item.status === ServiceStatusEnum.pending ||
-                          item.status === ServiceStatusEnum.revision_pending ||
-                          item.status === ServiceStatusEnum.draft,
+                          item?.status !== ServiceStatusEnum?.pending &&
+                          item?.status !==
+                            ServiceStatusEnum?.revision_pending &&
+                          item?.status !== ServiceStatusEnum?.draft,
                       )
                       ?.map((option) => (
                         <Select.Option
                           key={option.status}
                           value={option.status}
-                          disabled={
-                            option?.status === ServiceStatusEnum?.pending ||
-                            option?.status ===
-                              ServiceStatusEnum?.revision_pending ||
-                            option?.status === ServiceStatusEnum?.draft
-                          }
                         >
                           <div className="flex items-center gap-2">
                             <div
@@ -328,7 +323,8 @@ const ServiceReview = () => {
                 <Input
                   value={ConvertToNumber(
                     serviceData?.pending_revision
-                      ? serviceData?.pending_revision?.data?.min_price?.toString()!
+                      ? (serviceData.pending_revision.data?.min_price?.toString() ??
+                          "-")
                       : serviceData?.min_price?.toString() || "-",
                   )}
                   type="number"
@@ -385,6 +381,14 @@ const ServiceReview = () => {
                 className="bg-transparent! text-primary! shadow-none! border-primary!"
                 size="large"
                 onClick={() => setIsModalOpen(true)}
+                loading={
+                  approveServiceRevisionMutation.isPending ||
+                  rejectServiceRevisionMutation.isPending
+                }
+                disabled={
+                  approveServiceRevisionMutation.isPending ||
+                  rejectServiceRevisionMutation.isPending
+                }
               >
                 إرجاع للمزوّد مع ملاحظات
               </Button>
@@ -392,9 +396,19 @@ const ServiceReview = () => {
                 type="primary"
                 className="shadow-none!"
                 size="large"
-                onClick={() => approveServiceRevisionMutation.mutate(undefined)}
-                loading={approveServiceRevisionMutation.isPending}
-                disabled={approveServiceRevisionMutation.isPending}
+                onClick={() => {
+                  const revisionId = serviceData.pending_revision?.id;
+                  if (revisionId == null) return;
+                  approveServiceRevisionMutation.mutate(revisionId);
+                }}
+                loading={
+                  approveServiceRevisionMutation.isPending ||
+                  rejectServiceRevisionMutation.isPending
+                }
+                disabled={
+                  approveServiceRevisionMutation.isPending ||
+                  rejectServiceRevisionMutation.isPending
+                }
               >
                 اعتماد الخدمة
               </Button>

@@ -1,8 +1,12 @@
 import { Tag } from "antd";
 import { getStatusTag } from "@shared/services/sharedService";
-import type { ServiceItem } from "../../../../serviceProviders.model";
+import type { Deadline, ServiceItem } from "../../../../serviceProviders.model";
 import type { User } from "@/app/modules/authentication/authentication.model";
-export const consultationConfigColumns = [
+import { Button } from "antd";
+import { EyeOutlined } from "@ant-design/icons";
+export const consultationConfigColumns = (
+  viewConsultation: (record: ServiceItem) => void,
+) => [
   {
     key: "id",
     dataIndex: "id",
@@ -30,6 +34,10 @@ export const consultationConfigColumns = [
     key: "remaining_time",
     dataIndex: "remaining_time",
     title: "الوقت المتبقي",
+    render: (remaining_time: Deadline) =>
+      remaining_time?.remaining_days
+        ? remaining_time?.remaining_days + " " + "يوم"
+        : "-",
   },
   {
     key: "status",
@@ -42,6 +50,15 @@ export const consultationConfigColumns = [
       >
         {record?.status_label}
       </Tag>
+    ),
+  },
+  {
+    key: "actions",
+    title: "استعراض الطلب",
+    render: (record: ServiceItem) => (
+      <Button className="border-none!" onClick={() => viewConsultation(record)}>
+        <EyeOutlined />
+      </Button>
     ),
   },
 ];

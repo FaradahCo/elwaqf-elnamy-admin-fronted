@@ -2,7 +2,11 @@ import { Tag } from "antd";
 import { getStatusTag } from "@shared/services/sharedService";
 import type { ServiceItem } from "../../../../serviceProviders.model";
 import type { Field } from "@shared/model/shared.model";
-export const providerServicesConfigColumns = [
+import { Button } from "antd";
+import { EyeOutlined } from "@ant-design/icons";
+export const providerServicesConfigColumns = (
+  viewService: (record: ServiceItem) => void,
+) => [
   {
     key: "id",
     dataIndex: "id",
@@ -23,6 +27,7 @@ export const providerServicesConfigColumns = [
     key: "type",
     dataIndex: "type",
     title: "الخدمة",
+    render: (type: string) => (type === "service" ? "خدمة" : "باقة"),
   },
   {
     key: "field",
@@ -52,6 +57,15 @@ export const providerServicesConfigColumns = [
       >
         {record?.status_label}
       </Tag>
+    ),
+  },
+  {
+    key: "actions",
+    title: "استعراض الخدمة",
+    render: (record: ServiceItem) => (
+      <Button className="border-none!" onClick={() => viewService(record)}>
+        <EyeOutlined />
+      </Button>
     ),
   },
 ];

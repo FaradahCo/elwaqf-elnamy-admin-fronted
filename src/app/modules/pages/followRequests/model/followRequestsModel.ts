@@ -20,7 +20,11 @@ export interface Accounting {
     payment_method?: string | null;
     payment_method_val?: string | null;
   };
-  consultant?: any;
+  consultant?: {
+    name?: string;
+    percentage?: number | null;
+    value?: number | null;
+  };
   platform?: {
     discount_code?: string | null;
     discount_percentage?: number;
@@ -48,6 +52,7 @@ export interface FollowRequest {
   chat_id?: number;
   service: ServiceData;
   client: Client;
+  assignment?: Assignment;
   // accounting?: FollowRequestAccounting;
   quotations: Quotation[];
   active_quotation?: Quotation | null;
@@ -68,6 +73,19 @@ export type Client = {
   id: number;
   name: string;
   email: string;
+};
+
+export type Assignment = {
+  id: number;
+  assignee: {
+    id: number;
+    name: string;
+  };
+  assigner: {
+    id: number;
+    name: string;
+  };
+  assigned_at: string;
 };
 
 export type Provider = {
@@ -152,7 +170,7 @@ export type FollowRequestStatusResponse = {
   total?: number;
 };
 
-export type FollowRequestsResponse = {};
+export type FollowRequestsResponse = Record<string, never>;
 
 export type PreviewQuotationPayload = {
   quotations: {

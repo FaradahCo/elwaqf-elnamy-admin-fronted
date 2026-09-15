@@ -10,17 +10,20 @@ import type {
 } from "../../../../serviceProviders.model";
 
 import type { PaginatedResponse } from "@shared/model/shared.model";
-import { useOutletContext } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import type { Provider } from "@/app/modules/pages/followRequests/model/followRequestsModel";
 import { providerServicesConfigColumns } from "./providerServicesConfig";
 import { useServiceStatus } from "@/app/hooks/useServiceStatus";
 import { getProviderServices } from "../../../../serviceProvidersServices";
 import { renderOptionsWithStatusTag } from "@/app/utilites/optionsWithStatusTag/optionsWithStatusTag";
+import { serviceManagementRoutePath } from "@/app/modules/pages/serviceManagement/serviceManagementRoutes";
 
 const ProviderServices = () => {
   const providerData = useOutletContext<Provider>();
   const { serviceStatus } = useServiceStatus("service");
   const { fields } = useServiceFields();
+  const navigate = useNavigate();
+  const teamId = providerData?.profile?.at(0)?.team_id;
 
   const {
     data: services,
@@ -32,12 +35,12 @@ const ProviderServices = () => {
     ServiceProvidersListFilterQuery
   >({
     queryKey: "providerServices",
-    fetchFn: (filter) =>
-      getProviderServices(providerData?.profile?.at(0)?.team_id!, filter),
+    fetchFn: (filter) => getProviderServices(teamId as number, filter),
     initialFilter: {
       page: 1,
       per_page: 10,
     },
+    enabled: typeof teamId === "number",
     queryOptions: { retry: false },
   });
 
@@ -74,11 +77,17 @@ const ProviderServices = () => {
     ],
     [serviceStatus?.data, transformedFields],
   );
+  const viewService = (record: ServiceItem) => {
+    if (!record.id) return;
+    navigate(
+      serviceManagementRoutePath.SERVICE_REVIEW(record.id.toString()),
+    );
+  };
   return (
     <div className="pt-8 px-4 bg-white">
       <CustomFilter filters={filters} onFilterChange={handleFilterChange} />
       <CustomTable
-        columns={providerServicesConfigColumns}
+        columns={providerServicesConfigColumns(viewService)}
         dataSource={services?.data ?? []}
         showSelection={false}
         className={["mt-6 overflow-x-auto"]}

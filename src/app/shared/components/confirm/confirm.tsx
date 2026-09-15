@@ -1,4 +1,5 @@
 import { Button } from "antd";
+import type { ReactNode } from "react";
 
 type ConfirmProps = {
   title: string;
@@ -7,6 +8,7 @@ type ConfirmProps = {
   cancelText: string;
   loading?: boolean;
   confirmIcon?: string;
+  children?: ReactNode;
   onConfirm: (bool: boolean) => void;
   onCancel: () => void;
 };
@@ -18,6 +20,7 @@ const Confirm = ({
   cancelText,
   loading,
   confirmIcon,
+  children,
   onConfirm,
   onCancel,
 }: ConfirmProps) => {
@@ -30,6 +33,9 @@ const Confirm = ({
         <h1 className="mt-4 font-bold text-xl">{title}</h1>
         <p className="mt-3 text-[13px] text-gray-500">{description}</p>
       </div>
+
+      {children}
+
       <div className="flex justify-center items-center gap-5 mt-10">
         <Button
           type="primary"

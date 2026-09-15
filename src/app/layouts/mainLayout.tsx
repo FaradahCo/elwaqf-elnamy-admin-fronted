@@ -15,6 +15,12 @@ import { staticPagesRoutePath } from "../modules/pages/staticPages/staticPagesRo
 import { followRequestsRoutePath } from "../modules/pages/followRequests/followRequestsRoutes";
 import { alwaqfRoutePath } from "../modules/pages/alwaqf/alwaqfRoutes";
 
+type MenuNavItem = {
+  key?: string;
+  path?: string;
+  children?: MenuNavItem[];
+};
+
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [openKeys, setOpenKeys] = useState<string[]>([]);
@@ -26,12 +32,17 @@ const MainLayout: React.FC = () => {
 
   useLogOut();
 
+  const groupLabelClass = collapsed
+    ? "block text-center text-[10px]! leading-tight whitespace-normal"
+    : "block text-[15px]";
+  const itemLabelClass = collapsed ? "hidden" : "text-[18px]!";
+
   // Menu items with navigation
   const menuItems = useMemo(
     () => [
       {
         key: "1",
-        label: <span className="text-[18px] block">لوحة التحكم والتحليل</span>,
+        label: <span className={groupLabelClass}>لوحة التحكم والتحليل</span>,
         type: "group" as const,
         children: [
           {
@@ -43,7 +54,7 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">الرئيسية</span>,
+            label: <span className={itemLabelClass}>الرئيسية</span>,
             path: pagesRoutePath.HOME,
           },
         ],
@@ -52,7 +63,7 @@ const MainLayout: React.FC = () => {
       {
         key: "2",
         label: (
-          <span className="text-[15px] block mt-4!">
+          <span className={`${groupLabelClass} mt-4!`}>
             إدارة الخدمات والأوقاف
           </span>
         ),
@@ -67,7 +78,7 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">إدارة الخدمات</span>,
+            label: <span className={itemLabelClass}>إدارة الخدمات</span>,
             path: pagesRoutePath.SERVICE_MANAGEMENT_LIST,
           },
           {
@@ -79,7 +90,7 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">متابعه الطلبات</span>,
+            label: <span className={itemLabelClass}>متابعه الطلبات</span>,
             path: followRequestsRoutePath.FOLLOW_REQUESTS,
           },
           {
@@ -91,7 +102,7 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">مزودي الخدمات</span>,
+            label: <span className={itemLabelClass}>مزودي الخدمات</span>,
             path: serviceProviderRoutePath.SERVICE_PROVIDERS,
           },
           {
@@ -103,7 +114,7 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">الإوقاف</span>,
+            label: <span className={itemLabelClass}>الإوقاف</span>,
             path: alwaqfRoutePath.ALWAQF_LIST,
           },
         ],
@@ -112,7 +123,9 @@ const MainLayout: React.FC = () => {
       {
         key: "3",
         icon: <UploadOutlined />,
-        label: <span className="text-[15px] block mt-4!">الإدارة المالية</span>,
+        label: (
+          <span className={`${groupLabelClass} mt-4!`}>الإدارة المالية</span>
+        ),
         type: "group" as const,
         children: [
           {
@@ -124,7 +137,7 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">إدارة المحفظة</span>,
+            label: <span className={itemLabelClass}>إدارة المحفظة</span>,
             path: walletRoutePath.WALLET,
           },
           {
@@ -136,7 +149,7 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">المعاملات المالية</span>,
+            label: <span className={itemLabelClass}>المعاملات المالية</span>,
             path: walletRoutePath.PAYMENTS,
           },
           {
@@ -148,7 +161,7 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">الأرصدة</span>,
+            label: <span className={itemLabelClass}>الأرصدة</span>,
             path: walletRoutePath.BALANCES,
           },
           {
@@ -160,7 +173,7 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">أكواد الخصم</span>,
+            label: <span className={itemLabelClass}>أكواد الخصم</span>,
             path: pagesRoutePath.DISCOUNT_CODES_LIST,
           },
         ],
@@ -168,7 +181,7 @@ const MainLayout: React.FC = () => {
       {
         key: "4",
         label: (
-          <span className="text-[15px] block mt-4!">
+          <span className={`${groupLabelClass} mt-4!`}>
             المحتوى والخدمات المساندة
           </span>
         ),
@@ -184,7 +197,7 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">الاستشارة</span>,
+            label: <span className={itemLabelClass}>الاستشارة</span>,
           },
           {
             key: "4-2",
@@ -196,14 +209,14 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">إدارة المستشارين</span>,
+            label: <span className={itemLabelClass}>إدارة المستشارين</span>,
           },
         ],
       },
       {
         key: "5",
         label: (
-          <span className="text-[15px] block mt-4!">النظام والسياسات</span>
+          <span className={`${groupLabelClass} mt-4!`}>النظام والسياسات</span>
         ),
         type: "group" as const,
         children: [
@@ -228,7 +241,7 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">الصفحات الثابتة</span>,
+            label: <span className={itemLabelClass}>الصفحات الثابتة</span>,
             path: staticPagesRoutePath.STATIC_PAGES_LIST,
           },
           {
@@ -241,16 +254,19 @@ const MainLayout: React.FC = () => {
                 className="w-6 h-6"
               />
             ),
-            label: <span className="text-[18px]!">الاعدادات</span>,
+            label: <span className={itemLabelClass}>الاعدادات</span>,
           },
         ],
       },
     ],
-    [],
+    [groupLabelClass, itemLabelClass],
   );
 
   // Helper function to find menu item by key (including nested children)
-  const findMenuItemByKey = (items: any[], key: string): any => {
+  const findMenuItemByKey = (
+    items: MenuNavItem[],
+    key: string,
+  ): MenuNavItem | null => {
     for (const item of items) {
       if (item.key === key) {
         return item;
@@ -264,7 +280,10 @@ const MainLayout: React.FC = () => {
   };
 
   // Helper function to find menu item by path (including nested children)
-  const findMenuItemByPath = (items: any[], path: string): any => {
+  const findMenuItemByPath = (
+    items: MenuNavItem[],
+    path: string,
+  ): MenuNavItem | null => {
     for (const item of items) {
       if (item.path === path) {
         return item;
@@ -286,10 +305,10 @@ const MainLayout: React.FC = () => {
   };
 
   // Get current selected key based on location
-  const getSelectedKey = () => {
+  const getSelectedKey = (): string[] => {
     const currentPath = location.pathname;
     const selectedItem = findMenuItemByPath(menuItems, currentPath);
-    if (selectedItem) {
+    if (selectedItem?.key) {
       return [selectedItem.key];
     }
     return ["0"];
@@ -306,9 +325,29 @@ const MainLayout: React.FC = () => {
         width={280}
         collapsedWidth={80}
       >
-        <img src="/images/شعار سواقف.svg" alt="logo" className="mx-auto mt-5" />
+        <div className="flex items-center justify-center px-2 py-4">
+          <img
+            src="/images/شعار سواقف.svg"
+            alt="logo"
+            className={`transition-all duration-200 ${
+              collapsed ? "h-10 w-10 object-contain" : "w-auto max-w-45"
+            }`}
+          />
+        </div>
         <Menu
-          className="py-5!"
+          className={[
+            "py-5!",
+            collapsed &&
+              [
+                "[&.ant-menu-inline-collapsed]:w-full!",
+                "[&_.ant-menu-item-group-title]:block! [&_.ant-menu-item-group-title]:p-1 [&_.ant-menu-item-group-title]:text-center [&_.ant-menu-item-group-title]:leading-tight [&_.ant-menu-item-group-title]:whitespace-normal [&_.ant-menu-item-group-title]:opacity-75 [&_.ant-menu-item-group-title]:[writing-mode:horizontal-tb]!",
+                "[&_.ant-menu-item]:flex! [&_.ant-menu-item]:h-12! [&_.ant-menu-item]:w-12! [&_.ant-menu-item]:items-center! [&_.ant-menu-item]:justify-center! [&_.ant-menu-item]:px-0! [&_.ant-menu-item]:mx-auto!",
+                "[&_.ant-menu-item-icon]:me-0!",
+                "[&_.ant-menu-item>.ant-menu-title-content]:hidden!",
+              ].join(" "),
+          ]
+            .filter(Boolean)
+            .join(" ")}
           theme="dark"
           mode="inline"
           selectedKeys={selectedKeys}
@@ -326,7 +365,7 @@ const MainLayout: React.FC = () => {
           />
         </Header>
         <Content
-          className="overflow-auto"
+          className="overflow-auto h-screen!"
           style={{
             margin: "0 16px",
             padding: "15px 5px",

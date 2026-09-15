@@ -1,8 +1,11 @@
-import { Tag } from "antd";
+import { Button, Tag } from "antd";
 import type { Service, ServiceRequest } from "../../../../alwaqfModel";
 import { getStatusTag } from "@shared/services/sharedService";
+import { EyeOutlined } from "@ant-design/icons";
 
-export const requestsConfigColumns = [
+export const requestsConfigColumns = (
+  viewRequest: (record: ServiceRequest) => void,
+) => [
   {
     key: "id",
     dataIndex: "id",
@@ -11,7 +14,7 @@ export const requestsConfigColumns = [
   {
     key: "service",
     dataIndex: "service",
-    title: "الخدمة",
+    title: "إسم الخدمة",
     render: (service: Service) => service?.title,
   },
   {
@@ -23,8 +26,14 @@ export const requestsConfigColumns = [
   {
     key: "service",
     dataIndex: "service",
-    title: "مجال الطلب",
+    title: "مجال الخدمة",
     render: (service: Service) => service?.field?.name,
+  },
+  {
+    key: "price",
+    dataIndex: "price",
+    title: "السعر",
+    render: (price: number) => price?.toLocaleString() ?? "-",
   },
   {
     key: "service",
@@ -43,6 +52,15 @@ export const requestsConfigColumns = [
       >
         {record?.status_label}
       </Tag>
+    ),
+  },
+  {
+    key: "actions",
+    title: "استعراض الطلب",
+    render: (record: ServiceRequest) => (
+      <Button className="border-none!" onClick={() => viewRequest(record)}>
+        <EyeOutlined />
+      </Button>
     ),
   },
 ];

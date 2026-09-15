@@ -3,6 +3,7 @@ import type {
   ServiceStatus,
 } from "@shared/model/shared.model";
 import type { ServiceStatusEnum } from "@shared/services/sharedService";
+import type { Quotation } from "../followRequests/model/followRequestsModel";
 
 export interface ServiceProvidersListFilterQuery extends PaginatedParams {
   user_name?: string;
@@ -140,6 +141,26 @@ export type ServiceItem = {
   published_at?: string | null;
   updated_at?: string;
   created_at?: string;
+  remaining_time?: Deadline;
+  latest_quotation?: Quotation;
+};
+
+export type Deadline = {
+  expired: boolean;
+  start_date: {
+    date: string;
+    time_am_pm: string;
+    time_24h: string;
+    date_readable: string;
+  };
+  deadline: {
+    date: string;
+    time_am_pm: string;
+    time_24h: string;
+    date_readable: string;
+  };
+  remaining_days: number;
+  human_readable: string;
 };
 export type ProviderDashboard = {
   total_service_requests: number;

@@ -44,23 +44,27 @@ const ServiceDetails = React.memo(
     );
 
     const onPreivewQuotation = () => {
-      if (serviceDetails?.latest_quotation?.id) {
+      const quotationId = serviceDetails?.latest_quotation?.id;
+      if (quotationId != null) {
         previewQuoat.mutate({
-          quotation_ids: [serviceDetails?.latest_quotation?.id!],
+          quotation_ids: [quotationId],
         });
-      } else {
-        previewQuoat.mutate({
-          quotations: [
-            {
-              service_id: ConvertToNumber(serviceDetails?.service?.id!),
-              price: ConvertToNumber(
-                serviceDetails?.latest_quotation?.price! as any,
-              ),
-              valid_until: 3,
-            },
-          ],
-        });
+        return;
       }
+
+      const serviceId = serviceDetails?.service?.id;
+      const price = serviceDetails?.latest_quotation?.price;
+      if (serviceId == null || price == null) return;
+
+      previewQuoat.mutate({
+        quotations: [
+          {
+            service_id: ConvertToNumber(String(serviceId)),
+            price: ConvertToNumber(String(price)),
+            valid_until: 3,
+          },
+        ],
+      });
     };
     return (
       <div className="bg-white shadow p-4 mt-4">
@@ -101,6 +105,10 @@ const ServiceDetails = React.memo(
               مسؤول الخدمة
             </span>
             <span>{serviceDetails?.service?.provider?.business_name}</span>
+          </p>
+          <p className="flex justify-between mt-3">
+            <span className="text-primary font-semibold text-lg">المستشار</span>
+            <span>{serviceDetails?.assignment?.assignee?.name ?? "-"}</span>
           </p>
           <p className="flex justify-between mt-3">
             <span className="text-primary font-semibold text-lg">
@@ -157,7 +165,7 @@ const ServiceDetails = React.memo(
           </div>
         </div>
 
-        <OfferDetails quotations={serviceDetails?.quotations!} />
+        <OfferDetails quotations={serviceDetails?.quotations ?? []} />
       </div>
     );
   },

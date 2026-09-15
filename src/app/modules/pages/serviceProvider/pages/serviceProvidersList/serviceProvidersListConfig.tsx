@@ -13,9 +13,12 @@ export const serviceProvidersListColumns = (
   onProviderClick: ProviderClickHandler,
 ) => [
   {
-    title: "ID",
-    dataIndex: "user_id",
-    key: "user_id",
+    title: "#",
+    dataIndex: "#",
+    key: "#",
+    render: (_value: string, _record: ServiceProviders, index: number) => (
+      <span className="text-xs">{index + 1}</span>
+    ),
   },
   {
     title: "مزود الخدمة",
@@ -43,7 +46,7 @@ export const serviceProvidersListColumns = (
         onChange={(checked) =>
           onToggleChange(record, "is_waqf_market", checked)
         }
-        className="[&.ant-switch-checked]:!bg-brand"
+        className="[&.ant-switch-checked]:bg-brand!"
       />
     ),
   },
@@ -55,7 +58,7 @@ export const serviceProvidersListColumns = (
       <Switch
         checked={value}
         onChange={(checked) => onToggleChange(record, "is_consultant", checked)}
-        className="[&.ant-switch-checked]:!bg-brand"
+        className="[&.ant-switch-checked]:bg-brand!"
       />
     ),
   },

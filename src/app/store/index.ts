@@ -5,6 +5,7 @@ import userReducer from "./slices/userSlice";
 import authReducer from "./slices/authSlice";
 import walletReducer from "./slices/walletSlice";
 import discountCodesReducer from "./slices/discountCodesSlice";
+import serviceProviderDetailsTabSlice from "./slices/serviceProviderDetailsTab";
 
 // Persist configuration
 const persistConfig = {
@@ -22,6 +23,7 @@ export const store = configureStore({
     auth: authReducer,
     discountCodes: discountCodesReducer,
     wallet: walletReducer,
+    serviceProviderDetailsTab: serviceProviderDetailsTabSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

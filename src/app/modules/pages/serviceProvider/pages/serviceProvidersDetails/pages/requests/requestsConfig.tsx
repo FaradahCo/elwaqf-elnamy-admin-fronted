@@ -1,8 +1,12 @@
-import { Tag } from "antd";
+import { Button, Tag } from "antd";
 import { getStatusTag } from "@shared/services/sharedService";
-import type { ServiceItem } from "../../../../serviceProviders.model";
+import type { Deadline, ServiceItem } from "../../../../serviceProviders.model";
 import type { Client } from "@/app/modules/pages/alwaqf/alwaqfModel";
-export const requestsConfigColumns = [
+import { EyeOutlined } from "@ant-design/icons";
+import type { Quotation } from "@/app/modules/pages/followRequests/model/followRequestsModel";
+export const requestsConfigColumns = (
+  viewRequest: (record: ServiceItem) => void,
+) => [
   {
     key: "id",
     dataIndex: "id",
@@ -12,7 +16,8 @@ export const requestsConfigColumns = [
     key: "service",
     dataIndex: "service",
     title: "التصنيف",
-    render: (service: ServiceItem) => service?.type,
+    render: (service: ServiceItem) =>
+      service?.type === "service" ? "خدمة" : "باقة",
   },
   {
     key: "service",
@@ -33,12 +38,12 @@ export const requestsConfigColumns = [
     title: "تاريخ الطلب",
   },
   {
-    key: "service",
-    dataIndex: "service",
+    key: "latest_quotation",
+    dataIndex: "latest_quotation",
     title: "السعر",
-    render: (service: ServiceItem) => (
+    render: (latest_quotation: Quotation) => (
       <div className="flex items-center gap-1">
-        <p>{service?.min_price}</p>
+        <p>{latest_quotation?.price ?? "-"}</p>
         <img src="/images/SAR.svg" alt="ريال سعودي" />
       </div>
     ),
@@ -47,6 +52,15 @@ export const requestsConfigColumns = [
     key: "remaining_time",
     dataIndex: "remaining_time",
     title: "الوقت المتبقي",
+    render: (remaining_time: Deadline) => {
+      return (
+        <span>
+          {remaining_time?.remaining_days
+            ? remaining_time?.remaining_days + " " + "يوم"
+            : "-"}
+        </span>
+      );
+    },
   },
   {
     key: "status",
@@ -59,6 +73,15 @@ export const requestsConfigColumns = [
       >
         {record?.status_label}
       </Tag>
+    ),
+  },
+  {
+    key: "actions",
+    title: "استعراض الطلب",
+    render: (record: ServiceItem) => (
+      <Button className="border-none!" onClick={() => viewRequest(record)}>
+        <EyeOutlined />
+      </Button>
     ),
   },
 ];

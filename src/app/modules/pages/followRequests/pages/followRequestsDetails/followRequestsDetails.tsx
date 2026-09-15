@@ -1,16 +1,19 @@
+import Chat from "@shared/components/chat/Chat";
 import { useApiQuery } from "@shared/services/api";
 import { handleDownloadAttachment } from "@shared/services/sharedService";
 import { Avatar, Button, Spin } from "antd";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import { alwaqfRoutePath } from "../../../alwaqf/alwaqfRoutes";
+import { serviceProviderRoutePath } from "../../../serviceProvider/serviceProvidersRoutes";
 import Box from "../../components/box/box";
 import RequestHistroy from "../../components/requestHistory/requestHistory";
 import Service from "../../components/service/service";
 import ServiceDetails from "../../components/serviceDetails/serviceDetails";
 import { getServiceRequestById } from "../../followRequestsService";
-import Chat from "@shared/components/chat/Chat";
 
-const followRequestsDetails = () => {
+const FollowRequestsDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data: followRequest, isLoading } = useApiQuery(
     ["follow-requests", id],
     () => getServiceRequestById(id!),
@@ -69,6 +72,17 @@ const followRequestsDetails = () => {
               )}
             </p>
           </div>
+          <Button
+            onClick={() =>
+              navigate(
+                alwaqfRoutePath.ALWAQF_REQUESTS(followRequest?.client?.id ?? 0),
+              )
+            }
+            className="mt-6! self-end font-semibold! text-second-primary!"
+            type="text"
+          >
+            الانتقال إلى صفحة الطلب
+          </Button>
         </Box>
         <Box title="مزود الخدمة">
           <div className="flex gap-4 items-center">
@@ -131,6 +145,19 @@ const followRequestsDetails = () => {
               )}
             </p>
           </div>
+          <Button
+            onClick={() =>
+              navigate(
+                serviceProviderRoutePath.SERVICE_PROVIDERS_DETAILS(
+                  followRequest?.service?.provider?.id ?? 0,
+                ),
+              )
+            }
+            className="mt-6! self-end font-semibold! text-second-primary!"
+            type="text"
+          >
+            الانتقال إلى المزود
+          </Button>
         </Box>
         <Box title="المنصة">
           <div className="flex gap-4 items-center">
@@ -143,12 +170,12 @@ const followRequestsDetails = () => {
             <p className="text-[#0F1A2A] font-semibold">القيمة</p>
             <p className="flex items-center">
               {followRequest?.accounting?.platform?.discount_value ? (
-                <p className="flex items-center gap-2">
+                <span className="flex items-center gap-2">
                   <span>
                     {followRequest?.accounting?.platform?.discount_value}
                   </span>
                   <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
-                </p>
+                </span>
               ) : (
                 "--"
               )}
@@ -188,18 +215,20 @@ const followRequestsDetails = () => {
       </div>
       <ServiceDetails serviceDetails={followRequest!} />
       <Service outputs={followRequest?.service?.outputs || []} />
-      <Chat
-        chat_id={followRequest?.chat_id!}
-        role="admin"
-        user={{
-          name: followRequest?.client.name!,
-          image: followRequest?.service.provider?.logo,
-          business_name: followRequest?.service.provider?.business_name,
-        }}
-      />
+      {followRequest?.chat_id != null && (
+        <Chat
+          chat_id={followRequest.chat_id}
+          role="admin"
+          user={{
+            name: followRequest.client?.name ?? "",
+            image: followRequest.service?.provider?.logo,
+            business_name: followRequest.service?.provider?.business_name,
+          }}
+        />
+      )}
       <RequestHistroy activities={followRequest?.activities || []} />
     </div>
   );
 };
 
-export default followRequestsDetails;
+export default FollowRequestsDetails;

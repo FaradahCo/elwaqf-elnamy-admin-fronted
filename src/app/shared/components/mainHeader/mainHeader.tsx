@@ -1,3 +1,4 @@
+import { AuthenticationService } from "@/app/modules/authentication/authenticationService";
 import { pagesRoutePath } from "@/app/modules/pages/pages.routes";
 import type { RootState } from "@/app/store";
 import {
@@ -8,6 +9,7 @@ import {
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { useApiMutation } from "@shared/services/api";
 import { triggerForceLogoutForInterceptor } from "@shared/services/sharedService";
 import { Avatar, Button, Dropdown } from "antd";
 import { useSelector } from "react-redux";
@@ -20,10 +22,11 @@ interface HeaderProps {
 
 const MainHeader = ({ collapsed, onToggleCollapse }: HeaderProps) => {
   const user = useSelector((state: RootState) => state.user?.user);
-
-  const handleLogout = () => {
-    triggerForceLogoutForInterceptor();
-  };
+  const logOutMutation = useApiMutation(AuthenticationService.logout, {
+    onSuccess: () => {
+      triggerForceLogoutForInterceptor();
+    },
+  });
 
   const profileMenuItems = [
     {
@@ -51,7 +54,7 @@ const MainHeader = ({ collapsed, onToggleCollapse }: HeaderProps) => {
       key: "3",
       label: (
         <div
-          onClick={handleLogout}
+          onClick={logOutMutation.mutate}
           className="flex items-center gap-2 text-red-600 cursor-pointer"
         >
           <LogoutOutlined />
@@ -76,24 +79,6 @@ const MainHeader = ({ collapsed, onToggleCollapse }: HeaderProps) => {
       </div>
 
       <div className="flex items-center gap-2 md:gap-4">
-        <div className="hidden md:flex items-center gap-2 lg:gap-3">
-          <img
-            src="/images/cart.svg"
-            alt="Cart"
-            className="h-5 w-5 lg:h-6 lg:w-6 cursor-pointer hover:opacity-80 transition-opacity"
-          />
-          <img
-            src="/images/notifications.svg"
-            alt="Notifications"
-            className="h-5 w-5 lg:h-6 lg:w-6 cursor-pointer hover:opacity-80 transition-opacity"
-          />
-          <img
-            src="/images/envolove.svg"
-            alt="Messages"
-            className="h-5 w-5 lg:h-6 lg:w-6 cursor-pointer hover:opacity-80 transition-opacity"
-          />
-        </div>
-
         {/* Profile Dropdown */}
         <Dropdown
           menu={{ items: profileMenuItems }}
@@ -105,7 +90,7 @@ const MainHeader = ({ collapsed, onToggleCollapse }: HeaderProps) => {
               size="small"
               src={user?.image}
               icon={!user?.image && <UserOutlined />}
-              className="bg-green-600 md:!w-8 md:!h-8"
+              className="bg-green-600 md:w-8! md:h-8!"
             />
             {user && (
               <span className="hidden md:block text-sm font-medium text-gray-700">
