@@ -1,13 +1,14 @@
 import { Spin, Tabs } from "antd";
 import "dayjs/locale/ar";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import type { Attachement, ChatModel, ChatResponse } from "./chat.model";
-import { filterchat, showChat } from "./chatService";
+import type { Attachement, Role } from "./chat.model";
+import { filterchat } from "./chatService";
 import ChatHeader, { type ChatHeaderUser } from "./components/ChatHeader";
-import ChatMessageItem from "./components/ChatMessageItem";
 import FilteredMessageItem from "./components/FilteredMessageItem";
+import Timeline from "./components/timeline/Timeline";
+import { useChatTimeline } from "./hooks/useChatTimeline";
 import { useApiQuery } from "../../services/api";
-type Role = "provider" | "client" | "admin";
+
 const Chat = ({
   chat_id,
   role,
@@ -23,131 +24,145 @@ const Chat = ({
 }) => {
   const [activeTab, setActiveTab] = useState("all");
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const previousScrollHeightRef = useRef(0);
 
   const tabs = [
+    { id: "all", label: "المحادثة" },
     { id: "photos", label: "الصور", type: "image" as const },
     { id: "documents", label: "المستندات", type: "document" as const },
     { id: "links", label: "الروابط", type: "link" as const },
   ];
 
-  // Auto-scroll to bottom function
+  const {
+    sections,
+    isLoading: isLoadingTimeline,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useChatTimeline(role, chat_id);
+
   const scrollToBottom = useCallback(() => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop =
-        messagesContainerRef.current.scrollHeight;
-    }
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    container.scrollTop = container.scrollHeight;
   }, []);
 
-  // Single filtered messages query that changes based on activeTab
-  const { data: chatResponse, isLoading: isLoadingMessages } =
-    useApiQuery<ChatModel>(
-      ["messages-filtered", chat_id, activeTab, role],
-      () => {
-        const filterType = tabs.find((tab) => tab.id === activeTab)?.type;
-        return filterType
-          ? filterchat(role, chat_id, {
-              type: filterType,
-            })
-          : showChat(role, chat_id);
-      },
-      {
-        retry: false,
-        enabled: !!chat_id,
-      },
-    );
+  const scrollToBottomAfterPaint = useCallback(() => {
+    requestAnimationFrame(() => {
+      scrollToBottom();
+      window.setTimeout(scrollToBottom, 150);
+    });
+  }, [scrollToBottom]);
+
+  const {
+    data: filteredAttachments = [],
+    isLoading: isLoadingFilteredMessages,
+  } = useApiQuery<Attachement[]>(
+    ["messages-filtered", chat_id, activeTab, role],
+    () => {
+      const filterType = tabs.find((tab) => tab.id === activeTab)?.type;
+      if (!filterType) return Promise.resolve([]);
+      return filterchat(role, chat_id, { type: filterType });
+    },
+    {
+      retry: false,
+      enabled: !!chat_id && activeTab !== "all",
+    },
+  );
 
   const handleTabChange = useCallback((key: string) => {
     setActiveTab(key);
   }, []);
 
-  useEffect(() => {
-    if (
-      (chatResponse as Attachement[])?.length > 0 ||
-      (chatResponse as ChatResponse)?.sections?.length! > 0
-    ) {
-      scrollToBottom();
+  const handleScroll = useCallback(() => {
+    const container = messagesContainerRef.current;
+    if (!container || activeTab !== "all" || !hasNextPage || isFetchingNextPage) {
+      return;
     }
-  }, [chatResponse, scrollToBottom]);
+
+    if (container.scrollTop <= 48) {
+      previousScrollHeightRef.current = container.scrollHeight;
+      void fetchNextPage();
+    }
+  }, [activeTab, fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  const totalItems = sections.reduce(
+    (count, section) => count + section.items.length,
+    0,
+  );
+
+  useEffect(() => {
+    if (activeTab === "all" && totalItems > 0 && !isFetchingNextPage) {
+      scrollToBottomAfterPaint();
+    }
+  }, [activeTab, totalItems, isFetchingNextPage, scrollToBottomAfterPaint]);
+
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container || !isFetchingNextPage || previousScrollHeightRef.current <= 0) {
+      return;
+    }
+    container.scrollTop =
+      container.scrollHeight - previousScrollHeightRef.current;
+  }, [sections, isFetchingNextPage]);
+
+  const isLoadingMessages =
+    activeTab === "all" ? isLoadingTimeline : isLoadingFilteredMessages;
 
   return (
-    <div className={`bg-white shadow p-4 mt-3 ${className}`}>
-      {/* Header Section */}
-      <div>
-        <ChatHeader user={user} chatMessageType={chatMessageType} />
+    <div className={`bg-white shadow p-4 mt-3 ${className ?? ""}`}>
+      <ChatHeader user={user} chatMessageType={chatMessageType} />
 
-        {/* Chat Messages Area */}
-        <div
-          ref={messagesContainerRef}
-          className="max-h-150 overflow-y-auto px-4 space-y-4 relative [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-        >
-          {/* Navigation Tabs - Fixed at top */}
-          <div className="sticky top-0 z-10 bg-white pb-2 -mt-4 -mx-4 px-4 pt-4 flex justify-center">
-            <Tabs
-              key={activeTab}
-              activeKey={activeTab !== "all" ? activeTab : ""}
-              onChange={handleTabChange}
-              items={tabs.map((tab) => ({
-                key: tab.id,
-                label: tab.label,
-              }))}
-              size="small"
+      <div
+        ref={messagesContainerRef}
+        onScroll={handleScroll}
+        className="max-h-150 overflow-y-auto px-4 space-y-4 relative [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      >
+        <div className="sticky top-0 z-10 -mx-4 -mt-4 bg-white px-4 pt-4 pb-2 flex justify-center">
+          <Tabs
+            activeKey={activeTab}
+            onChange={handleTabChange}
+            items={tabs.map((tab) => ({
+              key: tab.id,
+              label: tab.label,
+            }))}
+            size="small"
+          />
+        </div>
+
+        <div className="min-h-30">
+          {activeTab === "all" ? (
+            <Timeline
+              sections={sections}
+              role={role}
+              isLoading={isLoadingMessages}
+              isFetchingNextPage={isFetchingNextPage}
             />
-          </div>
+          ) : (
+            <>
+              {isLoadingMessages ? (
+                <div className="flex justify-center py-8">
+                  <Spin size="large" />
+                </div>
+              ) : null}
 
-          <div className="min-h-30">
-            {/* Loading Spinner */}
-            {isLoadingMessages && (
-              <div className="flex justify-center py-8">
-                <Spin size="large" />
-              </div>
-            )}
+              {!isLoadingMessages &&
+                filteredAttachments.map((attachment, index) => (
+                  <FilteredMessageItem
+                    message={attachment}
+                    key={attachment.id ?? index}
+                  />
+                ))}
 
-            {/* Messages by Sections  regular for all tab*/}
-            {!isLoadingMessages &&
-              activeTab === "all" &&
-              (chatResponse as ChatResponse)?.sections?.map(
-                (section, index) => (
-                  <div key={index}>
-                    {/* Date Separator for each section */}
-                    <div className="flex justify-center my-4">
-                      <div className="bg-gray-100 text-gray-600 text-sm px-3 py-1 rounded-full">
-                        {section.label}
-                      </div>
-                    </div>
-                    {section.items ? (
-                      section.items?.map((msg) => {
-                        // Handle regular chat messages
-                        return (
-                          <ChatMessageItem
-                            key={msg?.id}
-                            message={msg}
-                            currentRole={role}
-                          />
-                        );
-                      })
-                    ) : (
-                      <>لا يوجد رسائل</>
-                    )}
-                  </div>
-                ),
-              )}
-
-            {!isLoadingMessages &&
-              activeTab !== "all" &&
-              (chatResponse as Attachement[])?.map((msg, index) => (
-                <FilteredMessageItem message={msg} key={index} />
-              ))}
-          </div>
+              {!isLoadingMessages && filteredAttachments.length === 0 ? (
+                <div className="py-8 text-center text-sm text-gray-500">
+                  لا يوجد محتوى
+                </div>
+              ) : null}
+            </>
+          )}
         </div>
       </div>
-
-      {/* <MessageInput
-        ref={messageInputRef}
-        onSendMessage={handleSendMessage}
-        currentUser={currentUser}
-        isSending={sendMessageMutation.isPending}
-        onInputFocus={() => setActiveTab("all")}
-      /> */}
     </div>
   );
 };
