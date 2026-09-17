@@ -214,7 +214,7 @@ const FollowRequestsDetails = () => {
         </Box>
       </div>
       <ServiceDetails serviceDetails={followRequest!} />
-      <Service outputs={followRequest?.service?.outputs || []} />
+      <Service deliverables={followRequest?.deliverables || []} />
       {followRequest?.chat_id != null && (
         <Chat
           chat_id={followRequest.chat_id}

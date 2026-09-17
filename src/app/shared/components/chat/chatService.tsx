@@ -1,7 +1,11 @@
 import AoiService from "@shared/services/api";
-import type { Attachement, ChatMessage, ChatResponse } from "./chat.model";
+import type {
+  Attachement,
+  ChatMessage,
+  Role,
+  TimelineResponse,
+} from "./chat.model";
 
-type Role = "provider" | "client" | "admin";
 const base = (role: Role) => `/${role}/chats`;
 
 export const getAllMessages = async (role: Role) => {
@@ -16,8 +20,12 @@ export const sendMessage = async (role: Role, data: FormData) => {
   return AoiService.postMultipart<ChatMessage>(`${base(role)}/send`, data);
 };
 
-export const showChat = async (role: Role, chatId: number) => {
-  return AoiService.get<ChatResponse>(`${base(role)}/${chatId}`);
+export const showChat = async (
+  role: Role,
+  chatId: number,
+  params?: { page?: number; per_page?: number },
+) => {
+  return AoiService.get<TimelineResponse>(`${base(role)}/${chatId}`, params);
 };
 
 export const filterchat = async (
@@ -28,5 +36,14 @@ export const filterchat = async (
   return AoiService.get<Attachement[]>(
     `${base(role)}/${chatId}/filter`,
     params,
+  );
+};
+
+export const printQuotation = async (role: Role, quotationId: number) => {
+  return AoiService.postBlob<{ quotation_ids: number[] }>(
+    `/${role}/quotations/print`,
+    {
+      quotation_ids: [quotationId],
+    },
   );
 };

@@ -68,6 +68,7 @@ export interface FollowRequest {
   };
   start_date?: string;
   end_date?: string;
+  deliverables?: Deliverables[];
 }
 export type Client = {
   id: number;
@@ -198,4 +199,28 @@ export type Activity = {
     label?: string;
     value?: string;
   };
+};
+
+export type FileType = {
+  id?: number;
+  uuid?: string;
+  name?: string;
+  mime_type?: string;
+  size?: number;
+  url?: string;
+};
+
+export type Deliverables = {
+  id?: number;
+  title?: string;
+  description?: string | null;
+  status?: string;
+  status_label?: string;
+  uploaded_at?: string;
+  reviewed_at?: string | null;
+  silence_deadline?: string;
+  rejection_reason?: string | null;
+  files?: FileType[];
+  created_at?: "14 سبتمبر 2026";
+  updated_at?: "14 سبتمبر 2026";
 };
