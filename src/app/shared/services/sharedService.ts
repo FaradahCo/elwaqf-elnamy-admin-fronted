@@ -216,30 +216,6 @@ export const getServiceFields = async () => {
   return await AoiService.get<Field[]>(`/admin/fields`);
 };
 
-export const handleDownloadAttachment = async (
-  endpoint: string,
-): Promise<void> => {
-  try {
-    const blob = await AoiService.getBlob(endpoint);
-
-    const blobUrl = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = blobUrl;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    // تنظيف الـ blob
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 200);
-  } catch (error) {
-    console.error("Download error:", error);
-    throw error;
-  }
-};
 
 export const extractUrl = (text: string): string | null => {
   if (!text || typeof text !== "string") {

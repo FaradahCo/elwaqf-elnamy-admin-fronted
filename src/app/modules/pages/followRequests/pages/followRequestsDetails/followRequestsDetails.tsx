@@ -1,6 +1,5 @@
 import Chat from "@shared/components/chat/Chat";
 import { useApiQuery } from "@shared/services/api";
-import { handleDownloadAttachment } from "@shared/services/sharedService";
 import { Avatar, Button, Spin } from "antd";
 import { useNavigate, useParams } from "react-router";
 import { alwaqfRoutePath } from "../../../alwaqf/alwaqfRoutes";
@@ -10,10 +9,13 @@ import RequestHistroy from "../../components/requestHistory/requestHistory";
 import Service from "../../components/service/service";
 import ServiceDetails from "../../components/serviceDetails/serviceDetails";
 import { getServiceRequestById } from "../../followRequestsService";
+import { useDownloadAttachment } from "@/app/hooks/useDownloadAttachment";
 
 const FollowRequestsDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { handleDownloadAttachment, isLoading: isDownloading } =
+    useDownloadAttachment();
   const { data: followRequest, isLoading } = useApiQuery(
     ["follow-requests", id],
     () => getServiceRequestById(id!),
@@ -59,6 +61,8 @@ const FollowRequestsDetails = () => {
             <p>
               {followRequest?.accounting?.client?.invoice_url ? (
                 <Button
+                  loading={isDownloading}
+                  disabled={isDownloading}
                   onClick={() =>
                     handleDownloadAttachment(
                       followRequest?.accounting?.client?.invoice_url ?? "",
@@ -114,6 +118,8 @@ const FollowRequestsDetails = () => {
             <p>
               {followRequest?.accounting?.provider?.invoice_url ? (
                 <Button
+                  loading={isDownloading}
+                  disabled={isDownloading}
                   onClick={() =>
                     handleDownloadAttachment(
                       followRequest?.accounting?.provider?.invoice_url ?? "",
@@ -132,6 +138,8 @@ const FollowRequestsDetails = () => {
             <p>
               {followRequest?.accounting?.provider?.transfer_url ? (
                 <Button
+                  loading={isDownloading}
+                  disabled={isDownloading}
                   onClick={() =>
                     handleDownloadAttachment(
                       followRequest?.accounting?.provider?.transfer_url ?? "",

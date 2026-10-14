@@ -1,4 +1,4 @@
-import { handleDownloadAttachment } from "@shared/services/sharedService";
+import AttachmentCell from "@shared/components/attachmentCell/attachmentCell";
 import type { Payment } from "../../../../alwaqfModel";
 
 export const invoicesConfigColumns = [
@@ -33,17 +33,17 @@ export const invoicesConfigColumns = [
     dataIndex: "odoo_url",
     title: "الفاتورة",
     render: (odoo_url: string) => (
-      <div className="flex items-center gap-2">
-        {odoo_url ? (
+      <AttachmentCell
+        url={odoo_url}
+        icon={
           <img
             src="/images/download.svg"
             alt="تنزيل الفاتورة"
-            onClick={() => handleDownloadAttachment(odoo_url)}
+            title="تنزيل الفاتورة"
+            className="hover:opacity-75 transition-all duration-200"
           />
-        ) : (
-          "-"
-        )}
-      </div>
+        }
+      />
     ),
   },
 ];
