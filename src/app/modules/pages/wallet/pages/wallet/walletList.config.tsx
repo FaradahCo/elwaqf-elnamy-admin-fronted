@@ -4,10 +4,8 @@ import {
   setSelectedWithdraw,
 } from "@/app/store/slices/walletSlice";
 import type { PaginatedResponse } from "@shared/model/shared.model";
-import {
-  handleDownloadAttachment,
-  ownerTypeConfig,
-} from "@shared/services/sharedService";
+import { ownerTypeConfig } from "@shared/services/sharedService";
+import AttachmentCell from "@shared/components/attachmentCell/attachmentCell";
 import type { TabsProps } from "antd";
 import { Button } from "antd/es/radio";
 import type { ColumnsType } from "antd/es/table";
@@ -99,18 +97,9 @@ export const withDrawListColumns: ColumnsType<WithdrawItem> = [
     title: "وثيقة الدفع",
     width: 100,
     ellipsis: true,
-    render: (item: WithdrawItem) => {
-      return (
-        <div className="flex items-center gap-2">
-          <p
-            onClick={() => handleDownloadAttachment(item?.invoice?.url!)}
-            className="text-primary! underline! cursor-pointer"
-          >
-            صوره الفاتورة
-          </p>
-        </div>
-      );
-    },
+    render: (item: WithdrawItem) => (
+      <AttachmentCell url={item?.invoice?.url} text="صوره الفاتورة" />
+    ),
   },
   {
     title: "تاريخ المعاملة",
@@ -181,23 +170,11 @@ export const bankTransferListColumns: ColumnsType<BankTransferItem> = [
   },
   {
     title: "وثيقة الدفع",
-
     width: 100,
     ellipsis: true,
-    render: (item: BankTransferItem) => {
-      return (
-        <div className="flex items-center gap-2">
-          <p
-            onClick={() =>
-              handleDownloadAttachment(item?.transfer_receipt?.url!)
-            }
-            className="text-primary! underline! cursor-pointer"
-          >
-            صوره الحوالة
-          </p>
-        </div>
-      );
-    },
+    render: (item: BankTransferItem) => (
+      <AttachmentCell url={item?.transfer_receipt?.url} text="صوره الحوالة" />
+    ),
   },
   {
     title: "تاريخ المعاملة",

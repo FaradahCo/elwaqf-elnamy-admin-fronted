@@ -1,6 +1,5 @@
 import { Tag, type TabsProps } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { Link } from "react-router";
 import type {
   PaymentClientItem,
   PaymentClientListParams,
@@ -8,8 +7,9 @@ import type {
 } from "../../wallet.model";
 import PaymentClientsList from "./paymentClientsList";
 import PaymentsProvider from "./paymentsProvider";
-import type { PaginatedResponse } from "@shared/model/shared.model";
+import type { MediaItem, PaginatedResponse } from "@shared/model/shared.model";
 import { getStatusTag } from "@shared/services/sharedService";
+import AttachmentCell from "@shared/components/attachmentCell/attachmentCell";
 
 export const getTabsItems = (
   paymentClients: PaginatedResponse<PaymentClientItem>,
@@ -147,20 +147,8 @@ export const paymentsProviderColumns: ColumnsType<WithdrawItem> = [
     key: "invoice",
     width: 100,
     ellipsis: true,
-    render: (invoice: string) => (
-      <div className="flex items-center gap-2">
-        {invoice ? (
-          <Link
-            to={invoice}
-            target="_blank"
-            className="text-primary! underline! cursor-pointer"
-          >
-            صوره الفاتورة
-          </Link>
-        ) : (
-          <span>-</span>
-        )}
-      </div>
+    render: (invoice: MediaItem) => (
+      <AttachmentCell url={invoice?.url} text="صوره الفاتورة" />
     ),
   },
   {
