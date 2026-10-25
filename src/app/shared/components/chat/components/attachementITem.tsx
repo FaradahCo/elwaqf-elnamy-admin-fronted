@@ -1,8 +1,10 @@
 import type React from "react";
 import type { Attachement } from "../chat.model";
-import { handleDownloadAttachment } from "@shared/services/sharedService";
+import { useDownloadAttachment } from "@/app/hooks/useDownloadAttachment";
 
 const Attacheemnt: React.FC<{ attachment: Attachement }> = ({ attachment }) => {
+  const { handleDownloadAttachment } = useDownloadAttachment();
+
   const handleClick = () => {
     if (attachment.url) {
       handleDownloadAttachment(attachment.url);

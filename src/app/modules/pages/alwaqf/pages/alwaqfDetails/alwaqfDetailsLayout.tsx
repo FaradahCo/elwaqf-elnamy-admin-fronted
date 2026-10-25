@@ -75,7 +75,7 @@ const AlwaqfDetailsLayout = () => {
         <CardStatistic
           title="إجمالي الخدمات"
           icon="/images/elements_1.svg"
-          value={alwaqfDashboard?.total_service_requests!}
+          value={alwaqfDashboard?.total_service_requests ?? 0}
           classesName={[
             "border border-second-primary p-4 rounded-xl w-64 min-w-64",
           ]}
@@ -83,7 +83,7 @@ const AlwaqfDetailsLayout = () => {
         <CardStatistic
           title="الطلبات المكتملة"
           icon="/images/elements_2.svg"
-          value={alwaqfDashboard?.completed_service_requests!}
+          value={alwaqfDashboard?.completed_service_requests ?? 0}
           classesName={[
             "border border-green-dark text-green-dark rounded-lg p-4 rounded-xl bg-green-light w-64 min-w-64",
           ]}
@@ -92,7 +92,7 @@ const AlwaqfDetailsLayout = () => {
         <CardStatistic
           title="جاري العمل"
           icon="/images/elements_3.svg"
-          value={alwaqfDashboard?.in_progress_service_requests!}
+          value={alwaqfDashboard?.in_progress_service_requests ?? 0}
           classesName={[
             "border border-blue-dark text-blue-dark rounded-lg p-4 rounded-xl bg-blue-light w-64 min-w-64",
           ]}
@@ -101,7 +101,7 @@ const AlwaqfDetailsLayout = () => {
         <CardStatistic
           title="الرصيد معلق"
           icon="/images/elements_4.svg"
-          value={alwaqfDashboard?.locked_balance!}
+          value={alwaqfDashboard?.locked_balance ?? 0}
           classesName={[
             "border border-gray-dark bg-gray-light text-gray-dark rounded-lg p-4 rounded-xl w-64 min-w-64",
           ]}
