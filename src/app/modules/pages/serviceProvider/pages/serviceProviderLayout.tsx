@@ -109,7 +109,7 @@ const ServiceProviderLayout = () => {
             id
               ? (serviceProviderDashboard?.in_progress_service_requests ?? 0)
               : (serviceProvidersStatus?.data?.find(
-                  (item) => item?.status === ServiceStatusEnum.in_progress,
+                  (item) => item?.status === ServiceStatusEnum.review,
                 )?.count ?? 0)
           }
           classesName={[
@@ -124,7 +124,7 @@ const ServiceProviderLayout = () => {
             id
               ? (serviceProviderDashboard?.locked_balance ?? 0)
               : (serviceProvidersStatus?.data?.find(
-                  (item) => item?.status === ServiceStatusEnum.review,
+                  (item) => item?.status === ServiceStatusEnum.in_progress,
                 )?.count ?? 0)
           }
           classesName={[

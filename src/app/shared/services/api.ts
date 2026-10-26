@@ -107,6 +107,7 @@ export function useApiQuery<TData, TError = Error>(
     queryKey,
     queryFn,
     ...options,
+    retry: false,
   });
 }
 export function useMultipartMutation<TResponse>(
