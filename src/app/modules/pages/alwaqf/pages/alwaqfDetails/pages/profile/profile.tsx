@@ -51,13 +51,13 @@ const Profile = () => {
         ),
         children: (
           <div className="p-4 space-y-4">
-            <div className="grid grid-cols-1 gap-4">
-              <LabelContent label="اسم المنظمة">
+            {/* <div className="grid grid-cols-1 gap-4">
+              <LabelContent label="العنوان">
                 <p className="p-2 rounded-lg border border-gray-200">
                   {clientData?.profile?.waqf_name ?? "-"}
                 </p>
               </LabelContent>
-            </div>
+            </div> */}
 
             <div className="grid grid-cols-1 gap-4">
               <LabelContent label="الرقم الضريبي">
@@ -70,7 +70,7 @@ const Profile = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <LabelContent label="المدينة">
                 <p className="p-2 rounded-lg border border-gray-200">
-                  {clientData?.region ?? "-"}
+                  {clientData?.profile?.city ?? "-"}
                 </p>
               </LabelContent>
               <LabelContent label="الحي">

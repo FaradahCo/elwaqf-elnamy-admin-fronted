@@ -54,7 +54,11 @@ export type AlwaqfDashboard = {
   total_service_requests: number;
   completed_service_requests: number;
   in_progress_service_requests: number;
+  completed_requests: number;
+  in_progress_requests: number;
   locked_balance: number;
+  total_consultations: number;
+  total_requests: number;
 };
 
 export type Duration = {
