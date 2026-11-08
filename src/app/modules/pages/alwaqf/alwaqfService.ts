@@ -6,6 +6,7 @@ import type {
   AlwaqfServiceQuery,
   AlwaqfStatusResponse,
   Client,
+  ClientInvitation,
   Consultation,
   Invoice,
   ServiceRequest,
@@ -83,3 +84,16 @@ export const updateAlwaqfStatus = async (
     data,
   );
 };
+
+export const getClientInvitations = async (id: number) =>
+  AoiService.get<PaginatedResponse<ClientInvitation>>(
+    `/admin/clients/${id}/invitations`,
+  );
+
+export const resendClientInvitation = async (
+  id: number,
+  invitationId: number,
+) =>
+  AoiService.post<unknown, ClientInvitation>(
+    `/admin/clients/${id}/invitations/${invitationId}/resend`,
+  );

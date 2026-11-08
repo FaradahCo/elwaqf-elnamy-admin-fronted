@@ -110,6 +110,7 @@ export enum ServiceStatusEnum {
   cancelled = "cancelled",
   accepted = "accepted",
   under_negotiation = "under_negotiation",
+  registered = "registered",
 }
 
 export const getStatusTag = (status: ServiceStatusEnum | string) => {
@@ -155,6 +156,10 @@ export const getStatusTag = (status: ServiceStatusEnum | string) => {
     [ServiceStatusEnum.revision_pending]: {
       color: "#722ed1",
       text: "بانتظار المراجعة",
+    },
+    [ServiceStatusEnum.registered]: {
+      color: "#52c41a",
+      text: "تم التسجيل",
     },
   };
 
