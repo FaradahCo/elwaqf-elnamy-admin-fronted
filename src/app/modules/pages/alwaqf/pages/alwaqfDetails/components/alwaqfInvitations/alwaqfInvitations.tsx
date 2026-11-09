@@ -20,10 +20,10 @@ const getInvitationStatusText = (invitation: ClientInvitation) => {
   }
 
   if (invitation.resends_left_today === 0) {
-    return "أُعيد الإرسال 3 مرات اليوم · يمكن الإعادة غدًا";
+    return "أُعيد الإرسال 2 مرات اليوم · يمكن الإعادة غدًا";
   }
 
-  if (invitation.resends_left_today < 3) {
+  if (invitation.resends_left_today < 2) {
     return `أُعيد إرسال الدعوة ${invitation.sent_at} على الواتساب والبريد الإلكتروني`;
   }
 
@@ -59,10 +59,6 @@ const AlwaqfInvitations = ({
   return (
     <div className="flex flex-col gap-3 my-4">
       {invitations?.map((invitation) => {
-        const canResend =
-          invitation.status !== ServiceStatusEnum.registered &&
-          invitation.resends_left_today > 0;
-
         return (
           <div
             key={invitation.id}
@@ -88,7 +84,7 @@ const AlwaqfInvitations = ({
               </p>
             </div>
 
-            {canResend && (
+            {invitation?.can_resend && (
               <Button
                 type="link"
                 className="text-second-primary! p-0! h-auto! font-medium"

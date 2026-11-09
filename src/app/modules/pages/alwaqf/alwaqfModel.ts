@@ -315,5 +315,5 @@ export type ClientInvitation = {
   status: ServiceStatusEnum;
   status_label: string;
   resends_left_today: number;
+  can_resend: boolean;
 };
-

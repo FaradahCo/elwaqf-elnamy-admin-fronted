@@ -174,12 +174,6 @@ body {
   padding-bottom: 0 !important;
 }
 
-.main-radio .ant-radio-button-wrapper-checked {
-  background-color: var(--color-second-primary);
-  border-color: var(--color-second-primary);
-  color: white;
-}
-
 .walet-card .ant-tabs-nav::before {
   display: none;
 }
@@ -219,4 +213,52 @@ body {
   background-color: var(--color-second-primary);
   border-color: var(--color-second-primary);
   color: white;
+}
+
+/* Status Tag styles matching Figma soft badges */
+.ant-tag {
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-size: 13px !important;
+  font-weight: 500;
+  background-color: #f3f4f6 !important;
+  color: #1f2a37 !important;
+}
+
+.ant-tag.ant-tag-green,
+.ant-tag.ant-tag-success {
+  background-color: #e8fcf1 !important;
+  color: #01632b !important;
+}
+
+.ant-tag.ant-tag-orange,
+.ant-tag.ant-tag-gold,
+.ant-tag.ant-tag-yellow,
+.ant-tag.ant-tag-warning {
+  background-color: #fff5d5 !important;
+  color: #724b00 !important;
+}
+
+.ant-tag.ant-tag-blue,
+.ant-tag.ant-tag-processing {
+  background-color: #d4e0fe !important;
+  color: #0137b3 !important;
+}
+
+.ant-tag.ant-tag-red,
+.ant-tag.ant-tag-error {
+  background-color: #ffebeb !important;
+  color: #8c0000 !important;
+}
+
+.ant-tag.ant-tag-purple {
+  background-color: #f3e8ff !important;
+  color: #6b21a8 !important;
+}
+
+.ant-tag.ant-tag-default,
+.ant-tag.ant-tag-has-color {
+  background-color: #f3f4f6 !important;
+  color: #1f2a37 !important;
 }

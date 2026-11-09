@@ -121,7 +121,7 @@ const AlwaqfDetailsLayout = () => {
         />
       </div>
       <AlwaqfHeader clientData={clientData} alwaqfStatus={alwaqfStatus?.data} />
-      {clientInvitations?.data?.length && (
+      {!!clientInvitations?.data?.length && (
         <AlwaqfInvitations
           clientId={+id!}
           invitations={clientInvitations?.data}
