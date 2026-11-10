@@ -13,10 +13,13 @@ export interface AlwaqfFilterQuery extends PaginatedParams {
 export type Alwaqf = {
   id?: number;
   user_name?: string;
-  waqf_name?: string;
+  waqf_name?: string | null;
   created_at?: string;
   status?: ServiceStatusEnum;
   status_label?: string;
+  invitation_status?: ServiceStatusEnum | string | null;
+  invitation_status_label?: string | null;
+  is_trial?: boolean;
 };
 
 export type AlwaqfStatusResponse = {
@@ -300,4 +303,17 @@ export type Invoice = {
   odoo_url: string;
   created_at: string;
   payment: Payment;
+};
+
+export type ClientInvitation = {
+  id: number;
+  type: string;
+  type_label: string;
+  consultation_id: number | null;
+  provider_name: string;
+  sent_at: string;
+  status: ServiceStatusEnum;
+  status_label: string;
+  resends_left_today: number;
+  can_resend: boolean;
 };

@@ -1,14 +1,21 @@
 import CardStatistic from "@shared/components/cardStatistic/cardStatistic";
+import type { PaginatedResponse } from "@shared/model/shared.model";
 import { useApiQuery } from "@shared/services/api";
 import { Spin, Tabs } from "antd";
 import { Outlet, useNavigate, useParams } from "react-router";
-import type { AlwaqfDashboard, Client } from "../../alwaqfModel";
+import type {
+  AlwaqfDashboard,
+  Client,
+  ClientInvitation,
+} from "../../alwaqfModel";
 import {
   getAlWaqfDashboard,
   getAlWaqfDetails,
   getAlWaqfStatus,
+  getClientInvitations,
 } from "../../alwaqfService";
 import AlwaqfHeader from "./components/alwaqfHeader/alwaqfHeader";
+import AlwaqfInvitations from "./components/alwaqfInvitations/alwaqfInvitations";
 
 const TABS_ITEMS = [
   {
@@ -62,6 +69,12 @@ const AlwaqfDetailsLayout = () => {
     () => getAlWaqfStatus(),
     { retry: false },
   );
+
+  const { data: clientInvitations } = useApiQuery<
+    PaginatedResponse<ClientInvitation>
+  >(["clientInvitations", +id!], () => getClientInvitations(+id!), {
+    enabled: !!id,
+  });
   if (isLoading || isLoadingClient)
     return (
       <div className="flex h-1/2 items-center justify-center">
@@ -108,6 +121,12 @@ const AlwaqfDetailsLayout = () => {
         />
       </div>
       <AlwaqfHeader clientData={clientData} alwaqfStatus={alwaqfStatus?.data} />
+      {!!clientInvitations?.data?.length && (
+        <AlwaqfInvitations
+          clientId={+id!}
+          invitations={clientInvitations?.data}
+        />
+      )}
       <Tabs
         className="custom-tabs bg-white rounded-md mt-4! px-4!"
         size="large"

@@ -17,23 +17,44 @@ export const alwaqfColumns = [
     title: "اسم المنظمة",
     dataIndex: "waqf_name",
     key: "waqf_name",
+    render: (waqf_name: string | null) => waqf_name || "—",
   },
   {
     title: "تاريخ الانضمام",
     dataIndex: "created_at",
     key: "created_at",
+    render: (created_at: string | null) => created_at || "—",
   },
   {
     title: "الحالة",
     dataIndex: "status",
     key: "status",
-    render: (status: string, record: Alwaqf) => (
-      <Tag
-        className="px-2! py-1! text-[13px]!"
-        color={getStatusTag(status)?.color}
-      >
-        {record?.status_label}
-      </Tag>
-    ),
+    render: (status: string, record: Alwaqf) =>
+      status ? (
+        <Tag
+          className="px-2! py-1! text-[13px]!"
+          color={getStatusTag(status)?.color}
+        >
+          {record?.status_label}
+        </Tag>
+      ) : (
+        "—"
+      ),
+  },
+  {
+    title: "حالة الدعوة",
+    dataIndex: "invitation_status",
+    key: "invitation_status",
+    render: (invitation_status: string, record: Alwaqf) =>
+      invitation_status ? (
+        <Tag
+          className="px-2! py-1! text-[13px]!"
+          color={getStatusTag(invitation_status)?.color}
+        >
+          {record?.invitation_status_label}
+        </Tag>
+      ) : (
+        "—"
+      ),
   },
 ];
