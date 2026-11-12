@@ -16,6 +16,7 @@ const FollowRequestsDetails = () => {
   const navigate = useNavigate();
   const { handleDownloadAttachment, isLoading: isDownloading } =
     useDownloadAttachment();
+
   const { data: followRequest, isLoading } = useApiQuery(
     ["follow-requests", id],
     () => getServiceRequestById(id!),
@@ -143,7 +144,7 @@ const FollowRequestsDetails = () => {
                     )
                   }
                 >
-                  الحوالة
+                  الفاتورة
                 </Button>
               ) : (
                 "---"
