@@ -64,7 +64,7 @@ const FollowRequestsDetails = () => {
                   href={followRequest.accounting.client.invoice_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-second-primary underline hover:opacity-75"
+                  className="text-second-primary! underline! hover:opacity-75! border! border-border-primary! p-2!"
                 >
                   الفاتورة
                 </a>
