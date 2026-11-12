@@ -106,7 +106,7 @@ const FollowRequestsDetails = () => {
                   <img src="/images/SAR.svg" alt="sar" className="w-4 h-4" />
                 </>
               ) : (
-                "--"
+                "---"
               )}
             </p>
           </div>
@@ -126,7 +126,7 @@ const FollowRequestsDetails = () => {
                   الفاتورة
                 </Button>
               ) : (
-                "--"
+                "---"
               )}
             </p>
           </div>
@@ -146,7 +146,7 @@ const FollowRequestsDetails = () => {
                   الحوالة
                 </Button>
               ) : (
-                "--"
+                "---"
               )}
             </p>
           </div>
