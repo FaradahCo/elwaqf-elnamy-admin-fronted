@@ -9,13 +9,11 @@ import RequestHistroy from "../../components/requestHistory/requestHistory";
 import Service from "../../components/service/service";
 import ServiceDetails from "../../components/serviceDetails/serviceDetails";
 import { getServiceRequestById } from "../../followRequestsService";
-import { useDownloadAttachment } from "@/app/hooks/useDownloadAttachment";
 
 const FollowRequestsDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { handleDownloadAttachment, isLoading: isDownloading } =
-    useDownloadAttachment();
+
   const { data: followRequest, isLoading } = useApiQuery(
     ["follow-requests", id],
     () => getServiceRequestById(id!),
@@ -64,7 +62,7 @@ const FollowRequestsDetails = () => {
                   href={followRequest.accounting.client.invoice_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-second-primary underline hover:opacity-75"
+                  className="text-second-primary! underline! hover:opacity-75! border! border-border-primary! p-2!"
                 >
                   الفاتورة
                 </a>
@@ -114,17 +112,14 @@ const FollowRequestsDetails = () => {
             <p className="text-[#0F1A2A] font-semibold">الفاتورة</p>
             <p>
               {followRequest?.accounting?.provider?.invoice_url ? (
-                <Button
-                  loading={isDownloading}
-                  disabled={isDownloading}
-                  onClick={() =>
-                    handleDownloadAttachment(
-                      followRequest?.accounting?.provider?.invoice_url ?? "",
-                    )
-                  }
+                <a
+                  href={followRequest.accounting.provider.invoice_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-second-primary! underline! hover:opacity-75! border! border-border-primary! p-2!"
                 >
                   الفاتورة
-                </Button>
+                </a>
               ) : (
                 "--"
               )}
@@ -134,17 +129,14 @@ const FollowRequestsDetails = () => {
             <p className="text-[#0F1A2A] font-semibold">الحوالة</p>
             <p>
               {followRequest?.accounting?.provider?.transfer_url ? (
-                <Button
-                  loading={isDownloading}
-                  disabled={isDownloading}
-                  onClick={() =>
-                    handleDownloadAttachment(
-                      followRequest?.accounting?.provider?.transfer_url ?? "",
-                    )
-                  }
+                <a
+                  href={followRequest.accounting.provider.transfer_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-second-primary! underline! hover:opacity-75! border! border-border-primary! p-2!"
                 >
                   الحوالة
-                </Button>
+                </a>
               ) : (
                 "--"
               )}
