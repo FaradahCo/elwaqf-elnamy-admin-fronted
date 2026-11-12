@@ -60,17 +60,14 @@ const FollowRequestsDetails = () => {
             <p className="text-[#0F1A2A] font-semibold">الفاتورة</p>
             <p>
               {followRequest?.accounting?.client?.invoice_url ? (
-                <Button
-                  loading={isDownloading}
-                  disabled={isDownloading}
-                  onClick={() =>
-                    handleDownloadAttachment(
-                      followRequest?.accounting?.client?.invoice_url ?? "",
-                    )
-                  }
+                <a
+                  href={followRequest.accounting.client.invoice_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-second-primary underline hover:opacity-75"
                 >
                   الفاتورة
-                </Button>
+                </a>
               ) : (
                 "--"
               )}
